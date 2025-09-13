@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nabha Telemedicine - Rural Healthcare Access</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2196F3">
+</head>
+<body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <select id="languageSelect">
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+            <option value="pa">ਪੰਜਾਬੀ</option>
+        </select>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h1 data-translate="app_title">Nabha Telemedicine</h1>
+        </div>
+        <div class="nav-links">
+            <button onclick="showSection('patient')" data-translate="patient_portal">Patient Portal</button>
+            <button onclick="showSection('doctor')" data-translate="doctor_portal">Doctor Portal</button>
+            <button onclick="showSection('pharmacy')" data-translate="pharmacy_portal">Pharmacy Portal</button>
+            <button onclick="showSection('symptoms')" data-translate="symptom_checker">Symptom Checker</button>
+        </div>
+    </nav>
+
+    <!-- Patient Section -->
+    <section id="patient-section" class="section active">
+        <div class="container">
+            <h2 data-translate="patient_registration">Patient Registration</h2>
+            <form id="patientForm">
+                <div class="form-group">
+                    <label data-translate="full_name">Full Name:</label>
+                    <input type="text" id="patientName" required>
+                </div>
+                <div class="form-group">
+                    <label data-translate="village">Village:</label>
+                    <input type="text" id="patientVillage" required>
+                </div>
+                <div class="form-group">
+                    <label data-translate="phone">Phone Number:</label>
+                    <input type="tel" id="patientPhone" required>
+                </div>
+                <div class="form-group">
+                    <label data-translate="age">Age:</label>
+                    <input type="number" id="patientAge" required>
+                </div>
+                <div class="form-group">
+                    <label data-translate="symptoms">Describe your symptoms:</label>
+                    <textarea id="patientSymptoms" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label data-translate="urgency">Urgency Level:</label>
+                    <select id="urgencyLevel">
+                        <option value="low" data-translate="low">Low</option>
+                        <option value="medium" data-translate="medium">Medium</option>
+                        <option value="high" data-translate="high">High</option>
+                        <option value="emergency" data-translate="emergency">Emergency</option>
+                    </select>
+                </div>
+                <button type="submit" data-translate="submit_request">Submit Request</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Doctor Section -->
+    <section id="doctor-section" class="section">
+        <div class="container">
+            <h2 data-translate="doctor_dashboard">Doctor Dashboard</h2>
+            <div id="patientRequests">
+                <h3 data-translate="pending_requests">Pending Patient Requests</h3>
+                <div id="requestsList"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pharmacy Section -->
+    <section id="pharmacy-section" class="section">
+        <div class="container">
+            <h2 data-translate="medicine_availability">Medicine Availability</h2>
+            <div class="pharmacy-tabs">
+                <button onclick="showPharmacyTab('check')" data-translate="check_medicines">Check Medicines</button>
+                <button onclick="showPharmacyTab('update')" data-translate="update_stock">Update Stock</button>
+            </div>
+            
+            <div id="medicine-check" class="pharmacy-tab active">
+                <h3 data-translate="search_medicines">Search Medicines</h3>
+                <input type="text" id="medicineSearch" placeholder="Enter medicine name">
+                <button onclick="searchMedicine()" data-translate="search">Search</button>
+                <div id="medicineResults"></div>
+            </div>
+            
+            <div id="medicine-update" class="pharmacy-tab">
+                <h3 data-translate="update_medicine_stock">Update Medicine Stock</h3>
+                <form id="medicineForm">
+                    <div class="form-group">
+                        <label data-translate="medicine_name">Medicine Name:</label>
+                        <input type="text" id="medicineName" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-translate="availability">Availability:</label>
+                        <select id="medicineAvailability">
+                            <option value="available" data-translate="available">Available</option>
+                            <option value="limited" data-translate="limited">Limited Stock</option>
+                            <option value="out_of_stock" data-translate="out_of_stock">Out of Stock</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label data-translate="pharmacy_name">Pharmacy Name:</label>
+                        <input type="text" id="pharmacyName" required>
+                    </div>
+                    <button type="submit" data-translate="update">Update</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Symptom Checker Section -->
+    <section id="symptoms-section" class="section">
+        <div class="container">
+            <h2 data-translate="symptom_checker_title">Symptom Checker</h2>
+            <div id="symptomChecker">
+                <div id="symptomQuestions"></div>
+                <div id="symptomResult"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Status Messages -->
+    <div id="statusMessage" class="status-message"></div>
+
+    <script src="translations.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
