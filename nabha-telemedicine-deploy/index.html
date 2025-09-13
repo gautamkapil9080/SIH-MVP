@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nabha Telemedicine - Rural Healthcare Access</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2196F3">
+</head>
+<body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <select id="languageSelect">
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+            <option value="te">తెలుగు</option>
+        </select>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h1 data-translate="app_title">Nabha Telemedicine</h1>
+        </div>
+        <div class="nav-links">
+            <button onclick="showSection('patient')" data-translate="patient_portal">Patient Portal</button>
+            <button onclick="showSection('doctor')" data-translate="doctor_portal">Doctor Portal</button>
+            <button onclick="showSection('pharmacy')" data-translate="pharmacy_portal">Pharmacy Portal</button>
+            <button onclick="showSection('symptoms')" data-translate="symptom_checker">Symptom Checker</button>
+            <button onclick="showSection('schemes')" data-translate="gov_schemes">Govt Schemes</button>
+            <button onclick="showSection('emergency')" data-translate="emergency" class="emergency-btn">🚨 Emergency</button>
+        </div>
+    </nav>
+
+    <!-- Patient Section -->
+    <section id="patient-section" class="section active">
+        <div class="container">
+            <h2 data-translate="patient_registration">Patient Registration</h2>
+            <form id="patientForm">
+                <div class="form-group">
+                    <label data-translate="full_name">Full Name:</label>
+                    <input type="text" id="patientName" required>
+                </div>
+                <div class="form-group">
+                    <label data-translate="village">Village:</label>
+                    <input type="text" id="patientVillage" required>
+                </div>
+                <div class="form-group">
+                    <label data-translate="phone">Phone Number:</label>
+                    <input type="tel" id="patientPhone" required>
+                </div>
+                <div class="form-group">
+                    <label data-translate="age">Age:</label>
+                    <input type="number" id="patientAge" required>
+                </div>
+                <div class="form-group">
+                    <label data-translate="symptoms">Describe your symptoms:</label>
+                    <textarea id="patientSymptoms" rows="4" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label data-translate="urgency">Urgency Level:</label>
+                    <select id="urgencyLevel">
+                        <option value="low" data-translate="low">Low</option>
+                        <option value="medium" data-translate="medium">Medium</option>
+                        <option value="high" data-translate="high">High</option>
+                        <option value="emergency" data-translate="emergency">Emergency</option>
+                    </select>
+                </div>
+                <button type="submit" data-translate="submit_request">Submit Request</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Doctor Section -->
+    <section id="doctor-section" class="section">
+        <div class="container">
+            <h2 data-translate="doctor_dashboard">Doctor Dashboard</h2>
+            
+            <!-- Doctor Dashboard Tabs -->
+            <div class="doctor-tabs">
+                <button onclick="showDoctorTab('requests')" class="tab-button active" data-translate="pending_requests">Patient Requests</button>
+                <button onclick="showDoctorTab('history')" class="tab-button" data-translate="patient_history">Patient History</button>
+                <button onclick="showDoctorTab('prescriptions')" class="tab-button" data-translate="prescriptions">Prescriptions</button>
+                <button onclick="showDoctorTab('analytics')" class="tab-button" data-translate="analytics">Analytics</button>
+            </div>
+
+            <!-- Patient Requests Tab -->
+            <div id="doctor-requests" class="doctor-tab active">
+                <h3 data-translate="pending_requests">Pending Patient Requests</h3>
+                <div class="filter-controls">
+                    <select id="urgencyFilter" onchange="filterRequests()">
+                        <option value="all" data-translate="all_urgency">All Urgency Levels</option>
+                        <option value="emergency" data-translate="emergency">Emergency</option>
+                        <option value="high" data-translate="high">High</option>
+                        <option value="medium" data-translate="medium">Medium</option>
+                        <option value="low" data-translate="low">Low</option>
+                    </select>
+                    <input type="text" id="patientSearchFilter" placeholder="Search patient by name or village" onkeyup="filterRequests()">
+                </div>
+                <div id="requestsList"></div>
+            </div>
+
+            <!-- Patient History Tab -->
+            <div id="doctor-history" class="doctor-tab">
+                <h3 data-translate="patient_history">Patient History</h3>
+                <div class="search-patient">
+                    <input type="text" id="historySearch" placeholder="Search patient by name or phone" onkeyup="searchPatientHistory()">
+                    <button onclick="searchPatientHistory()" data-translate="search">Search</button>
+                </div>
+                <div id="patientHistoryResults"></div>
+            </div>
+
+            <!-- Prescriptions Tab -->
+            <div id="doctor-prescriptions" class="doctor-tab">
+                <h3 data-translate="digital_prescriptions">Digital Prescriptions</h3>
+                <form id="prescriptionForm">
+                    <div class="form-row">
+                        <div class="form-group half-width">
+                            <label data-translate="patient_name">Patient Name:</label>
+                            <input type="text" id="prescriptionPatientName" required>
+                        </div>
+                        <div class="form-group half-width">
+                            <label data-translate="patient_phone">Patient Phone:</label>
+                            <input type="tel" id="prescriptionPatientPhone" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label data-translate="diagnosis">Diagnosis:</label>
+                        <textarea id="prescriptionDiagnosis" rows="2" required></textarea>
+                    </div>
+                    <div id="medicinesList">
+                        <h4 data-translate="prescribed_medicines">Prescribed Medicines:</h4>
+                        <div class="medicine-prescription">
+                            <div class="form-row">
+                                <div class="form-group third-width">
+                                    <input type="text" placeholder="Medicine name" class="medicine-name" required>
+                                </div>
+                                <div class="form-group third-width">
+                                    <input type="text" placeholder="Dosage (e.g., 500mg)" class="medicine-dosage" required>
+                                </div>
+                                <div class="form-group third-width">
+                                    <input type="text" placeholder="Instructions (e.g., twice daily)" class="medicine-instructions" required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="button" onclick="addMedicineToPrescription()" data-translate="add_medicine">+ Add Medicine</button>
+                    <div class="form-group">
+                        <label data-translate="additional_notes">Additional Notes:</label>
+                        <textarea id="prescriptionNotes" rows="3"></textarea>
+                    </div>
+                    <button type="submit" data-translate="generate_prescription">Generate Prescription</button>
+                </form>
+                <div id="generatedPrescriptions"></div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="doctor-analytics" class="doctor-tab">
+                <h3 data-translate="medical_analytics">Medical Analytics</h3>
+                <div class="analytics-cards">
+                    <div class="analytics-card">
+                        <h4 data-translate="total_consultations">Total Consultations</h4>
+                        <div class="analytics-number" id="totalConsultations">0</div>
+                    </div>
+                    <div class="analytics-card">
+                        <h4 data-translate="emergency_cases">Emergency Cases</h4>
+                        <div class="analytics-number emergency" id="emergencyCases">0</div>
+                    </div>
+                    <div class="analytics-card">
+                        <h4 data-translate="common_symptoms">Most Common Symptoms</h4>
+                        <div id="commonSymptoms"></div>
+                    </div>
+                    <div class="analytics-card">
+                        <h4 data-translate="response_time">Avg Response Time</h4>
+                        <div class="analytics-number" id="avgResponseTime">-</div>
+                    </div>
+                </div>
+                <div id="symptomsChart"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pharmacy Section -->
+    <section id="pharmacy-section" class="section">
+        <div class="container">
+            <h2 data-translate="medicine_availability">Medicine Availability</h2>
+            <div class="pharmacy-tabs">
+                <button onclick="showPharmacyTab('check')" data-translate="check_medicines">Check Medicines</button>
+                <button onclick="showPharmacyTab('update')" data-translate="update_stock">Update Stock</button>
+            </div>
+            
+            <div id="medicine-check" class="pharmacy-tab active">
+                <h3 data-translate="search_medicines">Search Medicines</h3>
+                <input type="text" id="medicineSearch" placeholder="Enter medicine name">
+                <button onclick="searchMedicine()" data-translate="search">Search</button>
+                <div id="medicineResults"></div>
+            </div>
+            
+            <div id="medicine-update" class="pharmacy-tab">
+                <h3 data-translate="update_medicine_stock">Update Medicine Stock</h3>
+                <form id="medicineForm">
+                    <div class="form-group">
+                        <label data-translate="medicine_name">Medicine Name:</label>
+                        <input type="text" id="medicineName" required>
+                    </div>
+                    <div class="form-group">
+                        <label data-translate="availability">Availability:</label>
+                        <select id="medicineAvailability">
+                            <option value="available" data-translate="available">Available</option>
+                            <option value="limited" data-translate="limited">Limited Stock</option>
+                            <option value="out_of_stock" data-translate="out_of_stock">Out of Stock</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label data-translate="pharmacy_name">Pharmacy Name:</label>
+                        <input type="text" id="pharmacyName" required>
+                    </div>
+                    <button type="submit" data-translate="update">Update</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Symptom Checker Section -->
+    <section id="symptoms-section" class="section">
+        <div class="container">
+            <h2 data-translate="symptom_checker_title">Symptom Checker</h2>
+            
+            <!-- Symptom Checker Modes -->
+            <div class="symptom-modes">
+                <button onclick="showSymptomMode('guided')" class="mode-button active" data-translate="guided_assessment">Guided Assessment</button>
+                <button onclick="showSymptomMode('quick')" class="mode-button" data-translate="quick_check">Quick Check</button>
+                <button onclick="showSymptomMode('emergency')" class="mode-button emergency" data-translate="emergency_check">Emergency Signs</button>
+            </div>
+
+            <!-- Guided Assessment Mode -->
+            <div id="symptom-guided" class="symptom-mode active">
+                <div class="disclaimer">
+                    <p data-translate="medical_disclaimer">⚠️ This tool is for informational purposes only and does not replace professional medical advice.</p>
+                </div>
+                <div id="symptomChecker">
+                    <div id="symptomQuestions"></div>
+                    <div id="symptomResult"></div>
+                </div>
+            </div>
+
+            <!-- Quick Check Mode -->
+            <div id="symptom-quick" class="symptom-mode">
+                <h3 data-translate="quick_symptom_check">Quick Symptom Check</h3>
+                <div class="symptom-categories">
+                    <div class="category-grid">
+                        <button onclick="quickSymptomCheck('respiratory')" class="category-btn" data-translate="respiratory">🫁 Respiratory</button>
+                        <button onclick="quickSymptomCheck('digestive')" class="category-btn" data-translate="digestive">🍽️ Digestive</button>
+                        <button onclick="quickSymptomCheck('neurological')" class="category-btn" data-translate="neurological">🧠 Neurological</button>
+                        <button onclick="quickSymptomCheck('cardiovascular')" class="category-btn" data-translate="cardiovascular">❤️ Cardiovascular</button>
+                        <button onclick="quickSymptomCheck('musculoskeletal')" class="category-btn" data-translate="musculoskeletal">🦴 Musculoskeletal</button>
+                        <button onclick="quickSymptomCheck('skin')" class="category-btn" data-translate="skin">🩹 Skin</button>
+                        <button onclick="quickSymptomCheck('mental_health')" class="category-btn" data-translate="mental_health">😌 Mental Health</button>
+                        <button onclick="quickSymptomCheck('general')" class="category-btn" data-translate="general_symptoms">🌡️ General</button>
+                    </div>
+                </div>
+                <div id="quickSymptomResult"></div>
+            </div>
+
+            <!-- Emergency Check Mode -->
+            <div id="symptom-emergency" class="symptom-mode">
+                <h3 data-translate="emergency_warning_signs">⚠️ Emergency Warning Signs</h3>
+                <div class="emergency-checklist">
+                    <h4 data-translate="call_emergency_if">Call Emergency Services Immediately If You Have:</h4>
+                    <div class="emergency-symptoms">
+                        <div class="emergency-item">
+                            <span class="icon">🫀</span>
+                            <span data-translate="chest_pain_severe">Severe chest pain or pressure</span>
+                        </div>
+                        <div class="emergency-item">
+                            <span class="icon">🫁</span>
+                            <span data-translate="breathing_difficulty">Severe difficulty breathing</span>
+                        </div>
+                        <div class="emergency-item">
+                            <span class="icon">🧠</span>
+                            <span data-translate="consciousness_loss">Loss of consciousness or confusion</span>
+                        </div>
+                        <div class="emergency-item">
+                            <span class="icon">🩸</span>
+                            <span data-translate="severe_bleeding">Severe bleeding that won't stop</span>
+                        </div>
+                        <div class="emergency-item">
+                            <span class="icon">🤕</span>
+                            <span data-translate="head_injury">Serious head injury</span>
+                        </div>
+                        <div class="emergency-item">
+                            <span class="icon">🔥</span>
+                            <span data-translate="high_fever_confusion">High fever with confusion or severe headache</span>
+                        </div>
+                        <div class="emergency-item">
+                            <span class="icon">⚡</span>
+                            <span data-translate="stroke_signs">Signs of stroke (facial drooping, arm weakness, speech difficulty)</span>
+                        </div>
+                    </div>
+                    <div class="emergency-action">
+                        <h4 data-translate="emergency_contacts">Emergency Contacts:</h4>
+                        <div class="contact-info">
+                            <div data-translate="emergency_number">Emergency Services: 108</div>
+                            <div data-translate="ambulance_number">Ambulance: 102</div>
+                            <div data-translate="local_hospital">Local Hospital: Contact your nearest facility</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Government Schemes Section -->
+    <section id="schemes-section" class="section">
+        <div class="container">
+            <h2 data-translate="govt_medicine_schemes">Government Medicine Schemes</h2>
+            
+            <div class="schemes-grid">
+                <!-- Ayushman Bharat -->
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <h3 data-translate="ayushman_bharat">Ayushman Bharat - PM-JAY</h3>
+                        <span class="scheme-badge active" data-translate="active">Active</span>
+                    </div>
+                    <p data-translate="ayushman_desc">Free treatment up to ₹5 lakh per family per year</p>
+                    <div class="scheme-details">
+                        <p><strong data-translate="eligibility">Eligibility:</strong> <span data-translate="ayushman_eligibility">Below poverty line families</span></p>
+                        <p><strong data-translate="coverage">Coverage:</strong> <span data-translate="ayushman_coverage">1,393 medical packages</span></p>
+                        <p><strong data-translate="hospitals">Hospitals:</strong> <span data-translate="ayushman_hospitals">Civil Hospital Nabha, Patiala Medical College</span></p>
+                    </div>
+                    <button onclick="checkEligibility('ayushman')" data-translate="check_eligibility">Check Eligibility</button>
+                </div>
+                
+                <!-- State Health Scheme -->
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <h3 data-translate="punjab_health_scheme">Punjab Health Scheme</h3>
+                        <span class="scheme-badge active" data-translate="active">Active</span>
+                    </div>
+                    <p data-translate="punjab_desc">Free medicines and treatment at government hospitals</p>
+                    <div class="scheme-details">
+                        <p><strong data-translate="eligibility">Eligibility:</strong> <span data-translate="punjab_eligibility">All Punjab residents</span></p>
+                        <p><strong data-translate="coverage">Coverage:</strong> <span data-translate="punjab_coverage">Essential medicines, OPD, emergency care</span></p>
+                        <p><strong data-translate="hospitals">Hospitals:</strong> <span data-translate="punjab_hospitals">All PHCs, CHCs, District Hospitals</span></p>
+                    </div>
+                    <button onclick="findNearbyCenter('punjab')" data-translate="find_center">Find Nearby Center</button>
+                </div>
+                
+                <!-- Jan Aushadhi -->
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <h3 data-translate="jan_aushadhi">Jan Aushadhi Scheme</h3>
+                        <span class="scheme-badge active" data-translate="active">Active</span>
+                    </div>
+                    <p data-translate="jan_aushadhi_desc">Generic medicines at 50-90% lower prices</p>
+                    <div class="scheme-details">
+                        <p><strong data-translate="eligibility">Eligibility:</strong> <span data-translate="jan_aushadhi_eligibility">Everyone</span></p>
+                        <p><strong data-translate="coverage">Coverage:</strong> <span data-translate="jan_aushadhi_coverage">1,500+ generic medicines</span></p>
+                        <p><strong data-translate="stores">Stores:</strong> <span data-translate="jan_aushadhi_stores">Nabha Main Market, Civil Hospital</span></p>
+                    </div>
+                    <button onclick="findJanAushadhiStore()" data-translate="find_store">Find Store</button>
+                </div>
+                
+                <!-- Emergency Scheme -->
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <h3 data-translate="emergency_scheme">Emergency Medical Scheme</h3>
+                        <span class="scheme-badge active" data-translate="active">Active</span>
+                    </div>
+                    <p data-translate="emergency_desc">Free ambulance and emergency treatment</p>
+                    <div class="scheme-details">
+                        <p><strong data-translate="eligibility">Eligibility:</strong> <span data-translate="emergency_eligibility">All residents in medical emergency</span></p>
+                        <p><strong data-translate="coverage">Coverage:</strong> <span data-translate="emergency_coverage">108 Ambulance, Emergency care</span></p>
+                        <p><strong data-translate="contact">Contact:</strong> <span class="emergency-number">108</span></p>
+                    </div>
+                    <button onclick="callEmergency()" data-translate="call_ambulance" class="emergency-btn">🚨 Call Ambulance</button>
+                </div>
+            </div>
+            
+            <div class="schemes-help">
+                <h3 data-translate="need_help">Need Help with Schemes?</h3>
+                <div class="help-contacts">
+                    <p><strong data-translate="helpline">Helpline:</strong> 14555 (Ayushman Bharat)</p>
+                    <p><strong data-translate="local_office">Local Office:</strong> Civil Hospital Nabha - 01762-230345</p>
+                    <p><strong data-translate="district_office">District Office:</strong> Patiala - 0175-2212345</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Emergency Section -->
+    <section id="emergency-section" class="section">
+        <div class="container">
+            <h2 class="emergency-title">🚨 <span data-translate="emergency_services">Emergency Services</span></h2>
+            
+            <div class="emergency-grid">
+                <!-- Ambulance Service -->
+                <div class="emergency-card urgent">
+                    <div class="emergency-icon">🚑</div>
+                    <h3 data-translate="ambulance_service">Ambulance Service</h3>
+                    <p data-translate="ambulance_desc">Free 24/7 ambulance service with medical support</p>
+                    <div class="emergency-actions">
+                        <button onclick="callAmbulance()" class="emergency-call-btn">
+                            <span>📞</span> <span data-translate="call_108">Call 108</span>
+                        </button>
+                        <button onclick="shareLocation()" class="location-btn">
+                            <span>📍</span> <span data-translate="share_location">Share Location</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Police Emergency -->
+                <div class="emergency-card">
+                    <div class="emergency-icon">🚓</div>
+                    <h3 data-translate="police_emergency">Police Emergency</h3>
+                    <p data-translate="police_desc">Police emergency and crime reporting</p>
+                    <div class="emergency-actions">
+                        <button onclick="callPolice()" class="emergency-call-btn">
+                            <span>📞</span> <span data-translate="call_100">Call 100</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Fire Emergency -->
+                <div class="emergency-card">
+                    <div class="emergency-icon">🚒</div>
+                    <h3 data-translate="fire_emergency">Fire Emergency</h3>
+                    <p data-translate="fire_desc">Fire department emergency response</p>
+                    <div class="emergency-actions">
+                        <button onclick="callFire()" class="emergency-call-btn">
+                            <span>📞</span> <span data-translate="call_101">Call 101</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Women Helpline -->
+                <div class="emergency-card">
+                    <div class="emergency-icon">👩‍⚕️</div>
+                    <h3 data-translate="women_helpline">Women Helpline</h3>
+                    <p data-translate="women_desc">24/7 support for women in distress</p>
+                    <div class="emergency-actions">
+                        <button onclick="callWomenHelpline()" class="emergency-call-btn">
+                            <span>📞</span> <span data-translate="call_1091">Call 1091</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="location-section">
+                <h3 data-translate="your_location">Your Current Location</h3>
+                <div id="locationDisplay" class="location-display">
+                    <p data-translate="location_loading">Getting location...</p>
+                </div>
+                <button onclick="getCurrentLocation()" data-translate="get_location" class="location-btn">Get My Location</button>
+                <button onclick="sendLocationSMS()" data-translate="send_location_sms" class="sms-btn">Send Location via SMS</button>
+            </div>
+            
+            <div class="emergency-contacts">
+                <h3 data-translate="important_contacts">Important Local Contacts</h3>
+                <div class="contacts-grid">
+                    <div class="contact-item">
+                        <strong data-translate="civil_hospital">Civil Hospital Nabha:</strong>
+                        <span class="contact-number">01762-230345</span>
+                    </div>
+                    <div class="contact-item">
+                        <strong data-translate="police_station">Police Station Nabha:</strong>
+                        <span class="contact-number">01762-230100</span>
+                    </div>
+                    <div class="contact-item">
+                        <strong data-translate="fire_station">Fire Station:</strong>
+                        <span class="contact-number">01762-230101</span>
+                    </div>
+                    <div class="contact-item">
+                        <strong data-translate="district_hospital">District Hospital Patiala:</strong>
+                        <span class="contact-number">0175-2212345</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Status Messages -->
+    <div id="statusMessage" class="status-message"></div>
+
+    <script src="translations.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test - Nabha Telemedicine Portals</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .nav-btn { padding: 10px 20px; margin: 5px; background: #2196F3; color: white; border: none; cursor: pointer; }
+        .section { display: none; margin-top: 20px; padding: 20px; border: 1px solid #ddd; }
+        .section.active { display: block; }
+        .test-content { background: #f5f5f5; padding: 15px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Testing Navigation - Nabha Telemedicine</h1>
+    
+    <div class="nav-buttons">
+        <button class="nav-btn" onclick="showTestSection('patient')">Patient Portal</button>
+        <button class="nav-btn" onclick="showTestSection('doctor')">Doctor Portal</button>
+        <button class="nav-btn" onclick="showTestSection('pharmacy')">Pharmacy Portal</button>
+        <button class="nav-btn" onclick="showTestSection('emergency')">Emergency Portal</button>
+    </div>
+
+    <div id="patient-section" class="section active">
+        <h2>✅ Patient Portal Working!</h2>
+        <div class="test-content">
+            <h3>Patient Registration Form</h3>
+            <p>This should show:</p>
+            <ul>
+                <li>Patient name input</li>
+                <li>Village input</li>
+                <li>Phone number input</li>
+                <li>Age input</li>
+                <li>Symptoms textarea</li>
+                <li>Urgency level dropdown</li>
+                <li>Submit button</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="doctor-section" class="section">
+        <h2>✅ Doctor Portal Working!</h2>
+        <div class="test-content">
+            <h3>Doctor Dashboard</h3>
+            <p>This should show:</p>
+            <ul>
+                <li>Pending patient requests</li>
+                <li>Patient history search</li>
+                <li>Digital prescription form</li>
+                <li>Medical analytics</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="pharmacy-section" class="section">
+        <h2>✅ Pharmacy Portal Working!</h2>
+        <div class="test-content">
+            <h3>Medicine Management</h3>
+            <p>This should show:</p>
+            <ul>
+                <li>Medicine search functionality</li>
+                <li>Stock update forms</li>
+                <li>Availability status</li>
+                <li>Pharmacy information</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="emergency-section" class="section">
+        <h2>🚨 Emergency Portal Working!</h2>
+        <div class="test-content">
+            <h3>Emergency Services</h3>
+            <p>This should show:</p>
+            <ul>
+                <li>Emergency contact numbers (108, 100, 101)</li>
+                <li>Location sharing</li>
+                <li>Quick access to ambulance</li>
+                <li>Local emergency contacts</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        function showTestSection(sectionName) {
+            console.log('Switching to section:', sectionName);
+            
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            const activeSection = document.getElementById(sectionName + '-section');
+            if (activeSection) {
+                activeSection.classList.add('active');
+                console.log('✅ Section switched successfully to:', sectionName);
+            } else {
+                console.error('❌ Section not found:', sectionName);
+            }
+        }
+    </script>
+</body>
+</html>

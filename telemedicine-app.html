@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telemedicine - Healthcare Access Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+        }
+
+        /* Header */
+        .header {
+            background: #2563eb;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .language-selector {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 6px;
+            padding: 0.5rem;
+        }
+
+        .language-selector select {
+            background: transparent;
+            border: none;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        .language-selector select option {
+            background: #2563eb;
+            color: white;
+        }
+
+        /* Navigation */
+        .navigation {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            padding: 0.75rem 1.5rem;
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .nav-btn.active {
+            background: #2563eb;
+            color: white;
+            border-color: #2563eb;
+        }
+
+        .nav-btn.emergency {
+            background: #dc2626;
+            color: white;
+            border-color: #dc2626;
+        }
+
+        .nav-btn.emergency:hover {
+            background: #b91c1c;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .section {
+            display: none;
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .section-title {
+            color: #1e293b;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Forms */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background 0.2s;
+            margin: 0.25rem;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-success {
+            background: #059669;
+        }
+
+        .btn-success:hover {
+            background: #047857;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        /* Cards */
+        .card {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #a7f3d0;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        /* Symptom Checker */
+        .symptom-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .symptom-option {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .symptom-option:hover {
+            background: #f1f5f9;
+        }
+
+        .symptom-option input {
+            margin-right: 0.5rem;
+            width: auto;
+        }
+
+        /* Government Schemes */
+        .schemes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .scheme-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .scheme-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .scheme-header {
+            background: #2563eb;
+            color: white;
+            padding: 1rem;
+        }
+
+        .scheme-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .scheme-content {
+            padding: 1.5rem;
+        }
+
+        .scheme-actions {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        /* Emergency Contacts */
+        .emergency-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .contact-item {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .contact-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #dc2626;
+            margin: 0.5rem 0;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .section {
+                padding: 1rem;
+            }
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #6b7280;
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 8px;
+            padding: 2rem;
+            margin: 1rem;
+            position: relative;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #dc2626;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo" data-translate="app_title">Telemedicine</div>
+            <div class="language-selector">
+                <select id="languageSelect" onchange="changeLanguage(this.value)">
+                    <option value="en">English</option>
+                    <option value="hi">हिंदी</option>
+                    <option value="pa">ਪੰਜਾਬੀ</option>
+                    <option value="te">తెలుగు</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <div class="nav-container">
+            <div class="nav-buttons">
+                <button class="nav-btn active" onclick="showSection('patient')" data-translate="patient_portal">
+                    Patient Portal
+                </button>
+                <button class="nav-btn" onclick="showSection('doctor')" data-translate="doctor_portal">
+                    Doctor Portal
+                </button>
+                <button class="nav-btn" onclick="showSection('pharmacy')" data-translate="pharmacy_portal">
+                    Pharmacy Portal
+                </button>
+                <button class="nav-btn" onclick="showSection('symptoms')" data-translate="symptom_checker">
+                    Symptom Checker
+                </button>
+                <button class="nav-btn" onclick="showSection('schemes')" data-translate="govt_schemes">
+                    Govt Schemes
+                </button>
+                <button class="nav-btn emergency" onclick="showSection('emergency')" data-translate="emergency">
+                    Emergency
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Alert Messages -->
+        <div id="successAlert" class="alert alert-success"></div>
+        <div id="errorAlert" class="alert alert-error"></div>
+
+        <!-- Patient Portal Section -->
+        <div id="patient" class="section active">
+            <h2 class="section-title" data-translate="patient_registration">Patient Registration</h2>
+            
+            <form id="patientForm">
+                <div class="form-grid">
+                    <div>
+                        <div class="form-group">
+                            <label data-translate="full_name">Full Name *</label>
+                            <input type="text" id="patientName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label data-translate="phone">Phone Number *</label>
+                            <input type="tel" id="patientPhone" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label data-translate="age">Age *</label>
+                            <input type="number" id="patientAge" min="1" max="150" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label data-translate="location">Location *</label>
+                            <input type="text" id="patientLocation" required>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="form-group">
+                            <label data-translate="symptoms">Symptoms *</label>
+                            <textarea id="patientSymptoms" rows="4" required 
+                                placeholder="Describe your symptoms..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label data-translate="urgency">Urgency Level *</label>
+                            <select id="urgencyLevel" required>
+                                <option value="">Select urgency level</option>
+                                <option value="low" data-translate="urgency_low">Low</option>
+                                <option value="medium" data-translate="urgency_medium">Medium</option>
+                                <option value="high" data-translate="urgency_high">High</option>
+                                <option value="emergency" data-translate="urgency_emergency">Emergency</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-success" data-translate="submit_request">
+                    Submit Request
+                </button>
+            </form>
+        </div>
+
+        <!-- Doctor Portal Section -->
+        <div id="doctor" class="section">
+            <h2 class="section-title" data-translate="doctor_dashboard">Doctor Dashboard</h2>
+            
+            <div class="card">
+                <h3 class="card-title" data-translate="patient_requests">Patient Requests</h3>
+                <div id="patientRequests" class="loading">Loading...</div>
+            </div>
+            
+            <div class="card" id="responseCard" style="display: none;">
+                <h3 class="card-title" data-translate="respond_to_patient">Respond to Patient</h3>
+                <form id="responseForm">
+                    <input type="hidden" id="responsePatientId">
+                    <div class="form-group">
+                        <label data-translate="patient_info">Patient Information:</label>
+                        <div id="responsePatientInfo"></div>
+                    </div>
+                    <div class="form-group">
+                        <label data-translate="medical_advice">Medical Response/Advice:</label>
+                        <textarea id="doctorResponse" rows="4" required 
+                            placeholder="Provide medical advice..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success" data-translate="send_response">Send Response</button>
+                    <button type="button" class="btn btn-secondary" onclick="cancelResponse()" data-translate="cancel">Cancel</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Pharmacy Portal Section -->
+        <div id="pharmacy" class="section">
+            <h2 class="section-title" data-translate="pharmacy_management">Pharmacy Management</h2>
+            
+            <div class="form-grid">
+                <div class="card">
+                    <h3 class="card-title" data-translate="search_medicine">Search Medicine</h3>
+                    <div class="form-group">
+                        <input type="text" id="medicineSearch" placeholder="Enter medicine name...">
+                    </div>
+                    <button onclick="searchMedicine()" class="btn" data-translate="search">Search</button>
+                    <div id="medicineResults"></div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title" data-translate="update_stock">Update Stock</h3>
+                    <form id="stockForm">
+                        <div class="form-group">
+                            <label data-translate="medicine_name">Medicine Name:</label>
+                            <input type="text" id="medicineName" required>
+                        </div>
+                        <div class="form-group">
+                            <label data-translate="stock_quantity">Stock Quantity:</label>
+                            <input type="number" id="medicineStock" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label data-translate="price">Price (₹):</label>
+                            <input type="number" id="medicinePrice" min="0" step="0.01" required>
+                        </div>
+                        <button type="submit" class="btn btn-success" data-translate="update_stock">Update Stock</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3 class="card-title" data-translate="current_stock">Current Stock</h3>
+                <div id="stockList"></div>
+            </div>
+        </div>
+
+        <!-- Symptom Checker Section -->
+        <div id="symptoms" class="section">
+            <h2 class="section-title" data-translate="symptom_checker">Symptom Checker</h2>
+            
+            <div class="alert alert-warning" style="display: block;">
+                <strong data-translate="medical_disclaimer">Medical Disclaimer:</strong>
+                <span data-translate="disclaimer_text">This tool is for informational purposes only and does not replace professional medical advice.</span>
+            </div>
+            
+            <div class="form-grid">
+                <div>
+                    <div class="card">
+                        <h3 class="card-title" data-translate="select_symptoms">Select Your Symptoms</h3>
+                        <div class="symptom-grid">
+                            <label class="symptom-option">
+                                <input type="checkbox" value="fever" data-urgency="2"> <span data-translate="fever">Fever</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" value="headache" data-urgency="1"> <span data-translate="headache">Headache</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" value="cough" data-urgency="1"> <span data-translate="cough">Cough</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" value="breathing_difficulty" data-urgency="4"> <span data-translate="breathing_difficulty">Difficulty Breathing</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" value="chest_pain" data-urgency="4"> <span data-translate="chest_pain">Chest Pain</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" value="abdominal_pain" data-urgency="2"> <span data-translate="abdominal_pain">Abdominal Pain</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" value="nausea" data-urgency="1"> <span data-translate="nausea">Nausea</span>
+                            </label>
+                            <label class="symptom-option">
+                                <input type="checkbox" value="dizziness" data-urgency="2"> <span data-translate="dizziness">Dizziness</span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label data-translate="severity">Severity Level:</label>
+                            <select id="symptomSeverity">
+                                <option value="1" data-translate="severity_mild">Mild</option>
+                                <option value="2" data-translate="severity_moderate">Moderate</option>
+                                <option value="3" data-translate="severity_severe">Severe</option>
+                                <option value="4" data-translate="severity_extreme">Extreme</option>
+                            </select>
+                        </div>
+                        
+                        <button onclick="assessSymptoms()" class="btn btn-success" data-translate="assess_symptoms">Assess Symptoms</button>
+                        <button onclick="clearSymptoms()" class="btn btn-secondary" data-translate="clear">Clear</button>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="card">
+                        <h3 class="card-title" data-translate="assessment_result">Assessment Result</h3>
+                        <div id="symptomResult">
+                            <p data-translate="complete_assessment">Please complete the symptom assessment to get recommendations.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Government Schemes Section -->
+        <div id="schemes" class="section">
+            <h2 class="section-title" data-translate="govt_schemes">Government Health Schemes</h2>
+            
+            <div class="schemes-grid">
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <div class="scheme-title" data-translate="ayushman_bharat">Ayushman Bharat - PM-JAY</div>
+                        <div data-translate="coverage_5_lakh">Coverage up to ₹5 lakh per family</div>
+                    </div>
+                    <div class="scheme-content">
+                        <p><strong data-translate="eligibility">Eligibility:</strong> <span data-translate="ayushman_eligibility">BPL families listed in SECC-2011</span></p>
+                        <p><strong data-translate="benefits">Benefits:</strong> <span data-translate="ayushman_benefits">Free treatment, 1,393+ medical packages</span></p>
+                        <div class="scheme-actions">
+                            <button onclick="showSchemeDetails('ayushman')" class="btn" data-translate="check_eligibility">Check Eligibility</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <div class="scheme-title" data-translate="jan_aushadhi">Jan Aushadhi Scheme</div>
+                        <div data-translate="affordable_medicines">Affordable Generic Medicines</div>
+                    </div>
+                    <div class="scheme-content">
+                        <p><strong data-translate="savings">Savings:</strong> <span data-translate="jan_aushadhi_savings">50-90% cheaper medicines</span></p>
+                        <p><strong data-translate="availability">Availability:</strong> <span data-translate="jan_aushadhi_availability">1,500+ medicines available</span></p>
+                        <div class="scheme-actions">
+                            <button onclick="showSchemeDetails('jan_aushadhi')" class="btn" data-translate="find_store">Find Store</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <div class="scheme-title" data-translate="state_health_scheme">State Health Insurance</div>
+                        <div data-translate="local_coverage">Local Health Coverage</div>
+                    </div>
+                    <div class="scheme-content">
+                        <p><strong data-translate="coverage">Coverage:</strong> <span data-translate="state_coverage">Basic treatment and medicines</span></p>
+                        <p><strong data-translate="access">Access:</strong> <span data-translate="state_access">Government hospitals and PHCs</span></p>
+                        <div class="scheme-actions">
+                            <button onclick="showSchemeDetails('state')" class="btn" data-translate="apply_now">Apply Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emergency Section -->
+        <div id="emergency" class="section">
+            <h2 class="section-title" data-translate="emergency_services">Emergency Services</h2>
+            
+            <div class="alert alert-error" style="display: block;">
+                <strong data-translate="emergency_warning">Emergency Warning:</strong>
+                <span data-translate="emergency_warning_text">For life-threatening emergencies, call immediately!</span>
+            </div>
+            
+            <div class="emergency-grid">
+                <div class="contact-item">
+                    <h3 data-translate="ambulance">Ambulance</h3>
+                    <div class="contact-number">
+                        <a href="tel:108" style="color: inherit; text-decoration: none;">108</a>
+                    </div>
+                    <p data-translate="ambulance_desc">Free 24/7 emergency ambulance</p>
+                </div>
+                
+                <div class="contact-item">
+                    <h3 data-translate="police">Police</h3>
+                    <div class="contact-number">
+                        <a href="tel:100" style="color: inherit; text-decoration: none;">100</a>
+                    </div>
+                    <p data-translate="police_desc">Police emergency services</p>
+                </div>
+                
+                <div class="contact-item">
+                    <h3 data-translate="fire">Fire Department</h3>
+                    <div class="contact-number">
+                        <a href="tel:101" style="color: inherit; text-decoration: none;">101</a>
+                    </div>
+                    <p data-translate="fire_desc">Fire emergency response</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3 class="card-title" data-translate="emergency_location">Share Location</h3>
+                <p data-translate="location_help">Help emergency services find you quickly:</p>
+                <button onclick="shareLocation()" class="btn btn-danger" data-translate="get_location">Get My Location</button>
+                <div id="locationInfo"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Translation system
+        const translations = {
+            en: {
+                app_title: "Telemedicine",
+                patient_portal: "Patient Portal",
+                doctor_portal: "Doctor Portal",
+                pharmacy_portal: "Pharmacy Portal",
+                symptom_checker: "Symptom Checker",
+                govt_schemes: "Govt Schemes",
+                emergency: "Emergency",
+                
+                patient_registration: "Patient Registration",
+                full_name: "Full Name *",
+                phone: "Phone Number *",
+                age: "Age *",
+                location: "Location *",
+                symptoms: "Symptoms *",
+                urgency: "Urgency Level *",
+                urgency_low: "Low",
+                urgency_medium: "Medium", 
+                urgency_high: "High",
+                urgency_emergency: "Emergency",
+                submit_request: "Submit Request",
+                
+                doctor_dashboard: "Doctor Dashboard",
+                patient_requests: "Patient Requests",
+                respond_to_patient: "Respond to Patient",
+                patient_info: "Patient Information:",
+                medical_advice: "Medical Response/Advice:",
+                send_response: "Send Response",
+                cancel: "Cancel",
+                
+                pharmacy_management: "Pharmacy Management",
+                search_medicine: "Search Medicine",
+                search: "Search",
+                update_stock: "Update Stock",
+                medicine_name: "Medicine Name:",
+                stock_quantity: "Stock Quantity:",
+                price: "Price (₹):",
+                current_stock: "Current Stock",
+                
+                select_symptoms: "Select Your Symptoms",
+                fever: "Fever",
+                headache: "Headache",
+                cough: "Cough",
+                breathing_difficulty: "Difficulty Breathing",
+                chest_pain: "Chest Pain",
+                abdominal_pain: "Abdominal Pain",
+                nausea: "Nausea",
+                dizziness: "Dizziness",
+                severity: "Severity Level:",
+                severity_mild: "Mild",
+                severity_moderate: "Moderate",
+                severity_severe: "Severe",
+                severity_extreme: "Extreme",
+                assess_symptoms: "Assess Symptoms",
+                clear: "Clear",
+                assessment_result: "Assessment Result",
+                complete_assessment: "Please complete the symptom assessment to get recommendations.",
+                medical_disclaimer: "Medical Disclaimer:",
+                disclaimer_text: "This tool is for informational purposes only and does not replace professional medical advice.",
+                
+                ayushman_bharat: "Ayushman Bharat - PM-JAY",
+                coverage_5_lakh: "Coverage up to ₹5 lakh per family",
+                eligibility: "Eligibility:",
+                ayushman_eligibility: "BPL families listed in SECC-2011",
+                benefits: "Benefits:",
+                ayushman_benefits: "Free treatment, 1,393+ medical packages",
+                check_eligibility: "Check Eligibility",
+                
+                jan_aushadhi: "Jan Aushadhi Scheme",
+                affordable_medicines: "Affordable Generic Medicines",
+                savings: "Savings:",
+                jan_aushadhi_savings: "50-90% cheaper medicines",
+                availability: "Availability:",
+                jan_aushadhi_availability: "1,500+ medicines available",
+                find_store: "Find Store",
+                
+                state_health_scheme: "State Health Insurance",
+                local_coverage: "Local Health Coverage",
+                coverage: "Coverage:",
+                state_coverage: "Basic treatment and medicines",
+                access: "Access:",
+                state_access: "Government hospitals and PHCs",
+                apply_now: "Apply Now",
+                
+                emergency_services: "Emergency Services",
+                emergency_warning: "Emergency Warning:",
+                emergency_warning_text: "For life-threatening emergencies, call immediately!",
+                ambulance: "Ambulance",
+                ambulance_desc: "Free 24/7 emergency ambulance",
+                police: "Police",
+                police_desc: "Police emergency services",
+                fire: "Fire Department", 
+                fire_desc: "Fire emergency response",
+                emergency_location: "Share Location",
+                location_help: "Help emergency services find you quickly:",
+                get_location: "Get My Location"
+            },
+            hi: {
+                app_title: "टेलीमेडिसिन",
+                patient_portal: "मरीज़ पोर्टल",
+                doctor_portal: "डॉक्टर पोर्टल",
+                pharmacy_portal: "दवाखाना पोर्टल",
+                symptom_checker: "लक्षण जांचकर्ता",
+                govt_schemes: "सरकारी योजनाएं",
+                emergency: "आपातकाल",
+                
+                patient_registration: "मरीज़ पंजीकरण",
+                full_name: "पूरा नाम *",
+                phone: "फ़ोन नंबर *",
+                age: "उम्र *",
+                location: "स्थान *",
+                symptoms: "लक्षण *",
+                urgency: "तात्कालिकता स्तर *",
+                urgency_low: "कम",
+                urgency_medium: "मध्यम",
+                urgency_high: "उच्च",
+                urgency_emergency: "आपातकाल",
+                submit_request: "अनुरोध भेजें",
+                
+                doctor_dashboard: "डॉक्टर डैशबोर्ड",
+                patient_requests: "मरीज़ अनुरोध",
+                respond_to_patient: "मरीज़ को जवाब दें",
+                patient_info: "मरीज़ की जानकारी:",
+                medical_advice: "चिकित्सा सलाह:",
+                send_response: "जवाब भेजें",
+                cancel: "रद्द करें",
+                
+                pharmacy_management: "दवाखाना प्रबंधन",
+                search_medicine: "दवा खोजें",
+                search: "खोजें",
+                update_stock: "स्टॉक अपडेट करें",
+                medicine_name: "दवा का नाम:",
+                stock_quantity: "स्टॉक मात्रा:",
+                price: "कीमत (₹):",
+                current_stock: "वर्तमान स्टॉक",
+                
+                select_symptoms: "अपने लक्षण चुनें",
+                fever: "बुखार",
+                headache: "सिरदर्द",
+                cough: "खांसी",
+                breathing_difficulty: "सांस लेने में कठिनाई",
+                chest_pain: "छाती में दर्द",
+                abdominal_pain: "पेट दर्द",
+                nausea: "जी मिचलाना",
+                dizziness: "चक्कर आना",
+                severity: "गंभीरता स्तर:",
+                severity_mild: "हल्का",
+                severity_moderate: "मध्यम",
+                severity_severe: "गंभीर",
+                severity_extreme: "अत्यधिक",
+                assess_symptoms: "लक्षणों का आकलन करें",
+                clear: "साफ करें",
+                assessment_result: "आकलन परिणाम",
+                complete_assessment: "सिफारिशें पाने के लिए कृपया लक्षण आकलन पूरा करें।",
+                medical_disclaimer: "चिकित्सा अस्वीकरण:",
+                disclaimer_text: "यह उपकरण केवल सूचनात्मक उद्देश्यों के लिए है और पेशेवर चिकित्सा सलाह का विकल्प नहीं है।",
+                
+                ayushman_bharat: "आयुष्मान भारत - PM-JAY",
+                coverage_5_lakh: "प्रति परिवार ₹5 लाख तक का कवरेज",
+                eligibility: "पात्रता:",
+                ayushman_eligibility: "SECC-2011 में सूचीबद्ध BPL परिवार",
+                benefits: "लाभ:",
+                ayushman_benefits: "निःशुल्क उपचार, 1,393+ चिकित्सा पैकेज",
+                check_eligibility: "पात्रता जांचें",
+                
+                jan_aushadhi: "जन औषधि योजना",
+                affordable_medicines: "किफायती जेनेरिक दवाएं",
+                savings: "बचत:",
+                jan_aushadhi_savings: "50-90% सस्ती दवाएं",
+                availability: "उपलब्धता:",
+                jan_aushadhi_availability: "1,500+ दवाएं उपलब्ध",
+                find_store: "स्टोर खोजें",
+                
+                state_health_scheme: "राज्य स्वास्थ्य बीमा",
+                local_coverage: "स्थानीय स्वास्थ्य कवरेज",
+                coverage: "कवरेज:",
+                state_coverage: "बुनियादी उपचार और दवाएं",
+                access: "पहुंच:",
+                state_access: "सरकारी अस्पताल और PHC",
+                apply_now: "अभी आवेदन करें",
+                
+                emergency_services: "आपातकालीन सेवाएं",
+                emergency_warning: "आपातकालीन चेतावनी:",
+                emergency_warning_text: "जीवन-खतरनाक आपात स्थिति के लिए तुरंत कॉल करें!",
+                ambulance: "एम्बुलेंस",
+                ambulance_desc: "निःशुल्क 24/7 आपातकालीन एम्बुलेंस",
+                police: "पुलिस",
+                police_desc: "पुलिस आपातकालीन सेवाएं",
+                fire: "अग्निशमन विभाग",
+                fire_desc: "अग्नि आपातकालीन प्रतिक्रिया",
+                emergency_location: "स्थान साझा करें",
+                location_help: "आपातकालीन सेवाओं को आपको जल्दी खोजने में मदद करें:",
+                get_location: "मेरा स्थान प्राप्त करें"
+            },
+            pa: {
+                app_title: "ਟੈਲੀਮੈਡਿਸਿਨ",
+                patient_portal: "ਮਰੀਜ਼ ਪੋਰਟਲ",
+                doctor_portal: "ਡਾਕਟਰ ਪੋਰਟਲ",
+                pharmacy_portal: "ਦਵਾਈ ਪੋਰਟਲ",
+                symptom_checker: "ਲੱਛਣ ਜਾਂਚਕਰਤਾ",
+                govt_schemes: "ਸਰਕਾਰੀ ਯੋਜਨਾਵਾਂ",
+                emergency: "ਐਮਰਜੈਂਸੀ",
+                
+                patient_registration: "ਮਰੀਜ਼ ਰਜਿਸਟਰੇਸ਼ਨ",
+                full_name: "ਪੂਰਾ ਨਾਮ *",
+                phone: "ਫ਼ੋਨ ਨੰਬਰ *",
+                age: "ਉਮਰ *",
+                location: "ਸਥਾਨ *",
+                symptoms: "ਲੱਛਣ *",
+                urgency: "ਜ਼ਰੂਰੀ ਪੱਧਰ *",
+                urgency_low: "ਘੱਟ",
+                urgency_medium: "ਮੱਧਮ",
+                urgency_high: "ਉੱਚਾ",
+                urgency_emergency: "ਐਮਰਜੈਂਸੀ",
+                submit_request: "ਬੇਨਤੀ ਭੇਜੋ",
+                
+                doctor_dashboard: "ਡਾਕਟਰ ਡੈਸ਼ਬੋਰਡ",
+                patient_requests: "ਮਰੀਜ਼ ਬੇਨਤੀਆਂ",
+                respond_to_patient: "ਮਰੀਜ਼ ਨੂੰ ਜਵਾਬ ਦਿਓ",
+                patient_info: "ਮਰੀਜ਼ ਦੀ ਜਾਣਕਾਰੀ:",
+                medical_advice: "ਮੈਡੀਕਲ ਸਲਾਹ:",
+                send_response: "ਜਵਾਬ ਭੇਜੋ",
+                cancel: "ਰੱਦ ਕਰੋ",
+                
+                pharmacy_management: "ਫਾਰਮੇਸੀ ਪ੍ਰਬੰਧਨ",
+                search_medicine: "ਦਵਾਈ ਖੋਜੋ",
+                search: "ਖੋਜੋ",
+                update_stock: "ਸਟਾਕ ਅਪਡੇਟ ਕਰੋ",
+                medicine_name: "ਦਵਾਈ ਦਾ ਨਾਮ:",
+                stock_quantity: "ਸਟਾਕ ਮਾਤਰਾ:",
+                price: "ਕੀਮਤ (₹):",
+                current_stock: "ਮੌਜੂਦਾ ਸਟਾਕ",
+                
+                select_symptoms: "ਆਪਣੇ ਲੱਛਣ ਚੁਣੋ",
+                fever: "ਬੁਖਾਰ",
+                headache: "ਸਿਰ ਦਰਦ",
+                cough: "ਖੰਘ",
+                breathing_difficulty: "ਸਾਹ ਲੈਣ ਵਿੱਚ ਮੁਸ਼ਕਲ",
+                chest_pain: "ਛਾਤੀ ਵਿੱਚ ਦਰਦ",
+                abdominal_pain: "ਪੇਟ ਦਰਦ",
+                nausea: "ਜੀ ਮਚਲਾਉਣਾ",
+                dizziness: "ਚੱਕਰ ਆਉਣਾ",
+                severity: "ਗੰਭੀਰਤਾ ਪੱਧਰ:",
+                severity_mild: "ਹਲਕਾ",
+                severity_moderate: "ਮੱਧਮ",
+                severity_severe: "ਗੰਭੀਰ",
+                severity_extreme: "ਬਹੁਤ ਜ਼ਿਆਦਾ",
+                assess_symptoms: "ਲੱਛਣਾਂ ਦਾ ਮੁਲਾਂਕਣ ਕਰੋ",
+                clear: "ਸਾਫ਼ ਕਰੋ",
+                assessment_result: "ਮੁਲਾਂਕਣ ਨਤੀਜਾ",
+                complete_assessment: "ਸਿਫ਼ਾਰਸ਼ਾਂ ਪ੍ਰਾਪਤ ਕਰਨ ਲਈ ਕਿਰਪਾ ਕਰਕੇ ਲੱਛਣ ਮੁਲਾਂਕਣ ਪੂਰਾ ਕਰੋ।",
+                medical_disclaimer: "ਮੈਡੀਕਲ ਅਸਵੀਕਰਣ:",
+                disclaimer_text: "ਇਹ ਟੂਲ ਕੇਵਲ ਜਾਣਕਾਰੀ ਦੇ ਉਦੇਸ਼ਾਂ ਲਈ ਹੈ ਅਤੇ ਪੇਸ਼ੇਵਰ ਮੈਡੀਕਲ ਸਲਾਹ ਦਾ ਬਦਲ ਨਹੀਂ ਹੈ।",
+                
+                emergency_services: "ਐਮਰਜੈਂਸੀ ਸੇਵਾਵਾਂ",
+                emergency_warning: "ਐਮਰਜੈਂਸੀ ਚੇਤਾਵਨੀ:",
+                emergency_warning_text: "ਜਾਨਲੇਵਾ ਐਮਰਜੈਂਸੀ ਲਈ ਤੁਰੰਤ ਕਾਲ ਕਰੋ!",
+                ambulance: "ਐਂਬੂਲੈਂਸ",
+                ambulance_desc: "ਮੁਫ਼ਤ 24/7 ਐਮਰਜੈਂਸੀ ਐਂਬੂਲੈਂਸ",
+                police: "ਪੁਲਿਸ",
+                police_desc: "ਪੁਲਿਸ ਐਮਰਜੈਂਸੀ ਸੇਵਾਵਾਂ",
+                fire: "ਫਾਇਰ ਡਿਪਾਰਟਮੈਂਟ",
+                fire_desc: "ਅੱਗ ਐਮਰਜੈਂਸੀ ਜਵਾਬ",
+                emergency_location: "ਟਿਕਾਣਾ ਸਾਂਝਾ ਕਰੋ",
+                location_help: "ਐਮਰਜੈਂਸੀ ਸੇਵਾਵਾਂ ਨੂੰ ਤੁਹਾਨੂੰ ਜਲਦੀ ਲੱਭਣ ਵਿੱਚ ਮਦਦ ਕਰੋ:",
+                get_location: "ਮੇਰਾ ਟਿਕਾਣਾ ਪ੍ਰਾਪਤ ਕਰੋ"
+            },
+            te: {
+                app_title: "టెలిమెడిసిన్",
+                patient_portal: "పేషెంట్ పోర్టల్",
+                doctor_portal: "డాక్టర్ పోర్టల్",
+                pharmacy_portal: "ఫార్మసీ పోర్టల్",
+                symptom_checker: "లక్షణాల తనిఖీ",
+                govt_schemes: "ప్రభుత్వ పథకాలు",
+                emergency: "అత్యవసర",
+                
+                patient_registration: "రోగి నమోదు",
+                full_name: "పూర్తి పేరు *",
+                phone: "ఫోన్ నంబర్ *",
+                age: "వయస్సు *",
+                location: "స్థానం *",
+                symptoms: "లక్షణాలు *",
+                urgency: "అత్యవసర స్థాయి *",
+                urgency_low: "తక్కువ",
+                urgency_medium: "మధ్యమ",
+                urgency_high: "అధిక",
+                urgency_emergency: "అత్యవసర",
+                submit_request: "అభ్యర్థన పంపు",
+                
+                doctor_dashboard: "డాక్టర్ డ్యాష్‌బోర్డ్",
+                patient_requests: "రోగుల అభ్యర్థనలు",
+                respond_to_patient: "రోగికి స్పందించు",
+                patient_info: "రోగి సమాచారం:",
+                medical_advice: "వైద్య సలహా:",
+                send_response: "స్పందన పంపు",
+                cancel: "రద్దు చేయి",
+                
+                pharmacy_management: "ఫార్మసీ నిర్వహణ",
+                search_medicine: "మందు వెతుకు",
+                search: "వెతుకు",
+                update_stock: "స్టాక్ అప్‌డేట్ చేయి",
+                medicine_name: "మందు పేరు:",
+                stock_quantity: "స్టాక్ పరిమాణం:",
+                price: "ధర (₹):",
+                current_stock: "ప్రస్తుత స్టాక్",
+                
+                select_symptoms: "మీ లక్షణాలను ఎంచుకోండి",
+                fever: "జ్వరం",
+                headache: "తలనొప్పి",
+                cough: "దగ్గు",
+                breathing_difficulty: "శ్వాస తీసుకోవడంలో ఇబ్బంది",
+                chest_pain: "ఛాతీ నొప్పి",
+                abdominal_pain: "కడుపు నొప్పి",
+                nausea: "వాంతులు",
+                dizziness: "తల తిరుగుట",
+                severity: "తీవ్రత స్థాయి:",
+                severity_mild: "తేలిక",
+                severity_moderate: "మధ్యమ",
+                severity_severe: "తీవ్రమైన",
+                severity_extreme: "అధిక తీవ్రత",
+                assess_symptoms: "లక్షణాలను అంచనా వేయండి",
+                clear: "క్లియర్ చేయి",
+                assessment_result: "అంచనా ఫలితం",
+                complete_assessment: "సిఫార్సులను పొందడానికి దయచేసి లక్షణ అంచనాను పూర్తి చేయండి.",
+                medical_disclaimer: "వైద్య నిరాకరణ:",
+                disclaimer_text: "ఈ సాధనం కేవలం సమాచార ప్రయోజనాలకు మాత్రమే మరియు వృత్తిపరమైన వైద్య సలహాకు ప్రత్యామనం కాదు.",
+                
+                emergency_services: "అత్యవసర సేవలు",
+                emergency_warning: "అత్యవసర హెచ్చరిక:",
+                emergency_warning_text: "ప్రాణాపాయకరమైన అత్యవసర పరిస్థితుల కోసం వెంటనే కాల్ చేయండి!",
+                ambulance: "అంబులెన్స్",
+                ambulance_desc: "ఉచిత 24/7 అత్యవసర అంబులెన్స్",
+                police: "పోలీసు",
+                police_desc: "పోలీసు అత్యవసర సేవలు",
+                fire: "అగ్నిమాపక విభాగం",
+                fire_desc: "అగ్ని అత్యవసర ప్రతిస్పందన",
+                emergency_location: "స్థానాన్ని పంచుకోండి",
+                location_help: "అత్యవసర సేవలకు మిమ్మల్ని త్వరగా కనుగొనడంలో సహాయం చేయండి:",
+                get_location: "నా స్థానాన్ని పొందు"
+            }
+        };
+
+        // Application Data
+        let appData = {
+            patients: JSON.parse(localStorage.getItem('telemedicine_patients') || '[]'),
+            medicines: JSON.parse(localStorage.getItem('telemedicine_medicines') || '[]'),
+            currentLanguage: 'en'
+        };
+
+        // Initialize default medicines
+        if (appData.medicines.length === 0) {
+            appData.medicines = [
+                { name: 'Paracetamol', stock: 50, price: 2.50 },
+                { name: 'Aspirin', stock: 30, price: 3.00 },
+                { name: 'Cough Syrup', stock: 15, price: 45.00 },
+                { name: 'Antibiotics', stock: 20, price: 120.00 }
+            ];
+            saveData();
+        }
+
+        // Translation function
+        function t(key) {
+            return translations[appData.currentLanguage][key] || translations.en[key] || key;
+        }
+
+        // Change language
+        function changeLanguage(lang) {
+            appData.currentLanguage = lang;
+            updateAllTexts();
+            localStorage.setItem('telemedicine_language', lang);
+        }
+
+        // Update all translated texts
+        function updateAllTexts() {
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (element.tagName === 'OPTION') {
+                    element.textContent = t(key);
+                } else if (element.tagName === 'INPUT' && element.type === 'text') {
+                    element.placeholder = t(key);
+                } else {
+                    element.textContent = t(key);
+                }
+            });
+        }
+
+        // Navigation
+        function showSection(sectionName) {
+            // Update nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionName).classList.add('active');
+
+            // Load section data
+            if (sectionName === 'doctor') loadPatientRequests();
+            if (sectionName === 'pharmacy') loadStockList();
+        }
+
+        // Patient form submission
+        document.getElementById('patientForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const patientData = {
+                id: Date.now(),
+                name: document.getElementById('patientName').value,
+                phone: document.getElementById('patientPhone').value,
+                age: document.getElementById('patientAge').value,
+                location: document.getElementById('patientLocation').value,
+                symptoms: document.getElementById('patientSymptoms').value,
+                urgency: document.getElementById('urgencyLevel').value,
+                timestamp: new Date().toLocaleString(),
+                status: 'pending'
+            };
+
+            appData.patients.push(patientData);
+            saveData();
+            this.reset();
+            showAlert('success', t('request_submitted') || 'Request submitted successfully!');
+        });
+
+        // Doctor response form
+        document.getElementById('responseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const patientId = document.getElementById('responsePatientId').value;
+            const response = document.getElementById('doctorResponse').value;
+            
+            const patient = appData.patients.find(p => p.id == patientId);
+            if (patient) {
+                patient.status = 'responded';
+                patient.doctorResponse = response;
+                patient.responseTime = new Date().toLocaleString();
+            }
+            
+            saveData();
+            loadPatientRequests();
+            cancelResponse();
+            showAlert('success', t('response_sent') || 'Response sent successfully!');
+        });
+
+        // Stock form submission
+        document.getElementById('stockForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('medicineName').value;
+            const stock = parseInt(document.getElementById('medicineStock').value);
+            const price = parseFloat(document.getElementById('medicinePrice').value);
+            
+            const existing = appData.medicines.find(m => m.name.toLowerCase() === name.toLowerCase());
+            if (existing) {
+                existing.stock = stock;
+                existing.price = price;
+            } else {
+                appData.medicines.push({ name, stock, price });
+            }
+            
+            saveData();
+            loadStockList();
+            this.reset();
+            showAlert('success', t('stock_updated') || 'Stock updated successfully!');
+        });
+
+        // Load patient requests
+        function loadPatientRequests() {
+            const container = document.getElementById('patientRequests');
+            
+            if (appData.patients.length === 0) {
+                container.innerHTML = `<p>${t('no_requests') || 'No patient requests yet.'}</p>`;
+                return;
+            }
+
+            const html = appData.patients
+                .sort((a, b) => {
+                    const urgencyOrder = { emergency: 4, high: 3, medium: 2, low: 1 };
+                    return urgencyOrder[b.urgency] - urgencyOrder[a.urgency];
+                })
+                .map(patient => `
+                    <div class="card" style="border-left: 4px solid ${patient.urgency === 'emergency' ? '#dc2626' : '#2563eb'};">
+                        <h4>${patient.name} (${patient.age}) - ${patient.location}</h4>
+                        <p><strong>${t('phone')}:</strong> ${patient.phone}</p>
+                        <p><strong>${t('urgency')}:</strong> ${patient.urgency.toUpperCase()}</p>
+                        <p><strong>${t('symptoms')}:</strong> ${patient.symptoms}</p>
+                        <p><strong>Submitted:</strong> ${patient.timestamp}</p>
+                        <div style="margin-top: 1rem;">
+                            ${patient.status === 'pending' ? 
+                                `<button onclick="respondToPatient(${patient.id})" class="btn btn-success">${t('respond_to_patient')}</button>` : 
+                                `<div style="background: #d1fae5; padding: 1rem; border-radius: 6px; margin-top: 1rem;">
+                                    <strong>Response:</strong> ${patient.doctorResponse}
+                                </div>`
+                            }
+                        </div>
+                    </div>
+                `).join('');
+                
+            container.innerHTML = html;
+        }
+
+        // Respond to patient
+        function respondToPatient(patientId) {
+            const patient = appData.patients.find(p => p.id === patientId);
+            if (!patient) return;
+
+            document.getElementById('responsePatientId').value = patientId;
+            document.getElementById('responsePatientInfo').innerHTML = `
+                <div class="card">
+                    <strong>${patient.name}</strong> (${patient.age} years)<br>
+                    <strong>${t('phone')}:</strong> ${patient.phone}<br>
+                    <strong>${t('location')}:</strong> ${patient.location}<br>
+                    <strong>${t('symptoms')}:</strong> ${patient.symptoms}
+                </div>
+            `;
+            document.getElementById('responseCard').style.display = 'block';
+        }
+
+        function cancelResponse() {
+            document.getElementById('responseCard').style.display = 'none';
+            document.getElementById('doctorResponse').value = '';
+        }
+
+        // Search medicine
+        function searchMedicine() {
+            const query = document.getElementById('medicineSearch').value.toLowerCase();
+            const results = appData.medicines.filter(med => 
+                med.name.toLowerCase().includes(query)
+            );
+
+            const container = document.getElementById('medicineResults');
+            
+            if (results.length === 0) {
+                container.innerHTML = `<p>${t('no_medicines_found') || 'No medicines found.'}</p>`;
+                return;
+            }
+
+            const html = results.map(med => `
+                <div class="card">
+                    <h4>${med.name}</h4>
+                    <p><strong>${t('stock_quantity')}:</strong> ${med.stock} units</p>
+                    <p><strong>${t('price')}:</strong> ₹${med.price}</p>
+                    <span style="padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; 
+                          background: ${med.stock > 0 ? '#d1fae5' : '#fee2e2'}; 
+                          color: ${med.stock > 0 ? '#065f46' : '#991b1b'};">
+                        ${med.stock > 0 ? (t('available') || 'Available') : (t('out_of_stock') || 'Out of Stock')}
+                    </span>
+                </div>
+            `).join('');
+
+            container.innerHTML = html;
+        }
+
+        // Load stock list
+        function loadStockList() {
+            const container = document.getElementById('stockList');
+            
+            if (appData.medicines.length === 0) {
+                container.innerHTML = `<p>${t('no_medicines') || 'No medicines in stock.'}</p>`;
+                return;
+            }
+
+            const html = appData.medicines.map(med => `
+                <div class="card">
+                    <h4>${med.name}</h4>
+                    <p><strong>${t('stock_quantity')}:</strong> ${med.stock} units</p>
+                    <p><strong>${t('price')}:</strong> ₹${med.price}</p>
+                    <span style="padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; 
+                          background: ${med.stock > 0 ? '#d1fae5' : '#fee2e2'}; 
+                          color: ${med.stock > 0 ? '#065f46' : '#991b1b'};">
+                        ${med.stock > 0 ? (t('available') || 'Available') : (t('out_of_stock') || 'Out of Stock')}
+                    </span>
+                </div>
+            `).join('');
+
+            container.innerHTML = html;
+        }
+
+        // Symptom assessment
+        function assessSymptoms() {
+            const checkedSymptoms = Array.from(document.querySelectorAll('#symptoms input[type="checkbox"]:checked'));
+            const severity = parseInt(document.getElementById('symptomSeverity').value);
+            
+            if (checkedSymptoms.length === 0) {
+                showAlert('error', t('select_symptoms') || 'Please select at least one symptom.');
+                return;
+            }
+            
+            let urgencyScore = 0;
+            let emergencySymptoms = [];
+            
+            checkedSymptoms.forEach(symptom => {
+                const symptomUrgency = parseInt(symptom.dataset.urgency);
+                urgencyScore += symptomUrgency;
+                if (symptomUrgency === 4) {
+                    emergencySymptoms.push(symptom.value);
+                }
+            });
+            
+            urgencyScore += severity;
+            
+            let urgencyLevel, urgencyColor, actionRecommendation;
+            
+            if (emergencySymptoms.length > 0 || urgencyScore >= 10) {
+                urgencyLevel = t('emergency') || 'EMERGENCY';
+                urgencyColor = '#dc2626';
+                actionRecommendation = t('call_108') || 'Call Emergency Services (108) IMMEDIATELY!';
+            } else if (urgencyScore >= 6) {
+                urgencyLevel = t('urgency_high') || 'HIGH URGENCY';
+                urgencyColor = '#f59e0b';
+                actionRecommendation = t('seek_medical_care') || 'Seek medical attention within 4 hours.';
+            } else if (urgencyScore >= 4) {
+                urgencyLevel = t('urgency_medium') || 'MODERATE';
+                urgencyColor = '#2563eb';
+                actionRecommendation = t('consult_doctor') || 'Schedule medical consultation within 24 hours.';
+            } else {
+                urgencyLevel = t('urgency_low') || 'LOW';
+                urgencyColor = '#059669';
+                actionRecommendation = t('monitor_symptoms') || 'Monitor symptoms. Consult doctor if they persist.';
+            }
+            
+            const resultHTML = `
+                <div style="border-left: 4px solid ${urgencyColor}; background: ${urgencyColor}20; padding: 1rem; border-radius: 6px; margin-bottom: 1rem;">
+                    <h3 style="color: ${urgencyColor}; margin: 0 0 0.5rem 0;">${urgencyLevel}</h3>
+                    <p style="margin: 0; font-weight: 500;">${actionRecommendation}</p>
+                </div>
+                
+                <div style="background: #fee2e2; padding: 1rem; border-radius: 6px; margin-top: 1rem;">
+                    <h4 style="color: #dc2626;">${t('emergency_contacts') || 'Emergency Contacts'}:</h4>
+                    <p><strong>${t('ambulance')}:</strong> <a href="tel:108">108</a></p>
+                </div>
+                
+                ${urgencyLevel !== (t('emergency') || 'EMERGENCY') ? `
+                    <button onclick="transferToPatientForm()" class="btn btn-success" style="margin-top: 1rem;">
+                        ${t('submit_to_doctor') || 'Submit to Doctor'}
+                    </button>
+                ` : ''}
+            `;
+            
+            document.getElementById('symptomResult').innerHTML = resultHTML;
+        }
+
+        function clearSymptoms() {
+            document.querySelectorAll('#symptoms input[type="checkbox"]').forEach(cb => cb.checked = false);
+            document.getElementById('symptomSeverity').selectedIndex = 0;
+            document.getElementById('symptomResult').innerHTML = `<p>${t('complete_assessment')}</p>`;
+        }
+
+        function transferToPatientForm() {
+            showSection('patient');
+            const checkedSymptoms = Array.from(document.querySelectorAll('#symptoms input[type="checkbox"]:checked'));
+            const symptomList = checkedSymptoms.map(s => s.nextElementSibling.textContent).join(', ');
+            document.getElementById('patientSymptoms').value = `${t('symptoms')}: ${symptomList}\n\n${t('from_symptom_checker') || 'Generated from symptom checker assessment.'}`;
+            showAlert('success', t('symptoms_transferred') || 'Symptoms transferred to patient form.');
+        }
+
+        // Government schemes
+        function showSchemeDetails(scheme) {
+            let content = '';
+            
+            switch(scheme) {
+                case 'ayushman':
+                    content = `
+                        <h3>${t('ayushman_bharat')}</h3>
+                        <p><strong>${t('eligibility')}:</strong> ${t('ayushman_eligibility')}</p>
+                        <p><strong>${t('benefits')}:</strong> ${t('ayushman_benefits')}</p>
+                        <p><strong>${t('how_to_apply') || 'How to Apply'}:</strong></p>
+                        <ul>
+                            <li>${t('visit_csc') || 'Visit nearest Common Service Center (CSC)'}</li>
+                            <li>${t('check_online') || 'Check eligibility online at pmjay.gov.in'}</li>
+                            <li>${t('provide_documents') || 'Provide required documents'}</li>
+                        </ul>
+                    `;
+                    break;
+                case 'jan_aushadhi':
+                    content = `
+                        <h3>${t('jan_aushadhi')}</h3>
+                        <p><strong>${t('savings')}:</strong> ${t('jan_aushadhi_savings')}</p>
+                        <p><strong>${t('availability')}:</strong> ${t('jan_aushadhi_availability')}</p>
+                        <p><strong>${t('locations') || 'Locations'}:</strong></p>
+                        <ul>
+                            <li>${t('civil_hospital') || 'Civil Hospital'}</li>
+                            <li>${t('main_market') || 'Main Market'}</li>
+                            <li>${t('railway_station') || 'Railway Station Area'}</li>
+                        </ul>
+                    `;
+                    break;
+                case 'state':
+                    content = `
+                        <h3>${t('state_health_scheme')}</h3>
+                        <p><strong>${t('coverage')}:</strong> ${t('state_coverage')}</p>
+                        <p><strong>${t('access')}:</strong> ${t('state_access')}</p>
+                        <p><strong>${t('application_process') || 'Application Process'}:</strong></p>
+                        <ol>
+                            <li>${t('visit_phc') || 'Visit nearest Primary Health Center'}</li>
+                            <li>${t('fill_form') || 'Fill application form'}</li>
+                            <li>${t('submit_documents') || 'Submit required documents'}</li>
+                            <li>${t('get_card') || 'Receive health card'}</li>
+                        </ol>
+                    `;
+                    break;
+            }
+            
+            showModal(t('scheme_details') || 'Scheme Details', content);
+        }
+
+        // Location sharing
+        function shareLocation() {
+            const container = document.getElementById('locationInfo');
+            container.innerHTML = `<p>${t('getting_location') || 'Getting your location...'}</p>`;
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    container.innerHTML = `
+                        <div class="card">
+                            <p><strong>${t('your_location') || 'Your Location'}:</strong></p>
+                            <p>${t('latitude') || 'Latitude'}: ${lat.toFixed(6)}</p>
+                            <p>${t('longitude') || 'Longitude'}: ${lng.toFixed(6)}</p>
+                            <a href="https://maps.google.com/?q=${lat},${lng}" target="_blank" class="btn">
+                                ${t('view_on_map') || 'View on Map'}
+                            </a>
+                            <button onclick="sendLocationSMS(${lat}, ${lng})" class="btn btn-danger">
+                                ${t('send_via_sms') || 'Send via SMS'}
+                            </button>
+                        </div>
+                    `;
+                }, function(error) {
+                    container.innerHTML = `<p>${t('location_error') || 'Unable to get location. Please enable location services.'}</p>`;
+                });
+            } else {
+                container.innerHTML = `<p>${t('geolocation_not_supported') || 'Geolocation is not supported by this browser.'}</p>`;
+            }
+        }
+
+        function sendLocationSMS(lat, lng) {
+            const message = `${t('emergency_location') || 'Emergency! My location'}: https://maps.google.com/?q=${lat},${lng}`;
+            window.location.href = `sms:108?body=${encodeURIComponent(message)}`;
+        }
+
+        // Utility functions
+        function saveData() {
+            localStorage.setItem('telemedicine_patients', JSON.stringify(appData.patients));
+            localStorage.setItem('telemedicine_medicines', JSON.stringify(appData.medicines));
+        }
+
+        function showAlert(type, message) {
+            const alertId = type === 'success' ? 'successAlert' : 'errorAlert';
+            const alertDiv = document.getElementById(alertId);
+            alertDiv.textContent = message;
+            alertDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                alertDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        function showModal(title, content) {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <button class="modal-close" onclick="this.parentElement.parentElement.remove()">×</button>
+                    <h2 style="color: #2563eb; margin-bottom: 1rem;">${title}</h2>
+                    ${content}
+                </div>
+            `;
+            document.body.appendChild(modal);
+            
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) modal.remove();
+            });
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedLang = localStorage.getItem('telemedicine_language');
+            if (savedLang) {
+                appData.currentLanguage = savedLang;
+                document.getElementById('languageSelect').value = savedLang;
+            }
+            updateAllTexts();
+            loadPatientRequests();
+            loadStockList();
+        });
+    </script>
+</body>
+</html>

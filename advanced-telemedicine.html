@@ -1,0 +1,3772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Telemedicine Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8fafc;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 1rem;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .language-selector select {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            border-radius: 6px;
+            padding: 0.5rem;
+        }
+
+        /* Login/Register Modal */
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+
+        .auth-modal {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            margin: auto;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .auth-modal-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+            margin: -2rem -2rem 2rem -2rem;
+            padding: 2rem 2rem 1rem 2rem;
+            border-bottom: 2px solid #f3f4f6;
+        }
+
+        .auth-modal-body {
+            padding-bottom: 1rem;
+        }
+
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .auth-tab {
+            flex: 1;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            font-weight: 500;
+            color: #6b7280;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .auth-tab.active {
+            color: #1e40af;
+            border-bottom-color: #1e40af;
+        }
+
+        .role-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .role-option {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .role-option.selected {
+            border-color: #1e40af;
+            background: #eff6ff;
+            color: #1e40af;
+        }
+
+        /* Form sections and enhanced styling */
+        .form-section {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .form-section-title {
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+            font-size: 1rem;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        @media (max-width: 640px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #1e40af;
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        }
+        
+        .error-message {
+            color: #dc2626;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        .form-group.error input, .form-group.error select, .form-group.error textarea {
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
+        
+        .password-strength {
+            margin-top: 0.5rem;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .password-strength-bar {
+            height: 100%;
+            width: 0%;
+            transition: all 0.3s ease;
+            border-radius: 2px;
+        }
+        
+        .password-strength-text {
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            font-weight: 500;
+        }
+        
+        .password-strength.weak .password-strength-bar {
+            background: #dc2626;
+            width: 33%;
+        }
+        
+        .password-strength.medium .password-strength-bar {
+            background: #f59e0b;
+            width: 66%;
+        }
+        
+        .password-strength.strong .password-strength-bar {
+            background: #10b981;
+            width: 100%;
+        }
+        
+        /* Doctor Dashboard Styles */
+        .patient-filters {
+            margin-bottom: 1rem;
+        }
+        
+        .filter-tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .filter-tab {
+            padding: 0.5rem 1rem;
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s;
+        }
+        
+        .filter-tab.active {
+            background: #1e40af;
+            color: white;
+            border-color: #1e40af;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .stat-item.urgent {
+            background: #fef2f2;
+            border-color: #fecaca;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1e40af;
+        }
+        
+        .stat-item.urgent .stat-number {
+            color: #dc2626;
+        }
+        
+        .stat-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 0.25rem;
+        }
+        
+        .quick-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .patient-queue-item {
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .patient-queue-item:hover {
+            border-color: #1e40af;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .patient-queue-item.urgent {
+            border-left: 4px solid #dc2626;
+            background: #fef2f2;
+        }
+        
+        .patient-queue-item.normal {
+            border-left: 4px solid #f59e0b;
+            background: #fffbeb;
+        }
+        
+        .patient-queue-item.routine {
+            border-left: 4px solid #10b981;
+            background: #f0fdf4;
+        }
+        
+        .patient-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .patient-name {
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .patient-priority {
+            font-size: 0.75rem;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+        
+        .patient-priority.urgent {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .patient-priority.normal {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .patient-priority.routine {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        
+        .patient-symptoms {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        /* Patient Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 2rem 1rem;
+        }
+        
+        .patient-modal {
+            background: white;
+            border-radius: 12px;
+            width: 95%;
+            max-width: 900px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6b7280;
+            padding: 0.5rem;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+        
+        .modal-footer {
+            padding: 1rem 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            flex-shrink: 0;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 1.5rem;
+        }
+        
+        .tab-btn {
+            padding: 0.75rem 1rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            font-weight: 500;
+            color: #6b7280;
+            transition: all 0.2s;
+        }
+        
+        .tab-btn.active {
+            color: #1e40af;
+            border-bottom-color: #1e40af;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .patient-info-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        .patient-basic-info {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .patient-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #f3f4f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        .patient-details h4 {
+            margin: 0 0 0.5rem 0;
+            color: #111827;
+        }
+        
+        .patient-meta {
+            color: #6b7280;
+            margin-bottom: 0.75rem;
+        }
+        
+        .priority-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            background: #fef3c7;
+            color: #92400e;
+        }
+        
+        .patient-contact h5 {
+            margin: 0 0 1rem 0;
+            color: #111827;
+        }
+        
+        .patient-contact p {
+            margin: 0.5rem 0;
+            color: #6b7280;
+        }
+        
+        .vital-signs {
+            margin-bottom: 2rem;
+        }
+        
+        .vital-signs h5 {
+            margin: 0 0 1rem 0;
+            color: #111827;
+        }
+        
+        .vitals-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .vital-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .vital-item label {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .vital-item input {
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 0.875rem;
+        }
+        
+        .priority-management h5 {
+            margin: 0 0 1rem 0;
+            color: #111827;
+        }
+        
+        .priority-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        
+        .priority-option {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+        }
+        
+        .priority-label {
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .priority-label.urgent {
+            color: #dc2626;
+        }
+        
+        .priority-label.normal {
+            color: #f59e0b;
+        }
+        
+        .priority-label.routine {
+            color: #10b981;
+        }
+        
+        .history-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .history-section h5 {
+            margin: 0 0 0.75rem 0;
+            color: #111827;
+        }
+        
+        .history-section textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            resize: vertical;
+            font-family: inherit;
+        }
+        
+        .reports-section {
+            margin-bottom: 1.5rem;
+        }
+        
+        .reports-section h5 {
+            margin: 0 0 0.75rem 0;
+            color: #111827;
+        }
+        
+        .lab-tests {
+            margin-top: 2rem;
+        }
+        
+        .test-checkboxes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .test-checkboxes label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+        
+        .prescription-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .prescription-table {
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+        
+        .prescription-table table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+        
+        .prescription-table th,
+        .prescription-table td {
+            padding: 0.75rem 0.5rem;
+            border: 1px solid #e5e7eb;
+            text-align: left;
+        }
+        
+        .prescription-table th {
+            background: #f9fafb;
+            font-weight: 600;
+        }
+        
+        .prescription-table input,
+        .prescription-table select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+        
+        .prescription-notes h5 {
+            margin: 0 0 0.75rem 0;
+            color: #111827;
+        }
+        
+        .visit-history-item {
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+        }
+        
+        .visit-date {
+            font-weight: 600;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+        
+        .visit-diagnosis {
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+        
+        @media (max-width: 768px) {
+            .patient-info-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .vitals-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .test-checkboxes {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Navigation */
+        .navigation {
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            padding: 0.75rem 1rem;
+            background: #f8fafc;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-btn:hover {
+            background: #e2e8f0;
+            transform: translateY(-1px);
+        }
+
+        .nav-btn.active {
+            background: #1e40af;
+            color: white;
+            border-color: #1e40af;
+        }
+
+        .nav-btn.emergency {
+            background: #dc2626;
+            color: white;
+            border-color: #dc2626;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .section {
+            display: none;
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid #e5e7eb;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            color: #1e293b;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid #1e40af;
+            padding-bottom: 0.5rem;
+        }
+
+        /* Forms */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #1e40af;
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.1);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #1e40af;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s;
+            margin: 0.25rem;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(30, 64, 175, 0.3);
+        }
+
+        .btn-success {
+            background: #059669;
+        }
+
+        .btn-success:hover {
+            background: #047857;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+
+        /* Cards */
+        .card {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* AI Chatbot */
+        .chatbot-container {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chatbot-header {
+            background: linear-gradient(135deg, #1e40af, #3b82f6);
+            color: white;
+            padding: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            background: #f8fafc;
+        }
+
+        .message {
+            margin-bottom: 1rem;
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .message.bot {
+            justify-content: flex-start;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message-content {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+
+        .message.bot .message-content {
+            background: #e0e7ff;
+            color: #1e40af;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user .message-content {
+            background: #1e40af;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .chatbot-input {
+            display: flex;
+            padding: 1rem;
+            border-top: 1px solid #e5e7eb;
+            background: white;
+        }
+
+        .chatbot-input input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            margin-right: 0.5rem;
+        }
+
+        /* File Upload */
+        .upload-area {
+            border: 2px dashed #d1d5db;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            background: #f8fafc;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .upload-area:hover {
+            border-color: #1e40af;
+            background: #eff6ff;
+        }
+
+        .upload-area.dragover {
+            border-color: #1e40af;
+            background: #eff6ff;
+            transform: scale(1.02);
+        }
+
+        .uploaded-files {
+            margin-top: 1rem;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Map */
+        .map-container {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1rem;
+            height: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .map-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #e5e7eb 25%, transparent 25%, transparent 75%, #e5e7eb 75%), 
+                        linear-gradient(45deg, #e5e7eb 25%, transparent 25%, transparent 75%, #e5e7eb 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            font-size: 1.1rem;
+            border-radius: 8px;
+        }
+
+        .facility-markers {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .marker {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: #dc2626;
+            border-radius: 50%;
+            border: 2px solid white;
+            cursor: pointer;
+            pointer-events: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .marker:hover {
+            transform: scale(1.2);
+            z-index: 10;
+        }
+
+        .marker-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .marker:hover .marker-tooltip {
+            opacity: 1;
+        }
+
+        /* Medicine Reminders */
+        .reminder-list {
+            space-y: 1rem;
+        }
+
+        .reminder-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            margin-bottom: 0.75rem;
+        }
+
+        .reminder-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .medicine-icon {
+            width: 40px;
+            height: 40px;
+            background: #eff6ff;
+            border: 2px solid #1e40af;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e40af;
+            font-size: 1.2rem;
+        }
+
+        .reminder-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: none;
+            border-left: 4px solid;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border-left-color: #059669;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border-left-color: #dc2626;
+        }
+
+        .alert-warning {
+            background: #fef3c7;
+            color: #92400e;
+            border-left-color: #f59e0b;
+        }
+
+        .alert-info {
+            background: #dbeafe;
+            color: #1e40af;
+            border-left-color: #3b82f6;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .section {
+                padding: 1rem;
+            }
+
+            .chatbot-container {
+                height: 400px;
+            }
+        }
+
+        /* Specialist Cards */
+        .specialist-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .specialist-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .specialist-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: #1e40af;
+        }
+
+        .specialist-icon {
+            width: 60px;
+            height: 60px;
+            background: #eff6ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: #1e40af;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e5e7eb;
+            border-top: 2px solid #1e40af;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Form Validation Styles */
+        .form-group {
+            position: relative;
+        }
+
+        .form-group.error input,
+        .form-group.error textarea,
+        .form-group.error select {
+            border-color: #dc2626;
+            box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+        }
+
+        .form-group.success input,
+        .form-group.success textarea,
+        .form-group.success select {
+            border-color: #059669;
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+        }
+
+        .error-message {
+            color: #dc2626;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+            display: none;
+        }
+
+        .form-group.error .error-message {
+            display: block;
+        }
+
+        /* Password Strength Indicator */
+        .password-strength {
+            margin-top: 0.5rem;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            overflow: hidden;
+            display: none;
+        }
+
+        .password-strength.show {
+            display: block;
+        }
+
+        .password-strength-bar {
+            height: 100%;
+            transition: all 0.3s;
+            border-radius: 2px;
+        }
+
+        .password-strength.weak .password-strength-bar {
+            width: 25%;
+            background: #dc2626;
+        }
+
+        .password-strength.fair .password-strength-bar {
+            width: 50%;
+            background: #f59e0b;
+        }
+
+        .password-strength.good .password-strength-bar {
+            width: 75%;
+            background: #3b82f6;
+        }
+
+        .password-strength.strong .password-strength-bar {
+            width: 100%;
+            background: #059669;
+        }
+
+        .password-strength-text {
+            font-size: 0.8rem;
+            margin-top: 0.25rem;
+            font-weight: 500;
+        }
+
+        /* Enhanced form sections */
+        .form-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .form-section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Authentication Overlay -->
+    <div id="authOverlay" class="auth-overlay">
+        <div class="auth-modal">
+            <div class="auth-modal-header">
+                <div class="auth-tabs">
+                    <div class="auth-tab active" onclick="switchAuthTab('login')" data-translate="login">Login</div>
+                    <div class="auth-tab" onclick="switchAuthTab('register')" data-translate="register">Register</div>
+                </div>
+            </div>
+            
+            <div class="auth-modal-body">
+                <!-- Login Form -->
+                <div id="loginForm" class="auth-content">
+                    <div class="role-selector">
+                        <div class="role-option selected" onclick="selectRole('patient')" data-role="patient">
+                            <div>👤</div>
+                            <div data-translate="patient">Patient</div>
+                        </div>
+                        <div class="role-option" onclick="selectRole('doctor')" data-role="doctor">
+                            <div>👨‍⚕️</div>
+                            <div data-translate="doctor">Doctor</div>
+                        </div>
+                    </div>
+
+                    <form id="loginFormSubmit">
+                        <div class="form-group">
+                            <label data-translate="email_phone">Email or Phone:</label>
+                            <input type="text" id="loginEmailPhone" required>
+                            <div class="error-message"></div>
+                        </div>
+                        <div class="form-group">
+                            <label data-translate="password">Password:</label>
+                            <input type="password" id="loginPassword" required>
+                            <div class="error-message"></div>
+                        </div>
+                        <button type="submit" class="btn" style="width: 100%;" data-translate="login">Login</button>
+                    </form>
+                </div>
+
+                <!-- Register Form -->
+                <div id="registerForm" class="auth-content" style="display: none;">
+                    <div class="role-selector">
+                        <div class="role-option selected" onclick="selectRole('patient')" data-role="patient">
+                            <div>👤</div>
+                            <div data-translate="patient">Patient</div>
+                        </div>
+                        <div class="role-option" onclick="selectRole('doctor')" data-role="doctor">
+                            <div>👨‍⚕️</div>
+                            <div data-translate="doctor">Doctor</div>
+                        </div>
+                    </div>
+
+                    <form id="registerFormSubmit">
+                        <!-- Basic Information -->
+                        <div class="form-section">
+                            <div class="form-section-title">📝 Basic Information</div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label data-translate="full_name">Full Name *</label>
+                                    <input type="text" id="registerName" required>
+                                    <div class="error-message"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label data-translate="date_of_birth">Date of Birth *</label>
+                                    <input type="date" id="registerDOB" required>
+                                    <div class="error-message"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label data-translate="gender">Gender *</label>
+                                    <select id="registerGender" required>
+                                        <option value="">Select Gender</option>
+                                        <option value="male" data-translate="male">Male</option>
+                                        <option value="female" data-translate="female">Female</option>
+                                        <option value="other" data-translate="other">Other</option>
+                                    </select>
+                                    <div class="error-message"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label data-translate="blood_group">Blood Group</label>
+                                    <select id="registerBloodGroup">
+                                        <option value="">Select Blood Group</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact Information -->
+                        <div class="form-section">
+                            <div class="form-section-title">📞 Contact Information</div>
+                            <div class="form-group">
+                                <label data-translate="email">Email Address *</label>
+                                <input type="email" id="registerEmail" required>
+                                <div class="error-message"></div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label data-translate="phone">Phone Number *</label>
+                                    <input type="tel" id="registerPhone" required>
+                                    <div class="error-message"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label data-translate="emergency_contact">Emergency Contact</label>
+                                    <input type="tel" id="registerEmergencyContact">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label data-translate="address">Address *</label>
+                                <textarea id="registerAddress" rows="2" required></textarea>
+                                <div class="error-message"></div>
+                            </div>
+                        </div>
+
+                        <!-- Medical Information (Patient) -->
+                        <div class="form-section" id="patientMedicalFields">
+                            <div class="form-section-title">🩺 Medical Information</div>
+                            <div class="form-group">
+                                <label data-translate="allergies">Known Allergies</label>
+                                <textarea id="registerAllergies" rows="2" placeholder="List any known allergies..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label data-translate="medical_conditions">Chronic Medical Conditions</label>
+                                <textarea id="registerMedicalConditions" rows="2" placeholder="Diabetes, Hypertension, etc..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label data-translate="current_medications">Current Medications</label>
+                                <textarea id="registerCurrentMedications" rows="2" placeholder="List current medications..."></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Professional Information (Doctor) -->
+                        <div class="form-section" id="doctorProfessionalFields" style="display: none;">
+                            <div class="form-section-title">👨‍⚕️ Professional Information</div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label data-translate="specialization">Primary Specialization *</label>
+                                    <select id="registerSpecialization">
+                                        <option value="">Select Specialization</option>
+                                        <option value="general" data-translate="general_physician">General Physician</option>
+                                        <option value="cardiologist" data-translate="cardiologist">Cardiologist</option>
+                                        <option value="neurologist" data-translate="neurologist">Neurologist</option>
+                                        <option value="dermatologist" data-translate="dermatologist">Dermatologist</option>
+                                        <option value="pediatrician" data-translate="pediatrician">Pediatrician</option>
+                                        <option value="psychiatrist" data-translate="psychiatrist">Psychiatrist</option>
+                                        <option value="orthopedic" data-translate="orthopedic">Orthopedic</option>
+                                        <option value="gynecologist" data-translate="gynecologist">Gynecologist</option>
+                                        <option value="ent" data-translate="ent_specialist">ENT Specialist</option>
+                                        <option value="ophthalmologist" data-translate="ophthalmologist">Ophthalmologist</option>
+                                    </select>
+                                    <div class="error-message"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label data-translate="experience_years">Years of Experience *</label>
+                                    <input type="number" id="registerExperience" min="0" max="50" required>
+                                    <div class="error-message"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label data-translate="medical_license">Medical License Number *</label>
+                                    <input type="text" id="registerLicenseNumber" required>
+                                    <div class="error-message"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label data-translate="registration_year">Registration Year *</label>
+                                    <input type="number" id="registerYear" min="1970" max="2024" required>
+                                    <div class="error-message"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label data-translate="medical_college">Medical College/University *</label>
+                                <input type="text" id="registerMedicalCollege" required>
+                                <div class="error-message"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label data-translate="hospital_affiliation">Current Hospital/Clinic Affiliation</label>
+                                <input type="text" id="registerHospitalAffiliation">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label data-translate="consultation_fee">Consultation Fee (₹)</label>
+                                <input type="number" id="registerConsultationFee" min="0">
+                            </div>
+                        </div>
+
+                        <!-- Account Security -->
+                        <div class="form-section">
+                            <div class="form-section-title">🔐 Account Security</div>
+                            <div class="form-group">
+                                <label data-translate="password">Password *</label>
+                                <input type="password" id="registerPassword" required oninput="checkPasswordStrength(this.value)">
+                                <div class="password-strength" id="passwordStrength">
+                                    <div class="password-strength-bar"></div>
+                                </div>
+                                <div class="password-strength-text" id="passwordStrengthText"></div>
+                                <div class="error-message"></div>
+                            </div>
+                            <div class="form-group">
+                                <label data-translate="confirm_password">Confirm Password *</label>
+                                <input type="password" id="registerConfirmPassword" required>
+                                <div class="error-message"></div>
+                            </div>
+                        </div>
+
+                        <!-- Terms and Conditions -->
+                        <div class="form-group">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                <input type="checkbox" id="registerTerms" required style="width: auto; margin: 0;">
+                                <span data-translate="agree_terms">I agree to the Terms of Service and Privacy Policy</span>
+                            </label>
+                            <div class="error-message"></div>
+                        </div>
+
+                        <button type="submit" class="btn" style="width: 100%; padding: 1rem;" data-translate="create_account">Create Account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo" data-translate="app_title">🏥 Telemedicine</div>
+            <div class="user-info">
+                <div class="language-selector">
+                    <select id="languageSelect" onchange="changeLanguage(this.value)">
+                        <option value="en">English</option>
+                        <option value="hi">हिंदी</option>
+                        <option value="pa">ਪੰਜਾਬੀ</option>
+                        <option value="te">తెలుగు</option>
+                    </select>
+                </div>
+                <div id="userProfile" style="display: none;">
+                    <span id="userName">User</span>
+                    <button onclick="logout()" class="btn btn-secondary" data-translate="logout">Logout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <div class="nav-container">
+            <div class="nav-buttons">
+                <button class="nav-btn active" onclick="showSection('dashboard')" data-translate="dashboard">
+                    📊 Dashboard
+                </button>
+                <button class="nav-btn" onclick="showSection('ai-triage')" data-translate="ai_triage">
+                    🤖 AI Triage
+                </button>
+                <button class="nav-btn" onclick="showSection('health-records')" data-translate="health_records">
+                    📋 Health Records
+                </button>
+                <button class="nav-btn" onclick="showSection('medicine-reminders')" data-translate="medicine_reminders">
+                    💊 Medicine Reminders
+                </button>
+                <button class="nav-btn" onclick="showSection('nearby-facilities')" data-translate="nearby_facilities">
+                    🏥 Nearby Facilities
+                </button>
+                <button class="nav-btn" onclick="showSection('consultation')" data-translate="consultation">
+                    👨‍⚕️ Consultation
+                </button>
+                <button class="nav-btn doctor-only" onclick="showSection('doctor-dashboard')" data-translate="doctor_dashboard" style="display: none;">
+                    👨‍⚕️ Doctor Dashboard
+                </button>
+                <button class="nav-btn emergency" onclick="showSection('emergency')" data-translate="emergency">
+                    🚨 Emergency
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Alert Messages -->
+        <div id="successAlert" class="alert alert-success"></div>
+        <div id="errorAlert" class="alert alert-error"></div>
+        <div id="warningAlert" class="alert alert-warning"></div>
+        <div id="infoAlert" class="alert alert-info"></div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="section active">
+            <h2 class="section-title" data-translate="dashboard">📊 Dashboard</h2>
+            
+            <div class="form-grid">
+                <div class="card">
+                    <h3 class="card-title">👋 <span data-translate="welcome">Welcome</span>, <span id="dashboardUserName">User</span></h3>
+                    <p data-translate="dashboard_intro">Your comprehensive healthcare platform</p>
+                    
+                    <div style="margin-top: 1.5rem;">
+                        <div class="specialist-grid">
+                            <div class="specialist-card" onclick="showSection('ai-triage')">
+                                <div class="specialist-icon">🤖</div>
+                                <h4 data-translate="ai_triage">AI Health Assistant</h4>
+                                <p data-translate="ai_triage_desc">Get instant health advice</p>
+                            </div>
+                            
+                            <div class="specialist-card" onclick="showSection('consultation')">
+                                <div class="specialist-icon">👨‍⚕️</div>
+                                <h4 data-translate="book_consultation">Book Consultation</h4>
+                                <p data-translate="consultation_desc">Connect with doctors</p>
+                            </div>
+                            
+                            <div class="specialist-card" onclick="showSection('medicine-reminders')">
+                                <div class="specialist-icon">💊</div>
+                                <h4 data-translate="medicine_reminders">Medicine Reminders</h4>
+                                <p data-translate="reminders_desc">Never miss a dose</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3 class="card-title">📈 <span data-translate="quick_stats">Quick Stats</span></h3>
+                    <div style="margin-top: 1rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                            <span data-translate="consultations">Consultations:</span>
+                            <strong id="totalConsultations">0</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                            <span data-translate="prescriptions">Prescriptions:</span>
+                            <strong id="totalPrescriptions">0</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                            <span data-translate="health_records">Health Records:</span>
+                            <strong id="totalRecords">0</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Triage Section -->
+        <div id="ai-triage" class="section">
+            <h2 class="section-title" data-translate="ai_triage">🤖 AI Health Assistant</h2>
+            
+            <div class="form-grid">
+                <div>
+                    <div class="chatbot-container">
+                        <div class="chatbot-header">
+                            <span>🤖</span>
+                            <span data-translate="ai_assistant">AI Health Assistant</span>
+                        </div>
+                        <div class="chatbot-messages" id="chatMessages">
+                            <div class="message bot">
+                                <div class="message-content" data-translate="ai_welcome">
+                                    Hello! I'm your AI health assistant. Describe your symptoms and I'll help assess your condition and recommend the right specialist.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="chatbot-input">
+                            <input type="text" id="chatInput" placeholder="Describe your symptoms..." data-translate-placeholder="describe_symptoms">
+                            <button onclick="sendMessage()" class="btn">
+                                <span data-translate="send">Send</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="card">
+                        <h3 class="card-title">🎯 <span data-translate="recommended_specialist">Recommended Specialist</span></h3>
+                        <div id="recommendedSpecialist">
+                            <p data-translate="start_conversation">Start a conversation to get specialist recommendations.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">⚠️ <span data-translate="emergency_signs">Emergency Signs</span></h3>
+                        <div style="color: #dc2626; font-weight: 500;">
+                            <p data-translate="call_emergency">Call 108 immediately if you have:</p>
+                            <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                <li data-translate="chest_pain">Severe chest pain</li>
+                                <li data-translate="breathing_difficulty">Difficulty breathing</li>
+                                <li data-translate="severe_bleeding">Severe bleeding</li>
+                                <li data-translate="loss_consciousness">Loss of consciousness</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Health Records Section -->
+        <div id="health-records" class="section">
+            <h2 class="section-title" data-translate="health_records">📋 Health Records</h2>
+            
+            <div class="form-grid">
+                <div>
+                    <div class="card">
+                        <h3 class="card-title">📄 <span data-translate="upload_documents">Upload Medical Documents</span></h3>
+                        <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                            <div style="font-size: 2rem; margin-bottom: 1rem;">📁</div>
+                            <p data-translate="drag_drop_files">Drag & drop files here or click to select</p>
+                            <small data-translate="supported_formats">Supported: PDF, JPG, PNG, DOC (Max 10MB)</small>
+                            <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="display: none;">
+                        </div>
+                        
+                        <div class="uploaded-files" id="uploadedFiles"></div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="card">
+                        <h3 class="card-title">📊 <span data-translate="my_records">My Health Records</span></h3>
+                        <div id="healthRecordsList">
+                            <p data-translate="no_records">No records uploaded yet.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">🏥 <span data-translate="recent_visits">Recent Hospital Visits</span></h3>
+                        <div id="recentVisits">
+                            <p data-translate="no_visits">No recent visits recorded.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Medicine Reminders Section -->
+        <div id="medicine-reminders" class="section">
+            <h2 class="section-title" data-translate="medicine_reminders">💊 Medicine Reminders</h2>
+            
+            <div class="form-grid">
+                <div>
+                    <div class="card">
+                        <h3 class="card-title">➕ <span data-translate="add_reminder">Add New Reminder</span></h3>
+                        <form id="reminderForm">
+                            <div class="form-group">
+                                <label data-translate="medicine_name">Medicine Name:</label>
+                                <input type="text" id="medicineName" required>
+                            </div>
+                            <div class="form-group">
+                                <label data-translate="dosage">Dosage:</label>
+                                <input type="text" id="medicineDosage" placeholder="e.g., 1 tablet" required>
+                            </div>
+                            <div class="form-group">
+                                <label data-translate="frequency">Frequency:</label>
+                                <select id="medicineFrequency" required>
+                                    <option value="">Select frequency</option>
+                                    <option value="daily" data-translate="daily">Daily</option>
+                                    <option value="twice-daily" data-translate="twice_daily">Twice Daily</option>
+                                    <option value="thrice-daily" data-translate="thrice_daily">Thrice Daily</option>
+                                    <option value="weekly" data-translate="weekly">Weekly</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label data-translate="start_date">Start Date:</label>
+                                <input type="date" id="medicineStartDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label data-translate="reminder_time">Reminder Time:</label>
+                                <input type="time" id="medicineTime" required>
+                            </div>
+                            <button type="submit" class="btn btn-success" data-translate="add_reminder">Add Reminder</button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="card">
+                        <h3 class="card-title">📋 <span data-translate="active_reminders">Active Reminders</span></h3>
+                        <div class="reminder-list" id="remindersList">
+                            <p data-translate="no_reminders">No active reminders.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Nearby Facilities Section -->
+        <div id="nearby-facilities" class="section">
+            <h2 class="section-title" data-translate="nearby_facilities">🏥 Nearby Healthcare Facilities</h2>
+            
+            <div class="form-grid">
+                <div>
+                    <div class="card">
+                        <h3 class="card-title">🗺️ <span data-translate="facilities_map">Healthcare Facilities Map</span></h3>
+                        <div class="map-container">
+                            <div class="map-placeholder">
+                                <div style="text-align: center;">
+                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🗺️</div>
+                                    <div data-translate="interactive_map">Interactive Healthcare Facilities Map</div>
+                                    <small data-translate="click_markers">Click on markers for facility details</small>
+                                </div>
+                            </div>
+                            <div class="facility-markers">
+                                <!-- Government Hospital -->
+                                <div class="marker" style="top: 30%; left: 40%;" onclick="showFacilityInfo('govt-hospital')">
+                                    🏥
+                                    <div class="marker-tooltip">Government Hospital</div>
+                                </div>
+                                <!-- PHC -->
+                                <div class="marker" style="top: 60%; left: 25%;" onclick="showFacilityInfo('phc')">
+                                    🏥
+                                    <div class="marker-tooltip">Primary Health Center</div>
+                                </div>
+                                <!-- Private Clinic -->
+                                <div class="marker" style="top: 45%; left: 70%;" onclick="showFacilityInfo('private-clinic')">
+                                    🏥
+                                    <div class="marker-tooltip">Private Clinic</div>
+                                </div>
+                                <!-- Pharmacy -->
+                                <div class="marker" style="top: 70%; left: 55%;" onclick="showFacilityInfo('pharmacy')">
+                                    💊
+                                    <div class="marker-tooltip">Pharmacy</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="card">
+                        <h3 class="card-title">📍 <span data-translate="facility_details">Facility Information</span></h3>
+                        <div id="facilityInfo">
+                            <p data-translate="click_facility">Click on a facility marker to view details.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">📞 <span data-translate="emergency_contacts">Emergency Contacts</span></h3>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span data-translate="ambulance">Ambulance:</span>
+                                <a href="tel:108" class="btn btn-danger" style="padding: 0.5rem 1rem;">📞 108</a>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span data-translate="police">Police:</span>
+                                <a href="tel:100" class="btn btn-danger" style="padding: 0.5rem 1rem;">📞 100</a>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span data-translate="fire">Fire:</span>
+                                <a href="tel:101" class="btn btn-danger" style="padding: 0.5rem 1rem;">📞 101</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Consultation Section -->
+        <div id="consultation" class="section">
+            <h2 class="section-title" data-translate="consultation">👨‍⚕️ Doctor Consultation</h2>
+            
+            <div class="form-grid">
+                <div>
+                    <div class="card">
+                        <h3 class="card-title">🎯 <span data-translate="choose_specialist">Choose Specialist</span></h3>
+                        <div class="specialist-grid">
+                            <div class="specialist-card" onclick="selectSpecialist('general')">
+                                <div class="specialist-icon">👨‍⚕️</div>
+                                <h4 data-translate="general_physician">General Physician</h4>
+                                <p data-translate="general_desc">Common health issues</p>
+                            </div>
+                            
+                            <div class="specialist-card" onclick="selectSpecialist('cardiologist')">
+                                <div class="specialist-icon">❤️</div>
+                                <h4 data-translate="cardiologist">Cardiologist</h4>
+                                <p data-translate="cardio_desc">Heart conditions</p>
+                            </div>
+                            
+                            <div class="specialist-card" onclick="selectSpecialist('neurologist')">
+                                <div class="specialist-icon">🧠</div>
+                                <h4 data-translate="neurologist">Neurologist</h4>
+                                <p data-translate="neuro_desc">Brain & nervous system</p>
+                            </div>
+                            
+                            <div class="specialist-card" onclick="selectSpecialist('pediatrician')">
+                                <div class="specialist-icon">👶</div>
+                                <h4 data-translate="pediatrician">Pediatrician</h4>
+                                <p data-translate="pediatric_desc">Children's health</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="card">
+                        <h3 class="card-title">📅 <span data-translate="book_appointment">Book Appointment</span></h3>
+                        <form id="appointmentForm">
+                            <div class="form-group">
+                                <label data-translate="selected_specialist">Selected Specialist:</label>
+                                <input type="text" id="selectedSpecialist" readonly>
+                            </div>
+                            <div class="form-group">
+                                <label data-translate="appointment_date">Appointment Date:</label>
+                                <input type="date" id="appointmentDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label data-translate="appointment_time">Preferred Time:</label>
+                                <select id="appointmentTime" required>
+                                    <option value="">Select time</option>
+                                    <option value="09:00">09:00 AM</option>
+                                    <option value="10:00">10:00 AM</option>
+                                    <option value="11:00">11:00 AM</option>
+                                    <option value="14:00">02:00 PM</option>
+                                    <option value="15:00">03:00 PM</option>
+                                    <option value="16:00">04:00 PM</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label data-translate="reason_visit">Reason for Visit:</label>
+                                <textarea id="reasonVisit" rows="3" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success" data-translate="book_appointment">Book Appointment</button>
+                        </form>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">📋 <span data-translate="my_appointments">My Appointments</span></h3>
+                        <div id="appointmentsList">
+                            <p data-translate="no_appointments">No appointments scheduled.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Doctor Dashboard Section -->
+        <div id="doctor-dashboard" class="section" style="display: none;">
+            <h2 class="section-title" data-translate="doctor_dashboard">👨‍⚕️ Doctor Dashboard</h2>
+            
+            <!-- Patient Queue and Priority Management -->
+            <div class="form-grid">
+                <div>
+                    <div class="card">
+                        <h3 class="card-title">📋 <span data-translate="patient_queue">Patient Queue</span></h3>
+                        <div class="patient-filters">
+                            <div class="filter-tabs">
+                                <button class="filter-tab active" onclick="filterPatients('all')" data-translate="all_patients">All Patients</button>
+                                <button class="filter-tab" onclick="filterPatients('urgent')" data-translate="urgent">🔴 Urgent</button>
+                                <button class="filter-tab" onclick="filterPatients('normal')" data-translate="normal">🟡 Normal</button>
+                                <button class="filter-tab" onclick="filterPatients('routine')" data-translate="routine">🟢 Routine</button>
+                            </div>
+                        </div>
+                        <div id="patientQueue">
+                            <!-- Patient queue will be populated here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="card">
+                        <h3 class="card-title">📊 <span data-translate="today_stats">Today's Statistics</span></h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-number" id="totalPatients">12</div>
+                                <div class="stat-label" data-translate="total_patients">Total Patients</div>
+                            </div>
+                            <div class="stat-item urgent">
+                                <div class="stat-number" id="urgentPatients">3</div>
+                                <div class="stat-label" data-translate="urgent_cases">Urgent Cases</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="completedConsultations">8</div>
+                                <div class="stat-label" data-translate="completed">Completed</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-number" id="pendingPatients">4</div>
+                                <div class="stat-label" data-translate="pending">Pending</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">🔔 <span data-translate="quick_actions">Quick Actions</span></h3>
+                        <div class="quick-actions">
+                            <button class="btn btn-success" onclick="addNewPatient()" data-translate="add_patient">➕ Add Patient</button>
+                            <button class="btn" onclick="viewSchedule()" data-translate="view_schedule">📅 View Schedule</button>
+                            <button class="btn" onclick="generateReports()" data-translate="generate_reports">📊 Generate Reports</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Patient Details Modal -->
+            <div id="patientModal" class="modal-overlay" style="display: none;">
+                <div class="modal-content patient-modal">
+                    <div class="modal-header">
+                        <h3 id="patientModalTitle">Patient Details</h3>
+                        <button class="modal-close" onclick="closePatientModal()">&times;</button>
+                    </div>
+                    
+                    <div class="modal-body">
+                        <div class="patient-tabs">
+                            <div class="tab-buttons">
+                                <button class="tab-btn active" onclick="switchPatientTab('overview')" data-translate="overview">Overview</button>
+                                <button class="tab-btn" onclick="switchPatientTab('history')" data-translate="medical_history">Medical History</button>
+                                <button class="tab-btn" onclick="switchPatientTab('reports')" data-translate="reports">Reports</button>
+                                <button class="tab-btn" onclick="switchPatientTab('prescription')" data-translate="prescription">Prescription</button>
+                            </div>
+                            
+                            <!-- Patient Overview Tab -->
+                            <div id="overviewTab" class="tab-content active">
+                                <div class="patient-info-grid">
+                                    <div class="patient-basic-info">
+                                        <div class="patient-avatar">
+                                            <div class="avatar-placeholder">👤</div>
+                                        </div>
+                                        <div class="patient-details">
+                                            <h4 id="patientName">John Doe</h4>
+                                            <div class="patient-meta">
+                                                <span id="patientAge">35 years</span> • 
+                                                <span id="patientGender">Male</span> • 
+                                                <span id="patientBloodGroup">O+</span>
+                                            </div>
+                                            <div class="priority-badge" id="patientPriority">
+                                                🟡 Normal Priority
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="patient-contact">
+                                        <h5 data-translate="contact_info">Contact Information</h5>
+                                        <p>📞 <span id="patientPhone">+91 9876543210</span></p>
+                                        <p>📧 <span id="patientEmail">john.doe@email.com</span></p>
+                                        <p>🏠 <span id="patientAddress">123 Main St, City</span></p>
+                                    </div>
+                                </div>
+                                
+                                <div class="vital-signs">
+                                    <h5 data-translate="vital_signs">Vital Signs</h5>
+                                    <div class="vitals-grid">
+                                        <div class="vital-item">
+                                            <label data-translate="blood_pressure">Blood Pressure:</label>
+                                            <input type="text" id="bloodPressure" placeholder="120/80 mmHg">
+                                        </div>
+                                        <div class="vital-item">
+                                            <label data-translate="heart_rate">Heart Rate:</label>
+                                            <input type="text" id="heartRate" placeholder="72 bpm">
+                                        </div>
+                                        <div class="vital-item">
+                                            <label data-translate="temperature">Temperature:</label>
+                                            <input type="text" id="temperature" placeholder="98.6°F">
+                                        </div>
+                                        <div class="vital-item">
+                                            <label data-translate="weight">Weight:</label>
+                                            <input type="text" id="weight" placeholder="70 kg">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="priority-management">
+                                    <h5 data-translate="priority_management">Priority Management</h5>
+                                    <div class="priority-options">
+                                        <label class="priority-option">
+                                            <input type="radio" name="priority" value="urgent">
+                                            <span class="priority-label urgent">🔴 Urgent - Immediate attention needed</span>
+                                        </label>
+                                        <label class="priority-option">
+                                            <input type="radio" name="priority" value="normal" checked>
+                                            <span class="priority-label normal">🟡 Normal - Standard consultation</span>
+                                        </label>
+                                        <label class="priority-option">
+                                            <input type="radio" name="priority" value="routine">
+                                            <span class="priority-label routine">🟢 Routine - Follow-up or preventive care</span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Medical History Tab -->
+                            <div id="historyTab" class="tab-content">
+                                <div class="history-section">
+                                    <h5 data-translate="medical_conditions">Current Medical Conditions</h5>
+                                    <textarea id="currentConditions" rows="3" placeholder="List current medical conditions..."></textarea>
+                                </div>
+                                
+                                <div class="history-section">
+                                    <h5 data-translate="allergies">Allergies</h5>
+                                    <textarea id="patientAllergies" rows="2" placeholder="List known allergies..."></textarea>
+                                </div>
+                                
+                                <div class="history-section">
+                                    <h5 data-translate="current_medications">Current Medications</h5>
+                                    <textarea id="currentMedicationsDoc" rows="3" placeholder="List current medications and dosages..."></textarea>
+                                </div>
+                                
+                                <div class="history-section">
+                                    <h5 data-translate="previous_surgeries">Previous Surgeries</h5>
+                                    <textarea id="previousSurgeries" rows="2" placeholder="List previous surgeries with dates..."></textarea>
+                                </div>
+                                
+                                <div class="history-section">
+                                    <h5 data-translate="family_history">Family Medical History</h5>
+                                    <textarea id="familyHistory" rows="2" placeholder="Relevant family medical history..."></textarea>
+                                </div>
+                                
+                                <div class="visit-history">
+                                    <h5 data-translate="previous_visits">Previous Visits</h5>
+                                    <div id="visitHistory">
+                                        <!-- Visit history will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Reports Tab -->
+                            <div id="reportsTab" class="tab-content">
+                                <div class="reports-section">
+                                    <h5 data-translate="clinical_notes">Clinical Notes</h5>
+                                    <textarea id="clinicalNotes" rows="4" placeholder="Enter clinical observations and notes..."></textarea>
+                                </div>
+                                
+                                <div class="reports-section">
+                                    <h5 data-translate="diagnosis">Diagnosis</h5>
+                                    <textarea id="diagnosis" rows="3" placeholder="Primary and secondary diagnosis..."></textarea>
+                                </div>
+                                
+                                <div class="reports-section">
+                                    <h5 data-translate="treatment_plan">Treatment Plan</h5>
+                                    <textarea id="treatmentPlan" rows="4" placeholder="Recommended treatment plan..."></textarea>
+                                </div>
+                                
+                                <div class="reports-section">
+                                    <h5 data-translate="follow_up">Follow-up Instructions</h5>
+                                    <textarea id="followUpInstructions" rows="2" placeholder="Follow-up appointments and instructions..."></textarea>
+                                </div>
+                                
+                                <div class="lab-tests">
+                                    <h5 data-translate="recommended_tests">Recommended Lab Tests</h5>
+                                    <div class="test-checkboxes">
+                                        <label><input type="checkbox" value="blood-test"> Complete Blood Count (CBC)</label>
+                                        <label><input type="checkbox" value="urine-test"> Urine Analysis</label>
+                                        <label><input type="checkbox" value="xray"> X-Ray</label>
+                                        <label><input type="checkbox" value="ecg"> ECG</label>
+                                        <label><input type="checkbox" value="ultrasound"> Ultrasound</label>
+                                        <label><input type="checkbox" value="mri"> MRI</label>
+                                    </div>
+                                    <input type="text" placeholder="Other tests..." id="otherTests">
+                                </div>
+                            </div>
+                            
+                            <!-- Prescription Tab -->
+                            <div id="prescriptionTab" class="tab-content">
+                                <div class="prescription-header">
+                                    <h5 data-translate="medicine_prescription">Medicine Prescription</h5>
+                                    <button class="btn btn-sm" onclick="addMedicineRow()" data-translate="add_medicine">➕ Add Medicine</button>
+                                </div>
+                                
+                                <div class="prescription-table">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th data-translate="medicine_name">Medicine</th>
+                                                <th data-translate="dosage">Dosage</th>
+                                                <th data-translate="frequency">Frequency</th>
+                                                <th data-translate="duration">Duration</th>
+                                                <th data-translate="instructions">Instructions</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="prescriptionTableBody">
+                                            <!-- Prescription rows will be added here -->
+                                        </tbody>
+                                    </table>
+                                </div>
+                                
+                                <div class="prescription-notes">
+                                    <h5 data-translate="prescription_notes">Additional Notes</h5>
+                                    <textarea id="prescriptionNotes" rows="3" placeholder="Additional instructions for patient..."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-footer">
+                        <button class="btn" onclick="closePatientModal()" data-translate="cancel">Cancel</button>
+                        <button class="btn btn-success" onclick="savePatientData()" data-translate="save">💾 Save</button>
+                        <button class="btn btn-primary" onclick="printPrescription()" data-translate="print_prescription">🖨️ Print Prescription</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emergency Section -->
+        <div id="emergency" class="section">
+            <h2 class="section-title" data-translate="emergency">🚨 Emergency Services</h2>
+            
+            <div class="alert alert-error" style="display: block;">
+                <strong data-translate="emergency_warning">Emergency Warning:</strong>
+                <span data-translate="emergency_warning_text">For life-threatening emergencies, call immediately!</span>
+            </div>
+            
+            <div class="form-grid">
+                <div>
+                    <div class="card" style="background: #fee2e2; border-color: #dc2626;">
+                        <h3 class="card-title">📞 <span data-translate="emergency_contacts">Emergency Contacts</span></h3>
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <a href="tel:108" class="btn btn-danger" style="font-size: 1.2rem; padding: 1rem;">
+                                🚑 <span data-translate="ambulance">Ambulance</span> - 108
+                            </a>
+                            <a href="tel:100" class="btn btn-danger" style="font-size: 1.2rem; padding: 1rem;">
+                                🚔 <span data-translate="police">Police</span> - 100
+                            </a>
+                            <a href="tel:101" class="btn btn-danger" style="font-size: 1.2rem; padding: 1rem;">
+                                🚒 <span data-translate="fire">Fire Department</span> - 101
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="card">
+                        <h3 class="card-title">📍 <span data-translate="share_location">Share Location</span></h3>
+                        <p data-translate="location_help">Help emergency services find you:</p>
+                        <button onclick="shareLocation()" class="btn btn-danger" data-translate="get_location">📍 Get My Location</button>
+                        <div id="locationInfo"></div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3 class="card-title">⚠️ <span data-translate="when_to_call">When to Call Emergency</span></h3>
+                        <ul style="color: #dc2626; font-weight: 500; margin-left: 1.5rem;">
+                            <li data-translate="chest_pain">Severe chest pain</li>
+                            <li data-translate="breathing_difficulty">Difficulty breathing</li>
+                            <li data-translate="severe_bleeding">Severe bleeding</li>
+                            <li data-translate="loss_consciousness">Loss of consciousness</li>
+                            <li data-translate="severe_allergic">Severe allergic reaction</li>
+                            <li data-translate="stroke_signs">Signs of stroke</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Translation system
+        const translations = {
+            en: {
+                app_title: "🏥 Telemedicine",
+                login: "Login",
+                register: "Register",
+                patient: "Patient",
+                doctor: "Doctor",
+                email_phone: "Email or Phone:",
+                password: "Password:",
+                full_name: "Full Name:",
+                email: "Email:",
+                phone: "Phone:",
+                specialization: "Specialization:",
+                general_physician: "General Physician",
+                cardiologist: "Cardiologist",
+                neurologist: "Neurologist",
+                dermatologist: "Dermatologist",
+                pediatrician: "Pediatrician",
+                psychiatrist: "Psychiatrist",
+                orthopedic: "Orthopedic Surgeon",
+                gynecologist: "Gynecologist",
+                ent_specialist: "ENT Specialist",
+                ophthalmologist: "Ophthalmologist",
+                logout: "Logout",
+                
+                // New form fields
+                date_of_birth: "Date of Birth:",
+                gender: "Gender:",
+                male: "Male",
+                female: "Female",
+                other: "Other",
+                blood_group: "Blood Group:",
+                address: "Address:",
+                emergency_contact: "Emergency Contact:",
+                allergies: "Known Allergies:",
+                medical_conditions: "Chronic Medical Conditions:",
+                current_medications: "Current Medications:",
+                experience_years: "Years of Experience:",
+                medical_license: "Medical License Number:",
+                registration_year: "Registration Year:",
+                medical_college: "Medical College/University:",
+                hospital_affiliation: "Hospital/Clinic Affiliation:",
+                consultation_fee: "Consultation Fee (₹):",
+                confirm_password: "Confirm Password:",
+                agree_terms: "I agree to the Terms of Service and Privacy Policy",
+                create_account: "Create Account",
+                
+                // Doctor Dashboard
+                doctor_dashboard: "Doctor Dashboard",
+                patient_queue: "Patient Queue",
+                today_stats: "Today's Statistics",
+                all_patients: "All Patients",
+                urgent: "Urgent",
+                normal: "Normal",
+                routine: "Routine",
+                total_patients: "Total Patients",
+                urgent_cases: "Urgent Cases",
+                completed: "Completed",
+                pending: "Pending",
+                quick_actions: "Quick Actions",
+                add_patient: "Add Patient",
+                view_schedule: "View Schedule",
+                generate_reports: "Generate Reports",
+                overview: "Overview",
+                medical_history: "Medical History",
+                reports: "Reports",
+                prescription: "Prescription",
+                contact_info: "Contact Information",
+                vital_signs: "Vital Signs",
+                blood_pressure: "Blood Pressure",
+                heart_rate: "Heart Rate",
+                temperature: "Temperature",
+                weight: "Weight",
+                priority_management: "Priority Management",
+                previous_surgeries: "Previous Surgeries",
+                family_history: "Family Medical History",
+                previous_visits: "Previous Visits",
+                clinical_notes: "Clinical Notes",
+                diagnosis: "Diagnosis",
+                treatment_plan: "Treatment Plan",
+                follow_up: "Follow-up Instructions",
+                recommended_tests: "Recommended Lab Tests",
+                medicine_prescription: "Medicine Prescription",
+                add_medicine: "Add Medicine",
+                medicine_name: "Medicine",
+                frequency: "Frequency",
+                duration: "Duration",
+                instructions: "Instructions",
+                prescription_notes: "Additional Notes",
+                cancel: "Cancel",
+                save: "Save",
+                print_prescription: "Print Prescription",
+                
+                dashboard: "📊 Dashboard",
+                ai_triage: "🤖 AI Triage",
+                health_records: "📋 Health Records",
+                medicine_reminders: "💊 Medicine Reminders",
+                nearby_facilities: "🏥 Nearby Facilities",
+                consultation: "👨‍⚕️ Consultation",
+                emergency: "🚨 Emergency",
+                
+                welcome: "Welcome",
+                dashboard_intro: "Your comprehensive healthcare platform",
+                ai_triage_desc: "Get instant health advice",
+                book_consultation: "Book Consultation",
+                consultation_desc: "Connect with doctors",
+                reminders_desc: "Never miss a dose",
+                
+                quick_stats: "Quick Stats",
+                consultations: "Consultations",
+                prescriptions: "Prescriptions",
+                
+                ai_assistant: "AI Health Assistant",
+                ai_welcome: "Hello! I'm your AI health assistant. Describe your symptoms and I'll help assess your condition and recommend the right specialist.",
+                describe_symptoms: "Describe your symptoms...",
+                send: "Send",
+                recommended_specialist: "Recommended Specialist",
+                start_conversation: "Start a conversation to get specialist recommendations.",
+                
+                emergency_signs: "Emergency Signs",
+                call_emergency: "Call 108 immediately if you have:",
+                chest_pain: "Severe chest pain",
+                breathing_difficulty: "Difficulty breathing",
+                severe_bleeding: "Severe bleeding",
+                loss_consciousness: "Loss of consciousness",
+                
+                upload_documents: "Upload Medical Documents",
+                drag_drop_files: "Drag & drop files here or click to select",
+                supported_formats: "Supported: PDF, JPG, PNG, DOC (Max 10MB)",
+                my_records: "My Health Records",
+                no_records: "No records uploaded yet.",
+                recent_visits: "Recent Hospital Visits",
+                no_visits: "No recent visits recorded.",
+                
+                add_reminder: "Add New Reminder",
+                medicine_name: "Medicine Name:",
+                dosage: "Dosage:",
+                frequency: "Frequency:",
+                daily: "Daily",
+                twice_daily: "Twice Daily",
+                thrice_daily: "Thrice Daily",
+                weekly: "Weekly",
+                start_date: "Start Date:",
+                reminder_time: "Reminder Time:",
+                active_reminders: "Active Reminders",
+                no_reminders: "No active reminders.",
+                
+                facilities_map: "Healthcare Facilities Map",
+                interactive_map: "Interactive Healthcare Facilities Map",
+                click_markers: "Click on markers for facility details",
+                facility_details: "Facility Information",
+                click_facility: "Click on a facility marker to view details.",
+                emergency_contacts: "Emergency Contacts",
+                ambulance: "Ambulance",
+                police: "Police",
+                fire: "Fire",
+                
+                choose_specialist: "Choose Specialist",
+                general_desc: "Common health issues",
+                cardio_desc: "Heart conditions",
+                neuro_desc: "Brain & nervous system",
+                pediatric_desc: "Children's health",
+                book_appointment: "Book Appointment",
+                selected_specialist: "Selected Specialist:",
+                appointment_date: "Appointment Date:",
+                appointment_time: "Preferred Time:",
+                reason_visit: "Reason for Visit:",
+                my_appointments: "My Appointments",
+                no_appointments: "No appointments scheduled.",
+                
+                emergency_warning: "Emergency Warning:",
+                emergency_warning_text: "For life-threatening emergencies, call immediately!",
+                share_location: "Share Location",
+                location_help: "Help emergency services find you:",
+                get_location: "📍 Get My Location",
+                when_to_call: "When to Call Emergency",
+                severe_allergic: "Severe allergic reaction",
+                stroke_signs: "Signs of stroke"
+            },
+            hi: {
+                app_title: "🏥 टेलीमेडिसिन",
+                login: "लॉगिन",
+                register: "पंजीकरण",
+                patient: "मरीज़",
+                doctor: "डॉक्टर",
+                email_phone: "ईमेल या फ़ोन:",
+                password: "पासवर्ड:",
+                full_name: "पूरा नाम:",
+                email: "ईमेल:",
+                phone: "फ़ोन:",
+                specialization: "विशेषज्ञता:",
+                general_physician: "सामान्य चिकित्सक",
+                cardiologist: "हृदय रोग विशेषज्ञ",
+                neurologist: "न्यूरोलॉजिस्ट",
+                dermatologist: "त्वचा विशेषज्ञ",
+                pediatrician: "बाल रोग विशेषज्ञ",
+                logout: "लॉगआउट",
+                
+                dashboard: "📊 डैशबोर्ड",
+                ai_triage: "🤖 AI ट्राइएज",
+                health_records: "📋 स्वास्थ्य रिकॉर्ड",
+                medicine_reminders: "💊 दवा रिमाइंडर",
+                nearby_facilities: "🏥 नज़दीकी सुविधाएं",
+                consultation: "👨‍⚕️ परामर्श",
+                emergency: "🚨 आपातकाल",
+                
+                welcome: "स्वागत है",
+                dashboard_intro: "आपका व्यापक स्वास्थ्य प्लेटफॉर्म",
+                ai_triage_desc: "तत्काल स्वास्थ्य सलाह प्राप्त करें",
+                book_consultation: "परामर्श बुक करें",
+                consultation_desc: "डॉक्टरों से जुड़ें",
+                reminders_desc: "कोई खुराक न छूटे",
+                
+                quick_stats: "त्वरित आंकड़े",
+                consultations: "परामर्श",
+                prescriptions: "नुस्खे",
+                
+                ai_assistant: "AI स्वास्थ्य सहायक",
+                ai_welcome: "नमस्ते! मैं आपका AI स्वास्थ्य सहायक हूं। अपने लक्षणों का वर्णन करें और मैं आपकी स्थिति का आकलन करने और सही विशेषज्ञ की सिफारिश करने में मदद करूंगा।",
+                describe_symptoms: "अपने लक्षणों का वर्णन करें...",
+                send: "भेजें",
+                recommended_specialist: "सुझाए गए विशेषज्ञ",
+                start_conversation: "विशेषज्ञ की सिफारिशें पाने के लिए बातचीत शुरू करें।"
+            },
+            // Add Punjabi and Telugu translations...
+        };
+
+        // Application state
+        let appState = {
+            currentUser: null,
+            userRole: 'patient',
+            currentLanguage: 'en',
+            isLoggedIn: false,
+            healthRecords: JSON.parse(localStorage.getItem('health_records') || '[]'),
+            reminders: JSON.parse(localStorage.getItem('medicine_reminders') || '[]'),
+            appointments: JSON.parse(localStorage.getItem('appointments') || '[]')
+        };
+
+        // Translation function
+        function t(key) {
+            return translations[appState.currentLanguage]?.[key] || translations.en[key] || key;
+        }
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is logged in
+            const savedUser = localStorage.getItem('current_user');
+            if (savedUser) {
+                appState.currentUser = JSON.parse(savedUser);
+                appState.isLoggedIn = true;
+                hideAuthModal();
+                updateUserInterface();
+            }
+            
+            setupEventListeners();
+            updateAllTexts();
+        });
+
+        // Event listeners
+        function setupEventListeners() {
+            // Auth forms
+            document.getElementById('loginFormSubmit').addEventListener('submit', handleLogin);
+            document.getElementById('registerFormSubmit').addEventListener('submit', handleRegister);
+            
+            // File upload
+            document.getElementById('fileInput').addEventListener('change', handleFileUpload);
+            
+            // Medicine reminders
+            document.getElementById('reminderForm').addEventListener('submit', addMedicineReminder);
+            
+            // Appointment booking
+            document.getElementById('appointmentForm').addEventListener('submit', bookAppointment);
+            
+            // Chat input
+            document.getElementById('chatInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+        }
+
+        // Authentication functions
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.auth-content').forEach(c => c.style.display = 'none');
+            
+            if (tab === 'login') {
+                document.querySelector('[onclick="switchAuthTab(\'login\')"]').classList.add('active');
+                document.getElementById('loginForm').style.display = 'block';
+            } else {
+                document.querySelector('[onclick="switchAuthTab(\'register\')"]').classList.add('active');
+                document.getElementById('registerForm').style.display = 'block';
+            }
+        }
+
+        function selectRole(role) {
+            document.querySelectorAll('.role-option').forEach(r => r.classList.remove('selected'));
+            document.querySelectorAll(`[data-role="${role}"]`).forEach(r => r.classList.add('selected'));
+            appState.userRole = role;
+            
+            // Show/hide role-specific fields
+            const patientFields = document.getElementById('patientMedicalFields');
+            const doctorFields = document.getElementById('doctorProfessionalFields');
+            
+            if (role === 'doctor') {
+                if (patientFields) patientFields.style.display = 'none';
+                if (doctorFields) {
+                    doctorFields.style.display = 'block';
+                    // Make doctor fields required
+                    const requiredFields = ['registerSpecialization', 'registerExperience', 'registerLicenseNumber', 'registerYear', 'registerMedicalCollege'];
+                    requiredFields.forEach(fieldId => {
+                        const field = document.getElementById(fieldId);
+                        if (field) field.required = true;
+                    });
+                }
+            } else {
+                if (doctorFields) {
+                    doctorFields.style.display = 'none';
+                    // Remove required from doctor fields
+                    const doctorRequiredFields = ['registerSpecialization', 'registerExperience', 'registerLicenseNumber', 'registerYear', 'registerMedicalCollege'];
+                    doctorRequiredFields.forEach(fieldId => {
+                        const field = document.getElementById(fieldId);
+                        if (field) field.required = false;
+                    });
+                }
+                if (patientFields) patientFields.style.display = 'block';
+            }
+        }
+        
+        // Password strength checker
+        function checkPasswordStrength(password) {
+            const strengthIndicator = document.getElementById('passwordStrength');
+            const strengthText = document.getElementById('passwordStrengthText');
+            
+            let strength = 0;
+            let feedback = '';
+            
+            // Length check
+            if (password.length >= 8) strength++;
+            else feedback = 'At least 8 characters';
+            
+            // Uppercase check
+            if (/[A-Z]/.test(password)) strength++;
+            else if (password.length >= 8) feedback = 'Add uppercase letters';
+            
+            // Lowercase check
+            if (/[a-z]/.test(password)) strength++;
+            else if (password.length >= 8 && /[A-Z]/.test(password)) feedback = 'Add lowercase letters';
+            
+            // Number check
+            if (/\d/.test(password)) strength++;
+            else if (strength >= 2) feedback = 'Add numbers';
+            
+            // Special character check
+            if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
+            else if (strength >= 3) feedback = 'Add special characters';
+            
+            // Update UI
+            strengthIndicator.classList.remove('weak', 'medium', 'strong');
+            
+            if (strength <= 2) {
+                strengthIndicator.classList.add('weak');
+                strengthText.textContent = feedback || 'Weak password';
+                strengthText.style.color = '#dc2626';
+            } else if (strength <= 3) {
+                strengthIndicator.classList.add('medium');
+                strengthText.textContent = 'Medium strength';
+                strengthText.style.color = '#f59e0b';
+            } else {
+                strengthIndicator.classList.add('strong');
+                strengthText.textContent = 'Strong password';
+                strengthText.style.color = '#10b981';
+            }
+        }
+        
+        // Form validation functions
+        function validateEmail(email) {
+            return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        }
+        
+        function validatePhone(phone) {
+            return /^[\d\s\+\-\(\)]+$/.test(phone) && phone.replace(/\D/g, '').length >= 10;
+        }
+        
+        function validateField(fieldId, validationFn, errorMessage) {
+            const field = document.getElementById(fieldId);
+            const formGroup = field.closest('.form-group');
+            const errorDiv = formGroup.querySelector('.error-message');
+            
+            if (field.required && !field.value.trim()) {
+                formGroup.classList.add('error');
+                errorDiv.textContent = 'This field is required';
+                errorDiv.classList.add('show');
+                return false;
+            }
+            
+            if (field.value && validationFn && !validationFn(field.value)) {
+                formGroup.classList.add('error');
+                errorDiv.textContent = errorMessage;
+                errorDiv.classList.add('show');
+                return false;
+            }
+            
+            formGroup.classList.remove('error');
+            errorDiv.classList.remove('show');
+            return true;
+        }
+        
+        function validateForm(formId) {
+            const form = document.getElementById(formId);
+            let isValid = true;
+            
+            // Clear all previous errors
+            form.querySelectorAll('.form-group').forEach(group => {
+                group.classList.remove('error');
+                group.querySelector('.error-message').classList.remove('show');
+            });
+            
+            // Validate email
+            const emailField = form.querySelector('input[type="email"]');
+            if (emailField) {
+                if (!validateField(emailField.id, validateEmail, 'Please enter a valid email address')) {
+                    isValid = false;
+                }
+            }
+            
+            // Validate phone
+            const phoneFields = form.querySelectorAll('input[type="tel"]');
+            phoneFields.forEach(field => {
+                if (field.required && !validateField(field.id, validatePhone, 'Please enter a valid phone number')) {
+                    isValid = false;
+                }
+            });
+            
+            // Validate passwords match
+            const password = document.getElementById('registerPassword');
+            const confirmPassword = document.getElementById('registerConfirmPassword');
+            if (password && confirmPassword && password.value !== confirmPassword.value) {
+                const formGroup = confirmPassword.closest('.form-group');
+                const errorDiv = formGroup.querySelector('.error-message');
+                formGroup.classList.add('error');
+                errorDiv.textContent = 'Passwords do not match';
+                errorDiv.classList.add('show');
+                isValid = false;
+            }
+            
+            // Validate required fields
+            form.querySelectorAll('input[required], select[required], textarea[required]').forEach(field => {
+                if (!field.value.trim()) {
+                    const formGroup = field.closest('.form-group');
+                    const errorDiv = formGroup.querySelector('.error-message');
+                    if (errorDiv) {
+                        formGroup.classList.add('error');
+                        errorDiv.textContent = 'This field is required';
+                        errorDiv.classList.add('show');
+                    }
+                    isValid = false;
+                }
+            });
+            
+            // Validate terms checkbox
+            const termsCheckbox = document.getElementById('registerTerms');
+            if (termsCheckbox && !termsCheckbox.checked) {
+                const formGroup = termsCheckbox.closest('.form-group');
+                const errorDiv = formGroup.querySelector('.error-message');
+                formGroup.classList.add('error');
+                errorDiv.textContent = 'You must agree to the terms and conditions';
+                errorDiv.classList.add('show');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            // Basic validation
+            const emailPhoneField = document.getElementById('loginEmailPhone');
+            const passwordField = document.getElementById('loginPassword');
+            
+            let isValid = true;
+            
+            // Clear previous errors
+            document.querySelectorAll('#loginForm .form-group').forEach(group => {
+                group.classList.remove('error');
+                group.querySelector('.error-message').classList.remove('show');
+            });
+            
+            if (!emailPhoneField.value.trim()) {
+                const formGroup = emailPhoneField.closest('.form-group');
+                const errorDiv = formGroup.querySelector('.error-message');
+                formGroup.classList.add('error');
+                errorDiv.textContent = 'Email or phone is required';
+                errorDiv.classList.add('show');
+                isValid = false;
+            }
+            
+            if (!passwordField.value.trim()) {
+                const formGroup = passwordField.closest('.form-group');
+                const errorDiv = formGroup.querySelector('.error-message');
+                formGroup.classList.add('error');
+                errorDiv.textContent = 'Password is required';
+                errorDiv.classList.add('show');
+                isValid = false;
+            }
+            
+            if (!isValid) return;
+            
+            const emailPhone = emailPhoneField.value;
+            const password = passwordField.value;
+            
+            // Simulate login (in real app, this would call an API)
+            const userData = {
+                id: Date.now(),
+                name: emailPhone.includes('@') ? emailPhone.split('@')[0] : 'User',
+                email: emailPhone,
+                role: appState.userRole
+            };
+            
+            appState.currentUser = userData;
+            appState.isLoggedIn = true;
+            localStorage.setItem('current_user', JSON.stringify(userData));
+            
+            hideAuthModal();
+            updateUserInterface();
+            showAlert('success', `Welcome back, ${userData.name}!`);
+        }
+
+        function handleRegister(e) {
+            e.preventDefault();
+            
+            // Validate form before submission
+            if (!validateForm('registerFormSubmit')) {
+                return;
+            }
+            
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const phone = document.getElementById('registerPhone').value;
+            const password = document.getElementById('registerPassword').value;
+            const dob = document.getElementById('registerDOB').value;
+            const gender = document.getElementById('registerGender').value;
+            const address = document.getElementById('registerAddress').value;
+            
+            // Collect role-specific data
+            let userData = {
+                id: Date.now(),
+                name: name,
+                email: email,
+                phone: phone,
+                dateOfBirth: dob,
+                gender: gender,
+                address: address,
+                role: appState.userRole,
+                registrationDate: new Date().toISOString()
+            };
+            
+            if (appState.userRole === 'doctor') {
+                userData = {
+                    ...userData,
+                    specialization: document.getElementById('registerSpecialization').value,
+                    experience: document.getElementById('registerExperience').value,
+                    licenseNumber: document.getElementById('registerLicenseNumber').value,
+                    registrationYear: document.getElementById('registerYear').value,
+                    medicalCollege: document.getElementById('registerMedicalCollege').value,
+                    hospitalAffiliation: document.getElementById('registerHospitalAffiliation').value,
+                    consultationFee: document.getElementById('registerConsultationFee').value
+                };
+            } else {
+                userData = {
+                    ...userData,
+                    bloodGroup: document.getElementById('registerBloodGroup').value,
+                    allergies: document.getElementById('registerAllergies').value,
+                    medicalConditions: document.getElementById('registerMedicalConditions').value,
+                    currentMedications: document.getElementById('registerCurrentMedications').value,
+                    emergencyContact: document.getElementById('registerEmergencyContact').value
+                };
+            }
+            
+            // Simulate registration (in real app, this would call an API)
+            appState.currentUser = userData;
+            appState.isLoggedIn = true;
+            localStorage.setItem('current_user', JSON.stringify(userData));
+            
+            hideAuthModal();
+            updateUserInterface();
+            showAlert('success', `Welcome ${userData.name}! Your ${userData.role} account has been created successfully.`);
+        }
+
+        function logout() {
+            appState.currentUser = null;
+            appState.isLoggedIn = false;
+            localStorage.removeItem('current_user');
+            
+            document.getElementById('authOverlay').style.display = 'flex';
+            document.getElementById('userProfile').style.display = 'none';
+        }
+
+        function hideAuthModal() {
+            document.getElementById('authOverlay').style.display = 'none';
+            document.getElementById('userProfile').style.display = 'flex';
+        }
+
+        function updateUserInterface() {
+            if (appState.currentUser) {
+                document.getElementById('userName').textContent = appState.currentUser.name;
+                document.getElementById('dashboardUserName').textContent = appState.currentUser.name;
+                
+                // Show/hide role-specific elements
+                const doctorElements = document.querySelectorAll('.doctor-only');
+                if (appState.currentUser.role === 'doctor') {
+                    doctorElements.forEach(element => {
+                        element.style.display = element.tagName === 'BUTTON' ? 'flex' : 'block';
+                    });
+                    // Initialize doctor dashboard
+                    initializeDoctorDashboard();
+                } else {
+                    doctorElements.forEach(element => {
+                        element.style.display = 'none';
+                    });
+                }
+            }
+        }
+
+        // AI Chatbot functions
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addChatMessage(message, 'user');
+            input.value = '';
+            
+            // Simulate AI response (in real app, this would call an AI API)
+            setTimeout(() => {
+                const response = generateAIResponse(message);
+                addChatMessage(response.message, 'bot');
+                
+                if (response.specialist) {
+                    updateSpecialistRecommendation(response.specialist);
+                }
+            }, 1000);
+        }
+
+        function addChatMessage(message, sender) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.textContent = message;
+            
+            messageDiv.appendChild(contentDiv);
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function generateAIResponse(symptoms) {
+            const responses = {
+                'chest pain': {
+                    message: 'Chest pain can be serious. Based on your symptoms, I recommend seeing a cardiologist immediately. If the pain is severe, please call emergency services (108).',
+                    specialist: 'cardiologist'
+                },
+                'headache': {
+                    message: 'Headaches can have various causes. If severe or persistent, I recommend consulting a neurologist. For mild headaches, rest and hydration may help.',
+                    specialist: 'neurologist'
+                },
+                'fever': {
+                    message: 'Fever indicates your body is fighting an infection. I recommend seeing a general physician for proper diagnosis and treatment.',
+                    specialist: 'general'
+                }
+            };
+            
+            // Simple keyword matching (in real app, this would use NLP)
+            for (const [key, value] of Object.entries(responses)) {
+                if (symptoms.toLowerCase().includes(key)) {
+                    return value;
+                }
+            }
+            
+            return {
+                message: 'Thank you for describing your symptoms. Based on the information provided, I recommend consulting with a general physician for a proper evaluation.',
+                specialist: 'general'
+            };
+        }
+
+        function updateSpecialistRecommendation(specialist) {
+            const container = document.getElementById('recommendedSpecialist');
+            const specialists = {
+                'general': '👨‍⚕️ General Physician - For general health concerns and initial diagnosis',
+                'cardiologist': '❤️ Cardiologist - For heart and cardiovascular conditions',
+                'neurologist': '🧠 Neurologist - For brain and nervous system disorders',
+                'pediatrician': '👶 Pediatrician - For children\'s health concerns'
+            };
+            
+            container.innerHTML = `
+                <div class="specialist-card" style="margin: 0;">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">${specialists[specialist].split(' ')[0]}</div>
+                    <p>${specialists[specialist]}</p>
+                    <button onclick="selectSpecialist('${specialist}'); showSection('consultation')" class="btn btn-success">Book Consultation</button>
+                </div>
+            `;
+        }
+
+        // File upload functions
+        function handleFileUpload(event) {
+            const files = Array.from(event.target.files);
+            files.forEach(file => {
+                if (file.size > 10 * 1024 * 1024) { // 10MB limit
+                    showAlert('error', `File ${file.name} is too large. Maximum size is 10MB.`);
+                    return;
+                }
+                
+                const record = {
+                    id: Date.now() + Math.random(),
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    uploadDate: new Date().toLocaleDateString(),
+                    url: URL.createObjectURL(file) // In real app, this would be uploaded to server
+                };
+                
+                appState.healthRecords.push(record);
+                localStorage.setItem('health_records', JSON.stringify(appState.healthRecords));
+                
+                updateHealthRecordsList();
+                showAlert('success', `Successfully uploaded ${file.name}`);
+            });
+        }
+
+        function updateHealthRecordsList() {
+            const container = document.getElementById('healthRecordsList');
+            
+            if (appState.healthRecords.length === 0) {
+                container.innerHTML = '<p data-translate="no_records">No records uploaded yet.</p>';
+                return;
+            }
+            
+            container.innerHTML = appState.healthRecords.map(record => `
+                <div class="file-item">
+                    <div>
+                        <strong>${record.name}</strong>
+                        <br>
+                        <small>Uploaded: ${record.uploadDate} • ${(record.size / 1024).toFixed(1)} KB</small>
+                    </div>
+                    <div>
+                        <button onclick="viewRecord('${record.id}')" class="btn" style="padding: 0.5rem;">View</button>
+                        <button onclick="deleteRecord('${record.id}')" class="btn btn-danger" style="padding: 0.5rem;">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function viewRecord(recordId) {
+            const record = appState.healthRecords.find(r => r.id == recordId);
+            if (record) {
+                window.open(record.url, '_blank');
+            }
+        }
+
+        function deleteRecord(recordId) {
+            appState.healthRecords = appState.healthRecords.filter(r => r.id != recordId);
+            localStorage.setItem('health_records', JSON.stringify(appState.healthRecords));
+            updateHealthRecordsList();
+            showAlert('success', 'Record deleted successfully');
+        }
+
+        // Medicine reminder functions
+        function addMedicineReminder(e) {
+            e.preventDefault();
+            
+            const reminder = {
+                id: Date.now(),
+                medicineName: document.getElementById('medicineName').value,
+                dosage: document.getElementById('medicineDosage').value,
+                frequency: document.getElementById('medicineFrequency').value,
+                startDate: document.getElementById('medicineStartDate').value,
+                time: document.getElementById('medicineTime').value,
+                active: true
+            };
+            
+            appState.reminders.push(reminder);
+            localStorage.setItem('medicine_reminders', JSON.stringify(appState.reminders));
+            
+            updateRemindersList();
+            e.target.reset();
+            showAlert('success', 'Medicine reminder added successfully!');
+        }
+
+        function updateRemindersList() {
+            const container = document.getElementById('remindersList');
+            
+            if (appState.reminders.length === 0) {
+                container.innerHTML = '<p data-translate="no_reminders">No active reminders.</p>';
+                return;
+            }
+            
+            container.innerHTML = appState.reminders.map(reminder => `
+                <div class="reminder-item">
+                    <div class="reminder-info">
+                        <div class="medicine-icon">💊</div>
+                        <div>
+                            <strong>${reminder.medicineName}</strong>
+                            <br>
+                            <small>${reminder.dosage} • ${reminder.frequency} • ${reminder.time}</small>
+                        </div>
+                    </div>
+                    <div class="reminder-actions">
+                        <button onclick="toggleReminder('${reminder.id}')" class="btn ${reminder.active ? 'btn-secondary' : 'btn-success'}" style="padding: 0.5rem;">
+                            ${reminder.active ? 'Pause' : 'Resume'}
+                        </button>
+                        <button onclick="deleteReminder('${reminder.id}')" class="btn btn-danger" style="padding: 0.5rem;">Delete</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleReminder(reminderId) {
+            const reminder = appState.reminders.find(r => r.id == reminderId);
+            if (reminder) {
+                reminder.active = !reminder.active;
+                localStorage.setItem('medicine_reminders', JSON.stringify(appState.reminders));
+                updateRemindersList();
+            }
+        }
+
+        function deleteReminder(reminderId) {
+            appState.reminders = appState.reminders.filter(r => r.id != reminderId);
+            localStorage.setItem('medicine_reminders', JSON.stringify(appState.reminders));
+            updateRemindersList();
+            showAlert('success', 'Reminder deleted successfully');
+        }
+
+        // Facility map functions
+        function showFacilityInfo(facilityType) {
+            const facilities = {
+                'govt-hospital': {
+                    name: 'Government District Hospital',
+                    type: 'Government Hospital',
+                    address: 'Main Road, City Center',
+                    phone: '0175-2212345',
+                    services: 'Emergency, General Medicine, Surgery, Pediatrics',
+                    hours: '24/7 Emergency, OPD: 9 AM - 5 PM'
+                },
+                'phc': {
+                    name: 'Primary Health Center',
+                    type: 'Primary Health Center',
+                    address: 'Village Road, Sector 2',
+                    phone: '0175-2212346',
+                    services: 'Basic Healthcare, Immunization, Maternity',
+                    hours: '9 AM - 5 PM (Mon-Sat)'
+                },
+                'private-clinic': {
+                    name: 'City Care Clinic',
+                    type: 'Private Clinic',
+                    address: 'Commercial Complex, Main Market',
+                    phone: '0175-2212347',
+                    services: 'General Medicine, Consultation, Lab Tests',
+                    hours: '10 AM - 8 PM'
+                },
+                'pharmacy': {
+                    name: 'MedPlus Pharmacy',
+                    type: 'Pharmacy',
+                    address: 'Near Bus Stand, Main Road',
+                    phone: '0175-2212348',
+                    services: 'Medicines, Medical Supplies, Home Delivery',
+                    hours: '8 AM - 10 PM'
+                }
+            };
+            
+            const facility = facilities[facilityType];
+            const container = document.getElementById('facilityInfo');
+            
+            container.innerHTML = `
+                <div class="card" style="margin: 0;">
+                    <h4>${facility.name}</h4>
+                    <p><strong>Type:</strong> ${facility.type}</p>
+                    <p><strong>Address:</strong> ${facility.address}</p>
+                    <p><strong>Phone:</strong> <a href="tel:${facility.phone}">${facility.phone}</a></p>
+                    <p><strong>Services:</strong> ${facility.services}</p>
+                    <p><strong>Hours:</strong> ${facility.hours}</p>
+                    <div style="margin-top: 1rem;">
+                        <button onclick="callFacility('${facility.phone}')" class="btn btn-success">📞 Call</button>
+                        <button onclick="getDirections('${facility.name}')" class="btn">🗺️ Directions</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function callFacility(phone) {
+            window.location.href = `tel:${phone}`;
+        }
+
+        function getDirections(facilityName) {
+            showAlert('info', `Getting directions to ${facilityName}...`);
+            // In real app, this would open maps with directions
+        }
+
+        // Consultation functions
+        function selectSpecialist(specialist) {
+            const specialists = {
+                'general': 'General Physician',
+                'cardiologist': 'Cardiologist',
+                'neurologist': 'Neurologist',
+                'pediatrician': 'Pediatrician'
+            };
+            
+            document.getElementById('selectedSpecialist').value = specialists[specialist];
+            
+            // Highlight selected specialist
+            document.querySelectorAll('.specialist-card').forEach(card => {
+                card.style.borderColor = '#e5e7eb';
+            });
+            event.target.closest('.specialist-card').style.borderColor = '#1e40af';
+        }
+
+        function bookAppointment(e) {
+            e.preventDefault();
+            
+            const appointment = {
+                id: Date.now(),
+                specialist: document.getElementById('selectedSpecialist').value,
+                date: document.getElementById('appointmentDate').value,
+                time: document.getElementById('appointmentTime').value,
+                reason: document.getElementById('reasonVisit').value,
+                status: 'scheduled',
+                bookingDate: new Date().toLocaleDateString()
+            };
+            
+            appState.appointments.push(appointment);
+            localStorage.setItem('appointments', JSON.stringify(appState.appointments));
+            
+            updateAppointmentsList();
+            e.target.reset();
+            showAlert('success', 'Appointment booked successfully!');
+        }
+
+        function updateAppointmentsList() {
+            const container = document.getElementById('appointmentsList');
+            
+            if (appState.appointments.length === 0) {
+                container.innerHTML = '<p data-translate="no_appointments">No appointments scheduled.</p>';
+                return;
+            }
+            
+            container.innerHTML = appState.appointments.map(appointment => `
+                <div class="card" style="margin: 0; margin-bottom: 1rem;">
+                    <h5>${appointment.specialist}</h5>
+                    <p><strong>Date:</strong> ${appointment.date} at ${appointment.time}</p>
+                    <p><strong>Reason:</strong> ${appointment.reason}</p>
+                    <p><strong>Status:</strong> <span class="status-indicator status-${appointment.status}">${appointment.status.toUpperCase()}</span></p>
+                    <button onclick="cancelAppointment('${appointment.id}')" class="btn btn-danger" style="padding: 0.5rem;">Cancel</button>
+                </div>
+            `).join('');
+        }
+
+        function cancelAppointment(appointmentId) {
+            if (confirm('Are you sure you want to cancel this appointment?')) {
+                appState.appointments = appState.appointments.filter(a => a.id != appointmentId);
+                localStorage.setItem('appointments', JSON.stringify(appState.appointments));
+                updateAppointmentsList();
+                showAlert('success', 'Appointment cancelled successfully');
+            }
+        }
+
+        // Location sharing
+        function shareLocation() {
+            const container = document.getElementById('locationInfo');
+            container.innerHTML = '<div class="loading"><div class="spinner"></div> Getting your location...</div>';
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    container.innerHTML = `
+                        <div class="card">
+                            <p><strong>Your Location:</strong></p>
+                            <p>Latitude: ${lat.toFixed(6)}</p>
+                            <p>Longitude: ${lng.toFixed(6)}</p>
+                            <div style="margin-top: 1rem;">
+                                <a href="https://maps.google.com/?q=${lat},${lng}" target="_blank" class="btn">View on Map</a>
+                                <button onclick="sendLocationSMS(${lat}, ${lng})" class="btn btn-danger">Send via SMS</button>
+                            </div>
+                        </div>
+                    `;
+                }, function(error) {
+                    container.innerHTML = '<p>Unable to get location. Please enable location services.</p>';
+                });
+            } else {
+                container.innerHTML = '<p>Geolocation is not supported by this browser.</p>';
+            }
+        }
+
+        function sendLocationSMS(lat, lng) {
+            const message = `Emergency! My location: https://maps.google.com/?q=${lat},${lng}`;
+            window.location.href = `sms:108?body=${encodeURIComponent(message)}`;
+        }
+
+        // Navigation
+        function showSection(sectionName) {
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+            document.getElementById(sectionName).classList.add('active');
+
+            // Load section-specific data
+            if (sectionName === 'health-records') {
+                updateHealthRecordsList();
+            } else if (sectionName === 'medicine-reminders') {
+                updateRemindersList();
+            } else if (sectionName === 'consultation') {
+                updateAppointmentsList();
+            }
+        }
+
+        // Language change
+        function changeLanguage(lang) {
+            appState.currentLanguage = lang;
+            updateAllTexts();
+            localStorage.setItem('preferred_language', lang);
+        }
+
+        function updateAllTexts() {
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                if (element.tagName === 'OPTION') {
+                    element.textContent = t(key);
+                } else if (element.hasAttribute('data-translate-placeholder')) {
+                    element.placeholder = t(key);
+                } else {
+                    element.textContent = t(key);
+                }
+            });
+        }
+
+        // Utility functions
+        function showAlert(type, message) {
+            const alertId = type + 'Alert';
+            const alertDiv = document.getElementById(alertId);
+            alertDiv.textContent = message;
+            alertDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                alertDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Doctor Dashboard Functions
+        let currentPatientData = null;
+        let patientQueue = [];
+        
+        function initializeDoctorDashboard() {
+            // Initialize with sample patient data
+            if (patientQueue.length === 0) {
+                patientQueue = [
+                    {
+                        id: 1,
+                        name: 'John Doe',
+                        age: 35,
+                        gender: 'Male',
+                        bloodGroup: 'O+',
+                        phone: '+91 9876543210',
+                        email: 'john.doe@email.com',
+                        address: '123 Main St, City',
+                        priority: 'urgent',
+                        symptoms: 'Chest pain, shortness of breath',
+                        appointmentTime: '10:00 AM',
+                        status: 'waiting'
+                    },
+                    {
+                        id: 2,
+                        name: 'Sarah Smith',
+                        age: 28,
+                        gender: 'Female',
+                        bloodGroup: 'A+',
+                        phone: '+91 9876543211',
+                        email: 'sarah.smith@email.com',
+                        address: '456 Oak St, City',
+                        priority: 'normal',
+                        symptoms: 'Persistent headache, dizziness',
+                        appointmentTime: '10:30 AM',
+                        status: 'waiting'
+                    },
+                    {
+                        id: 3,
+                        name: 'Mike Johnson',
+                        age: 45,
+                        gender: 'Male',
+                        bloodGroup: 'B+',
+                        phone: '+91 9876543212',
+                        email: 'mike.johnson@email.com',
+                        address: '789 Pine St, City',
+                        priority: 'routine',
+                        symptoms: 'Regular checkup, diabetes follow-up',
+                        appointmentTime: '11:00 AM',
+                        status: 'waiting'
+                    }
+                ];
+            }
+            updatePatientQueue();
+        }
+        
+        function filterPatients(priority) {
+            // Update active filter
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Filter and display patients
+            const filteredPatients = priority === 'all' ? 
+                patientQueue : 
+                patientQueue.filter(patient => patient.priority === priority);
+            
+            displayPatients(filteredPatients);
+        }
+        
+        function updatePatientQueue() {
+            displayPatients(patientQueue);
+        }
+        
+        function displayPatients(patients) {
+            const container = document.getElementById('patientQueue');
+            
+            if (patients.length === 0) {
+                container.innerHTML = '<p>No patients in queue.</p>';
+                return;
+            }
+            
+            container.innerHTML = patients.map(patient => `
+                <div class="patient-queue-item ${patient.priority}" onclick="openPatientModal(${patient.id})">
+                    <div class="patient-item-header">
+                        <span class="patient-name">${patient.name}</span>
+                        <span class="patient-priority ${patient.priority}">
+                            ${patient.priority === 'urgent' ? '🔴' : patient.priority === 'normal' ? '🟡' : '🟢'} ${patient.priority.toUpperCase()}
+                        </span>
+                    </div>
+                    <div class="patient-symptoms">
+                        <strong>Symptoms:</strong> ${patient.symptoms}
+                    </div>
+                    <div style="margin-top: 0.5rem; font-size: 0.875rem; color: #6b7280;">
+                        <span>🕰️ ${patient.appointmentTime}</span> • 
+                        <span>👤 ${patient.gender}, ${patient.age}y</span> • 
+                        <span>🩸 ${patient.bloodGroup}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        function openPatientModal(patientId) {
+            const patient = patientQueue.find(p => p.id === patientId);
+            if (!patient) return;
+            
+            currentPatientData = patient;
+            
+            // Populate patient data in modal
+            document.getElementById('patientModalTitle').textContent = `Patient: ${patient.name}`;
+            document.getElementById('patientName').textContent = patient.name;
+            document.getElementById('patientAge').textContent = `${patient.age} years`;
+            document.getElementById('patientGender').textContent = patient.gender;
+            document.getElementById('patientBloodGroup').textContent = patient.bloodGroup;
+            document.getElementById('patientPhone').textContent = patient.phone;
+            document.getElementById('patientEmail').textContent = patient.email;
+            document.getElementById('patientAddress').textContent = patient.address;
+            document.getElementById('patientPriority').textContent = 
+                `${patient.priority === 'urgent' ? '🔴' : patient.priority === 'normal' ? '🟡' : '🟢'} ${patient.priority.charAt(0).toUpperCase() + patient.priority.slice(1)} Priority`;
+            
+            // Set priority radio button
+            document.querySelector(`input[name="priority"][value="${patient.priority}"]`).checked = true;
+            
+            // Load visit history
+            loadVisitHistory(patientId);
+            
+            // Show modal
+            document.getElementById('patientModal').style.display = 'flex';
+            
+            // Initialize first prescription row
+            if (document.getElementById('prescriptionTableBody').children.length === 0) {
+                addMedicineRow();
+            }
+        }
+        
+        function closePatientModal() {
+            document.getElementById('patientModal').style.display = 'none';
+            currentPatientData = null;
+        }
+        
+        function switchPatientTab(tabName) {
+            // Update active tab
+            document.querySelectorAll('.tab-btn').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Show/hide tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+        
+        function addMedicineRow() {
+            const tableBody = document.getElementById('prescriptionTableBody');
+            const row = document.createElement('tr');
+            
+            row.innerHTML = `
+                <td><input type="text" placeholder="Medicine name" class="medicine-name"></td>
+                <td><input type="text" placeholder="500mg" class="dosage"></td>
+                <td>
+                    <select class="frequency">
+                        <option value="">Select frequency</option>
+                        <option value="once-daily">Once daily</option>
+                        <option value="twice-daily">Twice daily</option>
+                        <option value="thrice-daily">Thrice daily</option>
+                        <option value="as-needed">As needed</option>
+                    </select>
+                </td>
+                <td><input type="text" placeholder="7 days" class="duration"></td>
+                <td><input type="text" placeholder="After meals" class="instructions"></td>
+                <td>
+                    <button type="button" onclick="removeMedicineRow(this)" class="btn btn-danger btn-sm">×</button>
+                </td>
+            `;
+            
+            tableBody.appendChild(row);
+        }
+        
+        function removeMedicineRow(button) {
+            button.closest('tr').remove();
+        }
+        
+        function savePatientData() {
+            if (!currentPatientData) return;
+            
+            // Update patient priority
+            const selectedPriority = document.querySelector('input[name="priority"]:checked')?.value;
+            if (selectedPriority) {
+                currentPatientData.priority = selectedPriority;
+            }
+            
+            // Collect vital signs
+            const vitalSigns = {
+                bloodPressure: document.getElementById('bloodPressure').value,
+                heartRate: document.getElementById('heartRate').value,
+                temperature: document.getElementById('temperature').value,
+                weight: document.getElementById('weight').value
+            };
+            
+            // Collect medical history
+            const medicalHistory = {
+                currentConditions: document.getElementById('currentConditions').value,
+                allergies: document.getElementById('patientAllergies').value,
+                currentMedications: document.getElementById('currentMedicationsDoc').value,
+                previousSurgeries: document.getElementById('previousSurgeries').value,
+                familyHistory: document.getElementById('familyHistory').value
+            };
+            
+            // Collect clinical data
+            const clinicalData = {
+                notes: document.getElementById('clinicalNotes').value,
+                diagnosis: document.getElementById('diagnosis').value,
+                treatmentPlan: document.getElementById('treatmentPlan').value,
+                followUpInstructions: document.getElementById('followUpInstructions').value,
+                recommendedTests: Array.from(document.querySelectorAll('.test-checkboxes input:checked')).map(cb => cb.value),
+                otherTests: document.getElementById('otherTests').value
+            };
+            
+            // Collect prescription
+            const prescriptionRows = document.querySelectorAll('#prescriptionTableBody tr');
+            const prescription = Array.from(prescriptionRows).map(row => ({
+                medicine: row.querySelector('.medicine-name').value,
+                dosage: row.querySelector('.dosage').value,
+                frequency: row.querySelector('.frequency').value,
+                duration: row.querySelector('.duration').value,
+                instructions: row.querySelector('.instructions').value
+            })).filter(med => med.medicine.trim());
+            
+            const prescriptionNotes = document.getElementById('prescriptionNotes').value;
+            
+            // Save to local storage or send to server
+            const patientRecord = {
+                patientId: currentPatientData.id,
+                timestamp: new Date().toISOString(),
+                vitalSigns,
+                medicalHistory,
+                clinicalData,
+                prescription,
+                prescriptionNotes,
+                doctor: appState.currentUser.name
+            };
+            
+            // Store in localStorage for demo
+            let patientRecords = JSON.parse(localStorage.getItem('patient_records') || '[]');
+            patientRecords.push(patientRecord);
+            localStorage.setItem('patient_records', JSON.stringify(patientRecords));
+            
+            showAlert('success', 'Patient data saved successfully!');
+            
+            // Mark patient as completed
+            currentPatientData.status = 'completed';
+            updatePatientQueue();
+        }
+        
+        function printPrescription() {
+            if (!currentPatientData) return;
+            
+            // Create prescription content
+            const prescriptionRows = document.querySelectorAll('#prescriptionTableBody tr');
+            const prescription = Array.from(prescriptionRows).map(row => ({
+                medicine: row.querySelector('.medicine-name').value,
+                dosage: row.querySelector('.dosage').value,
+                frequency: row.querySelector('.frequency').value,
+                duration: row.querySelector('.duration').value,
+                instructions: row.querySelector('.instructions').value
+            })).filter(med => med.medicine.trim());
+            
+            const prescriptionNotes = document.getElementById('prescriptionNotes').value;
+            
+            // Create printable content
+            const printContent = `
+                <div style="font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px;">
+                    <div style="text-align: center; border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 20px;">
+                        <h1>Medical Prescription</h1>
+                        <h3>Dr. ${appState.currentUser.name}</h3>
+                        <p>${appState.currentUser.specialization || 'General Physician'}</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h3>Patient Information:</h3>
+                        <p><strong>Name:</strong> ${currentPatientData.name}</p>
+                        <p><strong>Age:</strong> ${currentPatientData.age} years</p>
+                        <p><strong>Gender:</strong> ${currentPatientData.gender}</p>
+                        <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h3>Prescription:</h3>
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #333;">
+                            <thead>
+                                <tr style="background: #f0f0f0;">
+                                    <th style="border: 1px solid #333; padding: 8px; text-align: left;">Medicine</th>
+                                    <th style="border: 1px solid #333; padding: 8px; text-align: left;">Dosage</th>
+                                    <th style="border: 1px solid #333; padding: 8px; text-align: left;">Frequency</th>
+                                    <th style="border: 1px solid #333; padding: 8px; text-align: left;">Duration</th>
+                                    <th style="border: 1px solid #333; padding: 8px; text-align: left;">Instructions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${prescription.map(med => `
+                                    <tr>
+                                        <td style="border: 1px solid #333; padding: 8px;">${med.medicine}</td>
+                                        <td style="border: 1px solid #333; padding: 8px;">${med.dosage}</td>
+                                        <td style="border: 1px solid #333; padding: 8px;">${med.frequency.replace('-', ' ')}</td>
+                                        <td style="border: 1px solid #333; padding: 8px;">${med.duration}</td>
+                                        <td style="border: 1px solid #333; padding: 8px;">${med.instructions}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    ${prescriptionNotes ? `
+                        <div style="margin-bottom: 20px;">
+                            <h3>Additional Instructions:</h3>
+                            <p>${prescriptionNotes}</p>
+                        </div>
+                    ` : ''}
+                    
+                    <div style="margin-top: 40px; text-align: right;">
+                        <p>_____________________</p>
+                        <p>Dr. ${appState.currentUser.name}</p>
+                        <p>Digital Signature</p>
+                    </div>
+                </div>
+            `;
+            
+            // Open print window
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <html>
+                    <head><title>Prescription - ${currentPatientData.name}</title></head>
+                    <body>${printContent}</body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.print();
+        }
+        
+        function loadVisitHistory(patientId) {
+            const records = JSON.parse(localStorage.getItem('patient_records') || '[]');
+            const patientRecords = records.filter(record => record.patientId === patientId);
+            
+            const container = document.getElementById('visitHistory');
+            
+            if (patientRecords.length === 0) {
+                container.innerHTML = '<p>No previous visits recorded.</p>';
+                return;
+            }
+            
+            container.innerHTML = patientRecords.map(record => `
+                <div class="visit-history-item">
+                    <div class="visit-date">${new Date(record.timestamp).toLocaleDateString()}</div>
+                    <div class="visit-diagnosis"><strong>Diagnosis:</strong> ${record.clinicalData.diagnosis || 'Not specified'}</div>
+                    <div class="visit-diagnosis"><strong>Treatment:</strong> ${record.clinicalData.treatmentPlan || 'Not specified'}</div>
+                </div>
+            `).join('');
+        }
+        
+        function addNewPatient() {
+            showAlert('info', 'Add new patient functionality would connect to patient registration system.');
+        }
+        
+        function viewSchedule() {
+            showAlert('info', 'Schedule view would show daily/weekly appointment calendar.');
+        }
+        
+        function generateReports() {
+            showAlert('info', 'Report generation would create statistical and clinical reports.');
+        }
+        
+        // Initialize data on load
+        window.onload = function() {
+            updateHealthRecordsList();
+            updateRemindersList();
+            updateAppointmentsList();
+        };
+    </script>
+</body>
+</html>

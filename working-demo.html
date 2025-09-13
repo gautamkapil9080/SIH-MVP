@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nabha Telemedicine - Rural Healthcare Access</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .navbar {
+            background: #2E8B57;
+            color: white;
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-brand h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-links button {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .nav-links button:hover, .nav-links button.active {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .language-selector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .language-selector select {
+            padding: 5px;
+            border-radius: 4px;
+        }
+
+        .section {
+            display: none;
+            padding: 2rem;
+            min-height: 80vh;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            background: #2E8B57;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background: #236B43;
+        }
+
+        .emergency-btn {
+            background: #dc3545;
+        }
+
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .symptoms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .symptom-btn {
+            padding: 1rem;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .symptom-btn.selected {
+            border-color: #2E8B57;
+            background: #e8f5e8;
+        }
+
+        .medicine-result {
+            background: #f8f9fa;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border-radius: 4px;
+            border-left: 4px solid #2E8B57;
+        }
+
+        .status-message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            display: none;
+            z-index: 1001;
+        }
+
+        .status-message.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-message.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+            }
+            
+            .section {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Language Selector -->
+    <div class="language-selector">
+        <select id="languageSelect">
+            <option value="en">English</option>
+            <option value="hi">हिंदी</option>
+            <option value="pa">ਪੰਜਾਬੀ</option>
+        </select>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <h1 id="app_title">Nabha Telemedicine</h1>
+        </div>
+        <div class="nav-links">
+            <button onclick="showSection('patient')" id="patient_portal" class="active">Patient Portal</button>
+            <button onclick="showSection('doctor')" id="doctor_portal">Doctor Portal</button>
+            <button onclick="showSection('pharmacy')" id="pharmacy_portal">Pharmacy Portal</button>
+            <button onclick="showSection('symptoms')" id="symptom_checker">Symptom Checker</button>
+            <button onclick="showSection('schemes')" id="gov_schemes">Govt Schemes</button>
+            <button onclick="showSection('emergency')" id="emergency" class="emergency-btn">🚨 Emergency</button>
+        </div>
+    </nav>
+
+    <!-- Patient Section -->
+    <section id="patient-section" class="section active">
+        <div class="container">
+            <h2 id="patient_registration">Patient Registration</h2>
+            <div class="card">
+                <form id="patientForm">
+                    <div class="form-group">
+                        <label id="full_name">Full Name:</label>
+                        <input type="text" id="patientName" required>
+                    </div>
+                    <div class="form-group">
+                        <label id="village">Village:</label>
+                        <input type="text" id="patientVillage" required>
+                    </div>
+                    <div class="form-group">
+                        <label id="phone">Phone Number:</label>
+                        <input type="tel" id="patientPhone" required>
+                    </div>
+                    <div class="form-group">
+                        <label id="age">Age:</label>
+                        <input type="number" id="patientAge" required>
+                    </div>
+                    <div class="form-group">
+                        <label id="symptoms">Describe your symptoms:</label>
+                        <textarea id="patientSymptoms" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label id="urgency">Urgency Level:</label>
+                        <select id="urgencyLevel">
+                            <option value="low" id="low">Low</option>
+                            <option value="medium" id="medium">Medium</option>
+                            <option value="high" id="high">High</option>
+                            <option value="emergency" id="emergency_level">Emergency</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn" id="submit_request">Submit Request</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Doctor Section -->
+    <section id="doctor-section" class="section">
+        <div class="container">
+            <h2 id="doctor_dashboard">Doctor Dashboard</h2>
+            <div class="card">
+                <h3 id="pending_requests">Pending Patient Requests</h3>
+                <div id="requestsList">
+                    <div class="medicine-result">
+                        <h4>Rajesh Kumar (45) - Khera Village</h4>
+                        <p><strong>Symptoms:</strong> Fever and cough for 3 days</p>
+                        <p><strong>Urgency:</strong> <span style="color: #dc3545;">High</span></p>
+                        <p><strong>Time:</strong> 2 hours ago</p>
+                        <button class="btn">Start Consultation</button>
+                    </div>
+                    <div class="medicine-result">
+                        <h4>Priya Singh (32) - Dandian Village</h4>
+                        <p><strong>Symptoms:</strong> Headache and nausea</p>
+                        <p><strong>Urgency:</strong> <span style="color: #ffc107;">Medium</span></p>
+                        <p><strong>Time:</strong> 1 hour ago</p>
+                        <button class="btn">Start Consultation</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pharmacy Section -->
+    <section id="pharmacy-section" class="section">
+        <div class="container">
+            <h2 id="medicine_availability">Medicine Availability</h2>
+            <div class="card">
+                <h3 id="search_medicines">Search Medicines</h3>
+                <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                    <input type="text" id="medicineSearch" placeholder="Enter medicine name" style="flex: 1;">
+                    <button onclick="searchMedicine()" class="btn" id="search">Search</button>
+                </div>
+                <div id="medicineResults">
+                    <div class="medicine-result">
+                        <h4>City Medical Store - Nabha Main Market (0.5 km)</h4>
+                        <p><strong>Paracetamol 500mg:</strong> <span style="color: #28a745;">Available</span> - ₹15 (50+ tablets)</p>
+                        <p><strong>Contact:</strong> +91 98765-43210</p>
+                        <button class="btn">Get Directions</button>
+                    </div>
+                    <div class="medicine-result">
+                        <h4>Health Plus Pharmacy - Khera Village (3.2 km)</h4>
+                        <p><strong>Paracetamol 500mg:</strong> <span style="color: #28a745;">Available</span> - ₹12 (100+ tablets)</p>
+                        <p><strong>Contact:</strong> +91 98765-43211</p>
+                        <button class="btn">Get Directions</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Symptom Checker Section -->
+    <section id="symptoms-section" class="section">
+        <div class="container">
+            <h2 id="symptom_checker_title">AI Symptom Checker</h2>
+            <div class="card">
+                <h3>Select your symptoms:</h3>
+                <div class="symptoms-grid">
+                    <div class="symptom-btn" onclick="toggleSymptom(this)">
+                        🌡️ <br>Fever
+                    </div>
+                    <div class="symptom-btn" onclick="toggleSymptom(this)">
+                        🤧 <br>Cough
+                    </div>
+                    <div class="symptom-btn" onclick="toggleSymptom(this)">
+                        🤕 <br>Headache
+                    </div>
+                    <div class="symptom-btn" onclick="toggleSymptom(this)">
+                        💪 <br>Body ache
+                    </div>
+                    <div class="symptom-btn" onclick="toggleSymptom(this)">
+                        🤢 <br>Nausea
+                    </div>
+                    <div class="symptom-btn" onclick="toggleSymptom(this)">
+                        😴 <br>Fatigue
+                    </div>
+                </div>
+                <button onclick="checkSymptoms()" class="btn">Check Symptoms</button>
+                <div id="symptomResults" style="margin-top: 1rem;"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Government Schemes Section -->
+    <section id="schemes-section" class="section">
+        <div class="container">
+            <h2 id="govt_schemes_title">🏛️ Government Health Schemes</h2>
+            <div class="card">
+                <h3>🏥 Ayushman Bharat - PM-JAY</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <span style="background: #28a745; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Active</span>
+                    <span style="color: #666; font-size: 0.9rem;">Updated: Today</span>
+                </div>
+                <p>Free treatment up to ₹5 lakh per family per year</p>
+                <div style="margin: 1rem 0;">
+                    <p><strong>Eligibility:</strong> Below poverty line families</p>
+                    <p><strong>Coverage:</strong> 1,393 medical packages including surgeries, treatments</p>
+                    <p><strong>Hospitals:</strong> Civil Hospital Nabha, Patiala Medical College</p>
+                </div>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button class="btn" onclick="checkEligibility('ayushman')">Check Eligibility</button>
+                    <button class="btn" style="background: #6c757d;" onclick="findHospital('ayushman')">Find Hospital</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>🏥 Punjab Health Scheme</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <span style="background: #28a745; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Active</span>
+                    <span style="color: #666; font-size: 0.9rem;">State Scheme</span>
+                </div>
+                <p>Free medicines and treatment at all government hospitals in Punjab</p>
+                <div style="margin: 1rem 0;">
+                    <p><strong>Eligibility:</strong> All Punjab residents</p>
+                    <p><strong>Coverage:</strong> Essential medicines, OPD, emergency care</p>
+                    <p><strong>Centers:</strong> All PHCs, CHCs, District Hospitals</p>
+                </div>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button class="btn" onclick="findCenter('punjab')">Find Nearby Center</button>
+                    <button class="btn" style="background: #6c757d;" onclick="downloadCard('punjab')">Get Health Card</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>💊 Jan Aushadhi Scheme</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <span style="background: #28a745; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">Active</span>
+                    <span style="color: #666; font-size: 0.9rem;">Central Scheme</span>
+                </div>
+                <p>Generic medicines at 50-90% lower prices than branded medicines</p>
+                <div style="margin: 1rem 0;">
+                    <p><strong>Eligibility:</strong> Everyone can purchase</p>
+                    <p><strong>Medicines:</strong> 1,500+ generic medicines available</p>
+                    <p><strong>Stores:</strong> Nabha Main Market, Civil Hospital premises</p>
+                </div>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button class="btn" onclick="findStore('janaushadhi')">Find Store</button>
+                    <button class="btn" style="background: #6c757d;" onclick="comparePrices()">Compare Prices</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>🚑 Emergency Medical Scheme</h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <span style="background: #dc3545; color: white; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">24/7 Active</span>
+                    <span style="color: #666; font-size: 0.9rem;">Emergency Only</span>
+                </div>
+                <p>Free ambulance service and emergency treatment for all</p>
+                <div style="margin: 1rem 0;">
+                    <p><strong>Service:</strong> 108 Ambulance with trained paramedics</p>
+                    <p><strong>Coverage:</strong> Free emergency care at government hospitals</p>
+                    <p><strong>Response:</strong> Average 15 minutes in rural areas</p>
+                </div>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button class="btn emergency-btn" onclick="callEmergency('108')">🚑 Call 108</button>
+                    <button class="btn" style="background: #6c757d;" onclick="trackAmbulance()">Track Ambulance</button>
+                </div>
+            </div>
+            
+            <div class="card" style="background: #e8f4f8; border-left: 4px solid #17a2b8;">
+                <h3>📞 Need Help with Schemes?</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                    <div>
+                        <strong>📞 Ayushman Bharat Helpline:</strong><br>
+                        <span style="color: #17a2b8; font-weight: bold;">14555</span> (Toll Free)
+                    </div>
+                    <div>
+                        <strong>🏥 Civil Hospital Nabha:</strong><br>
+                        <span style="color: #17a2b8; font-weight: bold;">01762-230345</span>
+                    </div>
+                    <div>
+                        <strong>🏛️ District Health Office:</strong><br>
+                        <span style="color: #17a2b8; font-weight: bold;">0175-2212345</span> (Patiala)
+                    </div>
+                    <div>
+                        <strong>💊 Jan Aushadhi Info:</strong><br>
+                        <span style="color: #17a2b8; font-weight: bold;">1800-180-5050</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Emergency Section -->
+    <section id="emergency-section" class="section">
+        <div class="container">
+            <h2 style="color: #dc3545;">🚨 Emergency Services</h2>
+            
+            <div class="card" style="background: #fff5f5; border-left: 4px solid #dc3545;">
+                <h3 style="color: #dc3545;">⚠️ Emergency Warning Signs</h3>
+                <p style="color: #721c24;"><strong>Call Emergency Services Immediately If You Have:</strong></p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0.5rem; margin: 1rem 0;">
+                    <div>• Severe chest pain or pressure</div>
+                    <div>• Severe difficulty breathing</div>
+                    <div>• Loss of consciousness or confusion</div>
+                    <div>• Severe bleeding that won't stop</div>
+                    <div>• Serious head injury</div>
+                    <div>• High fever with confusion</div>
+                    <div>• Signs of stroke (facial drooping, arm weakness)</div>
+                    <div>• Severe allergic reaction</div>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+                <div class="card">
+                    <h3>🚑 Medical Emergency</h3>
+                    <p>Free 24/7 ambulance service with trained paramedics and medical equipment</p>
+                    <div style="margin: 1rem 0; color: #666; font-size: 0.9rem;">
+                        <div>• Average response time: 15 minutes</div>
+                        <div>• GPS-enabled ambulances</div>
+                        <div>• Free service for all</div>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <button onclick="callEmergency('108')" class="btn emergency-btn">📞 Call 108</button>
+                        <button onclick="shareLocation()" class="btn" style="background: #6c757d;">📍 Share Location</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>🚓 Police Emergency</h3>
+                    <p>Police emergency response for crime, accidents, and law enforcement</p>
+                    <div style="margin: 1rem 0; color: #666; font-size: 0.9rem;">
+                        <div>• Crime reporting</div>
+                        <div>• Accident assistance</div>
+                        <div>• Women safety helpline</div>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <button onclick="callEmergency('100')" class="btn emergency-btn">📞 Call 100</button>
+                        <button onclick="callEmergency('1091')" class="btn" style="background: #e91e63;">👩 Women Helpline</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>🚒 Fire Emergency</h3>
+                    <p>Fire department emergency response for fires and rescue operations</p>
+                    <div style="margin: 1rem 0; color: #666; font-size: 0.9rem;">
+                        <div>• Fire suppression</div>
+                        <div>• Rescue operations</div>
+                        <div>• Hazardous material response</div>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <button onclick="callEmergency('101')" class="btn emergency-btn">📞 Call 101</button>
+                        <button onclick="reportFire()" class="btn" style="background: #6c757d;">🔥 Report Fire</button>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>🏭 Disaster Management</h3>
+                    <p>Natural disaster response and emergency coordination</p>
+                    <div style="margin: 1rem 0; color: #666; font-size: 0.9rem;">
+                        <div>• Flood response</div>
+                        <div>• Earthquake assistance</div>
+                        <div>• Emergency shelter</div>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <button onclick="callEmergency('1070')" class="btn emergency-btn">📞 Call 1070</button>
+                        <button onclick="findShelter()" class="btn" style="background: #6c757d;">🏠 Find Shelter</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card" style="background: #e8f4f8; border-left: 4px solid #17a2b8;">
+                <h3>📞 Important Local Contacts</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 1rem;">
+                    <div>
+                        <strong>🏥 Civil Hospital Nabha:</strong><br>
+                        <span style="color: #17a2b8; font-weight: bold;">01762-230345</span>
+                    </div>
+                    <div>
+                        <strong>🚓 Police Station Nabha:</strong><br>
+                        <span style="color: #17a2b8; font-weight: bold;">01762-230100</span>
+                    </div>
+                    <div>
+                        <strong>🚒 Fire Station:</strong><br>
+                        <span style="color: #17a2b8; font-weight: bold;">01762-230101</span>
+                    </div>
+                    <div>
+                        <strong>🏥 District Hospital Patiala:</strong><br>
+                        <span style="color: #17a2b8; font-weight: bold;">0175-2212345</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>📍 Your Location</h3>
+                <div id="locationDisplay" style="background: #f8f9fa; padding: 1rem; border-radius: 4px; margin: 1rem 0;">
+                    <p style="margin: 0; color: #666;">Click "Get My Location" to share your current location with emergency services</p>
+                </div>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <button onclick="getCurrentLocation()" class="btn">📍 Get My Location</button>
+                    <button onclick="sendLocationSMS()" class="btn" style="background: #6c757d;">📱 Send Location SMS</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Status Messages -->
+    <div id="statusMessage" class="status-message"></div>
+
+    <script>
+        // Translation data
+        const translations = {
+            en: {
+                app_title: "Nabha Telemedicine",
+                patient_portal: "Patient Portal",
+                doctor_portal: "Doctor Portal",
+                pharmacy_portal: "Pharmacy Portal",
+                symptom_checker: "Symptom Checker",
+                emergency: "🚨 Emergency",
+                patient_registration: "Patient Registration",
+                full_name: "Full Name:",
+                village: "Village:",
+                phone: "Phone Number:",
+                age: "Age:",
+                symptoms: "Describe your symptoms:",
+                urgency: "Urgency Level:",
+                low: "Low",
+                medium: "Medium",
+                high: "High",
+                emergency_level: "Emergency",
+                submit_request: "Submit Request",
+                doctor_dashboard: "Doctor Dashboard",
+                pending_requests: "Pending Patient Requests",
+                medicine_availability: "Medicine Availability",
+                search_medicines: "Search Medicines",
+                search: "Search",
+                symptom_checker_title: "AI Symptom Checker"
+            },
+            hi: {
+                app_title: "नाभा टेलीमेडिसिन",
+                patient_portal: "मरीज़ पोर्टल",
+                doctor_portal: "डॉक्टर पोर्टल",
+                pharmacy_portal: "दवाखाना पोर्टल",
+                symptom_checker: "लक्षण जांचकर्ता",
+                emergency: "🚨 आपातकाल",
+                patient_registration: "मरीज़ पंजीकरण",
+                full_name: "पूरा नाम:",
+                village: "गांव:",
+                phone: "फ़ोन नंबर:",
+                age: "उम्र:",
+                symptoms: "अपने लक्षणों का वर्णन करें:",
+                urgency: "तात्कालिकता स्तर:",
+                low: "कम",
+                medium: "मध्यम",
+                high: "उच्च",
+                emergency_level: "आपातकाल",
+                submit_request: "अनुरोध भेजें",
+                doctor_dashboard: "डॉक्टर डैशबोर्ड",
+                pending_requests: "लंबित मरीज़ अनुरोध",
+                medicine_availability: "दवा उपलब्धता",
+                search_medicines: "दवाएं खोजें",
+                search: "खोजें",
+                symptom_checker_title: "AI लक्षण जांचकर्ता"
+            },
+            pa: {
+                app_title: "ਨਾਭਾ ਟੈਲੀਮੈਡਿਸਿਨ",
+                patient_portal: "ਮਰੀਜ਼ ਪੋਰਟਲ",
+                doctor_portal: "ਡਾਕਟਰ ਪੋਰਟਲ",
+                pharmacy_portal: "ਦਵਾਈ ਪੋਰਟਲ",
+                symptom_checker: "ਲੱਛਣ ਜਾਂਚਕਰਤਾ",
+                emergency: "🚨 ਐਮਰਜੈਂਸੀ",
+                patient_registration: "ਮਰੀਜ਼ ਰਜਿਸਟ੍ਰੇਸ਼ਨ",
+                full_name: "ਪੂਰਾ ਨਾਮ:",
+                village: "ਪਿੰਡ:",
+                phone: "ਫ਼ੋਨ ਨੰਬਰ:",
+                age: "ਉਮਰ:",
+                symptoms: "ਆਪਣੇ ਲੱਛਣਾਂ ਦਾ ਵਰਣਨ ਕਰੋ:",
+                urgency: "ਤਤਕਾਲਤਾ ਪੱਧਰ:",
+                low: "ਘੱਟ",
+                medium: "ਮੱਧਮ",
+                high: "ਉੱਚ",
+                emergency_level: "ਐਮਰਜੈਂਸੀ",
+                submit_request: "ਬੇਨਤੀ ਭੇਜੋ",
+                doctor_dashboard: "ਡਾਕਟਰ ਡੈਸ਼ਬੋਰਡ",
+                pending_requests: "ਬਕਾਇਆ ਮਰੀਜ਼ ਬੇਨਤੀਆਂ",
+                medicine_availability: "ਦਵਾਈ ਉਪਲਬਧਤਾ",
+                search_medicines: "ਦਵਾਈਆਂ ਖੋਜੋ",
+                search: "ਖੋਜ",
+                symptom_checker_title: "AI ਲੱਛਣ ਜਾਂਚਕਰਤਾ"
+            }
+        };
+
+        let currentLanguage = 'en';
+        let selectedSymptoms = [];
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            showSection('patient');
+        });
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Language selector
+            document.getElementById('languageSelect').addEventListener('change', function(e) {
+                changeLanguage(e.target.value);
+            });
+
+            // Patient form
+            document.getElementById('patientForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                showStatusMessage('Request submitted successfully!', 'success');
+                this.reset();
+            });
+        }
+
+        // Show section
+        function showSection(sectionName) {
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all nav buttons
+            document.querySelectorAll('.nav-links button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionName + '-section').classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+
+            console.log('Switched to section:', sectionName);
+        }
+
+        // Change language
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update all translatable elements
+            Object.keys(translations[lang]).forEach(key => {
+                const element = document.getElementById(key);
+                if (element) {
+                    if (element.tagName === 'INPUT' && element.type === 'submit') {
+                        element.value = translations[lang][key];
+                    } else {
+                        element.textContent = translations[lang][key];
+                    }
+                }
+            });
+
+            console.log('Language changed to:', lang);
+        }
+
+        // Toggle symptom selection
+        function toggleSymptom(element) {
+            element.classList.toggle('selected');
+            const symptom = element.textContent.trim();
+            
+            if (element.classList.contains('selected')) {
+                selectedSymptoms.push(symptom);
+            } else {
+                selectedSymptoms = selectedSymptoms.filter(s => s !== symptom);
+            }
+
+            console.log('Selected symptoms:', selectedSymptoms);
+        }
+
+        // Check symptoms
+        function checkSymptoms() {
+            const resultsDiv = document.getElementById('symptomResults');
+            
+            if (selectedSymptoms.length === 0) {
+                resultsDiv.innerHTML = '<div class="medicine-result"><p>Please select at least one symptom.</p></div>';
+                return;
+            }
+
+            // Simple AI-like recommendation
+            let urgency = 'Low';
+            let recommendation = 'Rest and monitor symptoms. Consult doctor if symptoms persist.';
+            
+            if (selectedSymptoms.some(s => s.includes('Fever'))) {
+                urgency = 'Medium';
+                recommendation = 'Take paracetamol, rest, and stay hydrated. Consult doctor within 24 hours.';
+            }
+            
+            if (selectedSymptoms.length >= 3) {
+                urgency = 'High';
+                recommendation = 'Multiple symptoms detected. Please consult a doctor immediately.';
+            }
+
+            resultsDiv.innerHTML = `
+                <div class="medicine-result">
+                    <h4>AI Assessment Results</h4>
+                    <p><strong>Selected Symptoms:</strong> ${selectedSymptoms.join(', ')}</p>
+                    <p><strong>Urgency Level:</strong> <span style="color: ${urgency === 'High' ? '#dc3545' : urgency === 'Medium' ? '#ffc107' : '#28a745'}">${urgency}</span></p>
+                    <p><strong>Recommendation:</strong> ${recommendation}</p>
+                    <button class="btn">Book Consultation</button>
+                </div>
+            `;
+
+            console.log('Symptom check completed for:', selectedSymptoms);
+        }
+
+        // Search medicine
+        function searchMedicine() {
+            const searchTerm = document.getElementById('medicineSearch').value;
+            const resultsDiv = document.getElementById('medicineResults');
+            
+            if (!searchTerm) {
+                showStatusMessage('Please enter a medicine name', 'error');
+                return;
+            }
+
+            // Show search results (using existing mock data)
+            resultsDiv.style.display = 'block';
+            showStatusMessage(`Searched for: ${searchTerm}`, 'success');
+
+            console.log('Medicine searched:', searchTerm);
+        }
+
+        // Call emergency
+        function callEmergency(number) {
+            if (confirm(`Call emergency number ${number}?`)) {
+                showStatusMessage(`Calling ${number}...`, 'success');
+                // In real app, this would initiate the call
+                window.open(`tel:${number}`);
+            }
+        }
+
+        // Show status message
+        function showStatusMessage(message, type) {
+            const statusDiv = document.getElementById('statusMessage');
+            statusDiv.textContent = message;
+            statusDiv.className = `status-message ${type}`;
+            statusDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Government Schemes Functions
+        function checkEligibility(scheme) {
+            let message = '';
+            switch(scheme) {
+                case 'ayushman':
+                    message = 'Ayushman Bharat Eligibility Check:\n\nYou need:\n• Ration card (BPL/APL)\n• Aadhaar card\n• Family income certificate\n\nVisit: Civil Hospital Nabha or call 14555';
+                    break;
+                default:
+                    message = 'Eligibility information will be displayed here.';
+            }
+            alert(message);
+            showStatusMessage(`Checked eligibility for ${scheme}`, 'success');
+        }
+        
+        function findHospital(scheme) {
+            showStatusMessage('Finding nearby hospitals...', 'success');
+            alert('Nearby Hospitals for ' + scheme + ':\n\n1. Civil Hospital Nabha - 2.5 km\n2. Patiala Medical College - 45 km\n3. Rajindra Hospital - 48 km');
+        }
+        
+        function findCenter(scheme) {
+            showStatusMessage('Finding health centers...', 'success');
+            alert('Nearby Health Centers:\n\n1. PHC Nabha - 1 km\n2. CHC Samana - 15 km\n3. District Hospital Patiala - 45 km');
+        }
+        
+        function downloadCard(scheme) {
+            showStatusMessage('Generating health card...', 'success');
+            alert('Health card download initiated. You will receive SMS with download link.');
+        }
+        
+        function findStore(scheme) {
+            showStatusMessage('Finding Jan Aushadhi stores...', 'success');
+            alert('Jan Aushadhi Stores:\n\n1. Nabha Main Market - 0.8 km\n2. Civil Hospital Campus - 2.5 km\n3. Bus Stand Road - 1.2 km');
+        }
+        
+        function comparePrices() {
+            showStatusMessage('Loading price comparison...', 'success');
+            alert('Medicine Price Comparison:\n\nParacetamol 500mg:\n• Branded: ₹45\n• Jan Aushadhi: ₹8\n• Savings: 82%\n\nAmoxicillin 250mg:\n• Branded: ₹120\n• Jan Aushadhi: ₹25\n• Savings: 79%');
+        }
+        
+        function trackAmbulance() {
+            showStatusMessage('Tracking ambulance...', 'success');
+            alert('Ambulance Status:\n\nNearest ambulance: PB-10-AB-1234\nLocation: 5 km away\nETA: 12 minutes\n\nDriver: Rajesh Kumar\nPhone: +91 98765-11108');
+        }
+        
+        // Emergency Functions
+        function shareLocation() {
+            showStatusMessage('Getting location...', 'success');
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    showStatusMessage(`Location shared: ${lat.toFixed(6)}, ${lon.toFixed(6)}`, 'success');
+                    alert(`Your location has been shared with emergency services:\n\nLatitude: ${lat.toFixed(6)}\nLongitude: ${lon.toFixed(6)}\n\nEmergency services have been notified.`);
+                }, function() {
+                    showStatusMessage('Location access denied', 'error');
+                });
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        }
+        
+        function reportFire() {
+            showStatusMessage('Reporting fire emergency...', 'success');
+            alert('Fire Emergency Report:\n\nYour report has been filed.\nFire department has been notified.\nReference ID: FIRE-' + Date.now().toString().slice(-6));
+        }
+        
+        function findShelter() {
+            showStatusMessage('Finding emergency shelters...', 'success');
+            alert('Emergency Shelters:\n\n1. Community Center Nabha - 2 km\n2. Government School - 1.5 km\n3. Gurudwara Sahib - 3 km\n\nAll shelters have basic facilities and are open 24/7.');
+        }
+        
+        function getCurrentLocation() {
+            const locationDisplay = document.getElementById('locationDisplay');
+            locationDisplay.innerHTML = '<p style="margin: 0; color: #666;">Getting your location...</p>';
+            
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    locationDisplay.innerHTML = `
+                        <p style="margin: 0;"><strong>Your Location:</strong></p>
+                        <p style="margin: 0.5rem 0;">📍 Latitude: ${lat.toFixed(6)}</p>
+                        <p style="margin: 0.5rem 0;">📍 Longitude: ${lon.toFixed(6)}</p>
+                        <p style="margin: 0.5rem 0; color: #28a745;">✅ Location ready to share with emergency services</p>
+                    `;
+                    showStatusMessage('Location obtained successfully', 'success');
+                }, function() {
+                    locationDisplay.innerHTML = '<p style="margin: 0; color: #dc3545;">❌ Unable to get location. Please check your browser permissions.</p>';
+                    showStatusMessage('Location access denied', 'error');
+                });
+            } else {
+                locationDisplay.innerHTML = '<p style="margin: 0; color: #dc3545;">❌ Geolocation is not supported by this browser.</p>';
+            }
+        }
+        
+        function sendLocationSMS() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lon = position.coords.longitude;
+                    const message = `Emergency Location: https://maps.google.com/maps?q=${lat},${lon}`;
+                    const phone = prompt('Enter emergency contact number:', '+91');
+                    if (phone) {
+                        showStatusMessage(`Location SMS prepared for ${phone}`, 'success');
+                        alert(`SMS ready to send to ${phone}:\n\n${message}\n\n(In real app, SMS would be sent automatically)`);
+                    }
+                }, function() {
+                    showStatusMessage('Location access required for SMS', 'error');
+                });
+            }
+        }
+
+        console.log('Nabha Telemedicine MVP loaded successfully!');
+    </script>
+</body>
+</html>

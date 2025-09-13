@@ -1,0 +1,29 @@
+{
+  "name": "Nabha Telemedicine - Rural Healthcare Access",
+  "short_name": "Nabha Telemedicine",
+  "description": "A telemedicine solution for rural healthcare access in Nabha and surrounding villages",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "theme_color": "#2196F3",
+  "background_color": "#f4f4f4",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "./icon-512.png", 
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "categories": ["medical", "health", "productivity"],
+  "lang": "en-US",
+  "dir": "ltr",
+  "scope": "./",
+  "offline_enabled": true
+}

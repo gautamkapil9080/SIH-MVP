@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nabha Telemedicine - Function Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test-section { margin: 20px 0; padding: 15px; border: 1px solid #ccc; border-radius: 8px; }
+        .success { background-color: #d4edda; border-color: #c3e6cb; color: #155724; }
+        .error { background-color: #f8d7da; border-color: #f5c6cb; color: #721c24; }
+        .info { background-color: #d1ecf1; border-color: #bee5eb; color: #0c5460; }
+        button { padding: 8px 16px; margin: 5px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; }
+        button:hover { background: #0056b3; }
+    </style>
+</head>
+<body>
+    <h1>🧪 Nabha Telemedicine - Functionality Test</h1>
+    
+    <div class="test-section">
+        <h3>1. Core Functions Test</h3>
+        <button onclick="testShowSection()">Test Section Navigation</button>
+        <button onclick="testPharmacyTab()">Test Pharmacy Tabs</button>
+        <button onclick="testMedicineSearch()">Test Medicine Search</button>
+        <div id="section-test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>2. Patient & Doctor Functions Test</h3>
+        <button onclick="testPatientSubmission()">Test Patient Form</button>
+        <button onclick="testDoctorDashboard()">Test Doctor Dashboard</button>
+        <div id="patient-test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>3. Emergency & Location Functions Test</h3>
+        <button onclick="testEmergencyFunctions()">Test Emergency Calls</button>
+        <button onclick="testLocationFunction()">Test Get Location</button>
+        <div id="emergency-test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>4. Storage Functions Test</h3>
+        <button onclick="testStorageFunctions()">Test Local Storage</button>
+        <div id="storage-test-result"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>5. Live Application Test</h3>
+        <button onclick="openMainApp()">🚀 Open Main Application</button>
+        <p>Click to open the full telemedicine application</p>
+    </div>
+
+    <script src="translations.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Test functions
+        function testShowSection() {
+            const resultDiv = document.getElementById('section-test-result');
+            try {
+                // Test if showSection function exists and works
+                if (typeof showSection === 'function') {
+                    resultDiv.innerHTML = '<div class="success">✅ showSection() function exists and is callable</div>';
+                } else {
+                    resultDiv.innerHTML = '<div class="error">❌ showSection() function not found</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="error">❌ Error testing showSection: ' + error.message + '</div>';
+            }
+        }
+
+        function testPharmacyTab() {
+            const resultDiv = document.getElementById('section-test-result');
+            try {
+                if (typeof showPharmacyTab === 'function') {
+                    resultDiv.innerHTML += '<div class="success">✅ showPharmacyTab() function exists</div>';
+                } else {
+                    resultDiv.innerHTML += '<div class="error">❌ showPharmacyTab() function not found</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML += '<div class="error">❌ Error testing pharmacy tabs: ' + error.message + '</div>';
+            }
+        }
+
+        function testMedicineSearch() {
+            const resultDiv = document.getElementById('section-test-result');
+            try {
+                if (typeof searchMedicine === 'function') {
+                    resultDiv.innerHTML += '<div class="success">✅ searchMedicine() function exists</div>';
+                } else {
+                    resultDiv.innerHTML += '<div class="error">❌ searchMedicine() function not found</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML += '<div class="error">❌ Error testing medicine search: ' + error.message + '</div>';
+            }
+        }
+
+        function testPatientSubmission() {
+            const resultDiv = document.getElementById('patient-test-result');
+            try {
+                if (typeof handlePatientSubmission === 'function') {
+                    resultDiv.innerHTML = '<div class="success">✅ Patient form handler exists</div>';
+                } else {
+                    resultDiv.innerHTML = '<div class="error">❌ Patient form handler not found</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="error">❌ Error testing patient functions: ' + error.message + '</div>';
+            }
+        }
+
+        function testDoctorDashboard() {
+            const resultDiv = document.getElementById('patient-test-result');
+            try {
+                if (typeof loadDoctorRequests === 'function' && typeof showDoctorTab === 'function') {
+                    resultDiv.innerHTML += '<div class="success">✅ Doctor dashboard functions exist</div>';
+                } else {
+                    resultDiv.innerHTML += '<div class="error">❌ Doctor dashboard functions missing</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML += '<div class="error">❌ Error testing doctor functions: ' + error.message + '</div>';
+            }
+        }
+
+        function testEmergencyFunctions() {
+            const resultDiv = document.getElementById('emergency-test-result');
+            try {
+                const emergencyFunctions = ['callAmbulance', 'callPolice', 'callFire', 'callWomenHelpline'];
+                let allExist = true;
+                let results = '';
+                
+                emergencyFunctions.forEach(funcName => {
+                    if (typeof window[funcName] === 'function') {
+                        results += '<div class="success">✅ ' + funcName + '() exists</div>';
+                    } else {
+                        results += '<div class="error">❌ ' + funcName + '() missing</div>';
+                        allExist = false;
+                    }
+                });
+                
+                if (allExist) {
+                    results = '<div class="success">✅ All emergency functions exist!</div>' + results;
+                }
+                
+                resultDiv.innerHTML = results;
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="error">❌ Error testing emergency functions: ' + error.message + '</div>';
+            }
+        }
+
+        function testLocationFunction() {
+            const resultDiv = document.getElementById('emergency-test-result');
+            try {
+                if (typeof getCurrentLocation === 'function') {
+                    resultDiv.innerHTML += '<div class="success">✅ Location function exists</div>';
+                    if (navigator.geolocation) {
+                        resultDiv.innerHTML += '<div class="info">ℹ️ Geolocation is supported in this browser</div>';
+                    } else {
+                        resultDiv.innerHTML += '<div class="info">ℹ️ Geolocation not supported in this browser</div>';
+                    }
+                } else {
+                    resultDiv.innerHTML += '<div class="error">❌ Location function missing</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML += '<div class="error">❌ Error testing location: ' + error.message + '</div>';
+            }
+        }
+
+        function testStorageFunctions() {
+            const resultDiv = document.getElementById('storage-test-result');
+            try {
+                // Test basic storage functions
+                if (typeof getStoredData === 'function' && typeof generateId === 'function') {
+                    resultDiv.innerHTML = '<div class="success">✅ Storage utility functions exist</div>';
+                    
+                    // Test actual storage
+                    const testId = generateId();
+                    const testData = { id: testId, test: 'data', timestamp: new Date().toISOString() };
+                    localStorage.setItem('test_storage', JSON.stringify([testData]));
+                    
+                    const retrieved = getStoredData('test_storage');
+                    if (retrieved && retrieved.length > 0 && retrieved[0].id === testId) {
+                        resultDiv.innerHTML += '<div class="success">✅ Local storage read/write working</div>';
+                    } else {
+                        resultDiv.innerHTML += '<div class="error">❌ Local storage test failed</div>';
+                    }
+                    
+                    // Clean up test data
+                    localStorage.removeItem('test_storage');
+                } else {
+                    resultDiv.innerHTML = '<div class="error">❌ Storage utility functions missing</div>';
+                }
+            } catch (error) {
+                resultDiv.innerHTML = '<div class="error">❌ Error testing storage: ' + error.message + '</div>';
+            }
+        }
+
+        function openMainApp() {
+            window.open('index.html', '_blank');
+        }
+
+        // Run basic tests when page loads
+        window.addEventListener('load', function() {
+            console.log('Test page loaded, running basic function checks...');
+            
+            // Check if main app components loaded
+            if (typeof translations !== 'undefined') {
+                console.log('✅ Translations loaded');
+            } else {
+                console.log('❌ Translations not loaded');
+            }
+            
+            if (typeof currentLanguage !== 'undefined') {
+                console.log('✅ Language system loaded');
+            } else {
+                console.log('❌ Language system not loaded');
+            }
+
+            // Test core storage keys
+            if (typeof STORAGE_KEYS !== 'undefined') {
+                console.log('✅ Storage keys defined:', STORAGE_KEYS);
+            } else {
+                console.log('❌ Storage keys not defined');
+            }
+        });
+    </script>
+</body>
+</html>

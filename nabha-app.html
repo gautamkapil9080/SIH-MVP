@@ -1,0 +1,1660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nabha Telemedicine - Rural Healthcare Access</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .navigation {
+            background: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            padding: 0 1rem;
+        }
+
+        .nav-btn {
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .nav-btn.active {
+            background: #4c51bf;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .nav-btn.emergency {
+            background: #e53e3e;
+            animation: pulse 2s infinite;
+        }
+
+        .nav-btn.emergency:hover {
+            background: #c53030;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .section {
+            display: none;
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section h2 {
+            color: #4c51bf;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 0.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .btn {
+            background: #667eea;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            margin: 0.5rem 0.5rem 0.5rem 0;
+        }
+
+        .btn:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background: #38a169;
+        }
+
+        .btn-success:hover {
+            background: #2f855a;
+        }
+
+        .btn-danger {
+            background: #e53e3e;
+        }
+
+        .btn-danger:hover {
+            background: #c53030;
+        }
+
+        .card {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .card h3 {
+            color: #2d3748;
+            margin-bottom: 1rem;
+        }
+
+        .emergency-card {
+            border-left-color: #e53e3e;
+            background: #fed7d7;
+        }
+
+        .success-message {
+            background: #c6f6d5;
+            color: #2f855a;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .error-message {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            display: none;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+
+        .status-indicator {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-completed {
+            background: #c6f6d5;
+            color: #2f855a;
+        }
+
+        .urgency-high {
+            border-left-color: #e53e3e;
+            background: #fed7d7;
+        }
+
+        .urgency-emergency {
+            border-left-color: #c53030;
+            background: #fed7d7;
+            animation: pulse 2s infinite;
+        }
+
+        /* Symptom Checker Styles */
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .checkbox-group label:hover {
+            background: #e9ecef;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 8px;
+            width: auto;
+        }
+
+        .condition-guide details {
+            margin: 1rem 0;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 1rem;
+        }
+
+        .condition-guide summary {
+            cursor: pointer;
+            font-weight: 500;
+            color: #4c51bf;
+        }
+
+        .condition-guide summary:hover {
+            color: #667eea;
+        }
+
+        .urgency-guide {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .urgency-item {
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+
+        .urgency-item.emergency {
+            background: #fed7d7;
+            border-left-color: #e53e3e;
+        }
+
+        .urgency-item.high {
+            background: #fef3c7;
+            border-left-color: #f59e0b;
+        }
+
+        .urgency-item.medium {
+            background: #dbeafe;
+            border-left-color: #3b82f6;
+        }
+
+        .urgency-item.low {
+            background: #d1fae5;
+            border-left-color: #10b981;
+        }
+
+        .urgency-item h4 {
+            margin: 0 0 0.5rem 0;
+            font-size: 1.1rem;
+        }
+
+        .urgency-item p {
+            margin: 0;
+            font-size: 0.9rem;
+        }
+
+        /* Government Schemes Styles */
+        .schemes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .scheme-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .scheme-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .scheme-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .scheme-header h3 {
+            margin: 0;
+            font-size: 1.3rem;
+        }
+
+        .scheme-status {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .scheme-status.active {
+            background: #38a169;
+            color: white;
+        }
+
+        .scheme-content {
+            padding: 1.5rem;
+        }
+
+        .scheme-desc {
+            font-size: 1.1rem;
+            color: #4a5568;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .scheme-details {
+            margin: 1.5rem 0;
+        }
+
+        .detail-item {
+            margin: 1rem 0;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+
+        .detail-item strong {
+            color: #2d3748;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-item p {
+            margin: 0.5rem 0 0 0;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+
+        .scheme-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .scheme-actions .btn {
+            flex: 1;
+            min-width: 120px;
+        }
+
+        @media (max-width: 768px) {
+            .schemes-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .scheme-actions {
+                flex-direction: column;
+            }
+            
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h1>🏥 Nabha Telemedicine</h1>
+        <p>Rural Healthcare Access Platform</p>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <div class="nav-container">
+            <button class="nav-btn active" onclick="showSection('patient')">
+                👤 Patient Portal
+            </button>
+            <button class="nav-btn" onclick="showSection('doctor')">
+                👨‍⚕️ Doctor Portal  
+            </button>
+            <button class="nav-btn" onclick="showSection('pharmacy')">
+                💊 Pharmacy Portal
+            </button>
+            <button class="nav-btn" onclick="showSection('symptoms')">
+                🩺 Symptom Checker
+            </button>
+            <button class="nav-btn" onclick="showSection('schemes')">
+                🏛️ Govt Schemes
+            </button>
+            <button class="nav-btn emergency" onclick="showSection('emergency')">
+                🚨 Emergency
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Success/Error Messages -->
+        <div id="successMessage" class="success-message"></div>
+        <div id="errorMessage" class="error-message"></div>
+
+        <!-- Patient Portal Section -->
+        <div id="patient" class="section active">
+            <h2>👤 Patient Registration</h2>
+            <form id="patientForm">
+                <div class="two-column">
+                    <div>
+                        <div class="form-group">
+                            <label for="patientName">Full Name *</label>
+                            <input type="text" id="patientName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="patientVillage">Village/Location *</label>
+                            <input type="text" id="patientVillage" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="patientPhone">Phone Number *</label>
+                            <input type="tel" id="patientPhone" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="patientAge">Age *</label>
+                            <input type="number" id="patientAge" min="1" max="150" required>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="form-group">
+                            <label for="patientSymptoms">Describe Your Symptoms *</label>
+                            <textarea id="patientSymptoms" rows="6" required 
+                                placeholder="Please describe your symptoms in detail..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="urgencyLevel">Urgency Level *</label>
+                            <select id="urgencyLevel" required>
+                                <option value="">Select urgency level</option>
+                                <option value="low">Low - Can wait a few days</option>
+                                <option value="medium">Medium - Need consultation within 24 hours</option>
+                                <option value="high">High - Need immediate attention</option>
+                                <option value="emergency">Emergency - Life threatening</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-success">Submit Request</button>
+            </form>
+        </div>
+
+        <!-- Doctor Portal Section -->
+        <div id="doctor" class="section">
+            <h2>👨‍⚕️ Doctor Dashboard</h2>
+            
+            <div class="card">
+                <h3>📋 Patient Requests</h3>
+                <div id="patientRequests">
+                    <p>Loading patient requests...</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>📝 Quick Response</h3>
+                <form id="responseForm" style="display: none;">
+                    <input type="hidden" id="responsePatientId">
+                    <div class="form-group">
+                        <label>Patient:</label>
+                        <p id="responsePatientInfo"></p>
+                    </div>
+                    <div class="form-group">
+                        <label for="doctorResponse">Medical Response/Advice:</label>
+                        <textarea id="doctorResponse" rows="4" required 
+                            placeholder="Provide medical advice, prescription, or next steps..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">Send Response</button>
+                    <button type="button" class="btn" onclick="cancelResponse()">Cancel</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Pharmacy Portal Section -->
+        <div id="pharmacy" class="section">
+            <h2>💊 Pharmacy Management</h2>
+            
+            <div class="two-column">
+                <div class="card">
+                    <h3>🔍 Medicine Search</h3>
+                    <div class="form-group">
+                        <label for="medicineSearch">Search Medicine:</label>
+                        <input type="text" id="medicineSearch" placeholder="Enter medicine name">
+                    </div>
+                    <button onclick="searchMedicine()" class="btn">Search</button>
+                    <div id="medicineResults"></div>
+                </div>
+                
+                <div class="card">
+                    <h3>📦 Update Stock</h3>
+                    <form id="stockForm">
+                        <div class="form-group">
+                            <label for="medicineName">Medicine Name:</label>
+                            <input type="text" id="medicineName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="medicineStock">Stock Quantity:</label>
+                            <input type="number" id="medicineStock" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="medicinePrice">Price (₹):</label>
+                            <input type="number" id="medicinePrice" min="0" step="0.01" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Update Stock</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>📋 Current Stock</h3>
+                <div id="stockList"></div>
+            </div>
+        </div>
+
+        <!-- Symptom Checker Section -->
+        <div id="symptoms" class="section">
+            <h2>🩺 Symptom Checker</h2>
+            
+            <div class="card">
+                <h3>⚠️ Medical Disclaimer</h3>
+                <p><strong>Important:</strong> This tool is for informational purposes only and does not replace professional medical advice. Always consult with a healthcare provider for accurate diagnosis and treatment.</p>
+            </div>
+            
+            <div class="two-column">
+                <div class="card">
+                    <h3>📝 Symptom Assessment</h3>
+                    <form id="symptomForm">
+                        <div class="form-group">
+                            <label>Primary Symptoms (Select all that apply):</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" value="fever" data-urgency="2"> Fever</label>
+                                <label><input type="checkbox" value="headache" data-urgency="1"> Headache</label>
+                                <label><input type="checkbox" value="cough" data-urgency="1"> Cough</label>
+                                <label><input type="checkbox" value="breathing_difficulty" data-urgency="4"> Difficulty Breathing</label>
+                                <label><input type="checkbox" value="chest_pain" data-urgency="4"> Chest Pain</label>
+                                <label><input type="checkbox" value="abdominal_pain" data-urgency="2"> Abdominal Pain</label>
+                                <label><input type="checkbox" value="nausea" data-urgency="1"> Nausea/Vomiting</label>
+                                <label><input type="checkbox" value="diarrhea" data-urgency="2"> Diarrhea</label>
+                                <label><input type="checkbox" value="fatigue" data-urgency="1"> Fatigue/Weakness</label>
+                                <label><input type="checkbox" value="dizziness" data-urgency="2"> Dizziness</label>
+                                <label><input type="checkbox" value="joint_pain" data-urgency="1"> Joint Pain</label>
+                                <label><input type="checkbox" value="skin_rash" data-urgency="1"> Skin Rash</label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Severity Level:</label>
+                            <select id="symptomSeverity">
+                                <option value="1">Mild - Doesn't interfere with daily activities</option>
+                                <option value="2">Moderate - Some interference with activities</option>
+                                <option value="3">Severe - Significant interference</option>
+                                <option value="4">Extreme - Unable to perform activities</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Duration:</label>
+                            <select id="symptomDuration">
+                                <option value="1">Less than 1 day</option>
+                                <option value="2">1-3 days</option>
+                                <option value="3">4-7 days</option>
+                                <option value="4">More than 1 week</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Age Group:</label>
+                            <select id="ageGroup">
+                                <option value="child">Child (0-12 years)</option>
+                                <option value="teen">Teenager (13-19 years)</option>
+                                <option value="adult">Adult (20-59 years)</option>
+                                <option value="senior">Senior (60+ years)</option>
+                            </select>
+                        </div>
+                        
+                        <button type="button" onclick="assessSymptoms()" class="btn btn-success">Assess Symptoms</button>
+                        <button type="button" onclick="clearSymptoms()" class="btn">Clear</button>
+                    </form>
+                </div>
+                
+                <div class="card">
+                    <h3>📊 Assessment Result</h3>
+                    <div id="symptomResult">
+                        <p>Please complete the symptom assessment form to get recommendations.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card emergency-card">
+                <h3>🚨 Emergency Warning Signs</h3>
+                <p><strong>Call Emergency Services (108) IMMEDIATELY if you experience:</strong></p>
+                <ul>
+                    <li>Severe chest pain or pressure</li>
+                    <li>Severe difficulty breathing or shortness of breath</li>
+                    <li>Loss of consciousness or severe confusion</li>
+                    <li>Severe bleeding that won't stop</li>
+                    <li>Signs of stroke: Face drooping, arm weakness, speech difficulty</li>
+                    <li>High fever (above 103°F/39.4°C) with severe headache</li>
+                    <li>Severe allergic reaction (difficulty breathing, swelling)</li>
+                    <li>Severe abdominal pain with vomiting</li>
+                </ul>
+                <button onclick="callAmbulance()" class="btn btn-danger">🚨 Call Emergency Now</button>
+            </div>
+            
+            <div class="two-column">
+                <div class="card">
+                    <h3>🌡️ Common Conditions Guide</h3>
+                    <div class="condition-guide">
+                        <details>
+                            <summary><strong>Fever & Cold</strong></summary>
+                            <p><strong>Symptoms:</strong> Fever, runny nose, cough, headache</p>
+                            <p><strong>Care:</strong> Rest, fluids, paracetamol for fever</p>
+                            <p><strong>See doctor if:</strong> Fever above 102°F for more than 3 days</p>
+                        </details>
+                        <details>
+                            <summary><strong>Stomach Issues</strong></summary>
+                            <p><strong>Symptoms:</strong> Nausea, vomiting, diarrhea, abdominal pain</p>
+                            <p><strong>Care:</strong> Clear fluids, BRAT diet (Banana, Rice, Applesauce, Toast)</p>
+                            <p><strong>See doctor if:</strong> Severe dehydration, blood in stool</p>
+                        </details>
+                        <details>
+                            <summary><strong>Respiratory Issues</strong></summary>
+                            <p><strong>Symptoms:</strong> Cough, congestion, mild breathing difficulty</p>
+                            <p><strong>Care:</strong> Steam inhalation, warm fluids, rest</p>
+                            <p><strong>See doctor if:</strong> Persistent cough, breathing difficulty</p>
+                        </details>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>🏥 When to Seek Medical Care</h3>
+                    <div class="urgency-guide">
+                        <div class="urgency-item emergency">
+                            <h4>🚨 Emergency (Call 108)</h4>
+                            <p>Life-threatening symptoms requiring immediate medical attention</p>
+                        </div>
+                        <div class="urgency-item high">
+                            <h4>⚡ Urgent (Within 4 hours)</h4>
+                            <p>Severe symptoms that need prompt medical care</p>
+                        </div>
+                        <div class="urgency-item medium">
+                            <h4>🔄 Moderate (Within 24 hours)</h4>
+                            <p>Concerning symptoms that should be evaluated soon</p>
+                        </div>
+                        <div class="urgency-item low">
+                            <h4>📅 Low (Within few days)</h4>
+                            <p>Mild symptoms that can be monitored at home</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Government Schemes Section -->
+        <div id="schemes" class="section">
+            <h2>🏛️ Government Health Schemes</h2>
+            
+            <div class="card">
+                <h3>🎯 Available for Nabha, Punjab Residents</h3>
+                <p>Take advantage of various government health schemes designed to provide affordable healthcare to rural communities.</p>
+            </div>
+            
+            <div class="schemes-grid">
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <h3>🏛️ Ayushman Bharat - PM-JAY</h3>
+                        <span class="scheme-status active">Active</span>
+                    </div>
+                    <div class="scheme-content">
+                        <p class="scheme-desc">Free treatment up to ₹5 lakh per family per year</p>
+                        <div class="scheme-details">
+                            <div class="detail-item">
+                                <strong>Eligibility:</strong>
+                                <p>Families listed in SECC-2011 database, BPL families</p>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Coverage:</strong>
+                                <p>1,393+ medical packages, pre and post hospitalization</p>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Local Hospitals:</strong>
+                                <p>Civil Hospital Nabha, Rajindra Hospital Patiala</p>
+                            </div>
+                            <div class="detail-item">
+                                <strong>How to Apply:</strong>
+                                <p>Visit nearest CSC or use Ayushman Bharat app</p>
+                            </div>
+                        </div>
+                        <div class="scheme-actions">
+                            <button onclick="checkEligibility('ayushman')" class="btn btn-success">Check Eligibility</button>
+                            <button onclick="findHospital('ayushman')" class="btn">Find Hospital</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <h3>🌾 Punjab Health Insurance Scheme</h3>
+                        <span class="scheme-status active">Active</span>
+                    </div>
+                    <div class="scheme-content">
+                        <p class="scheme-desc">Free healthcare for all Punjab families below poverty line</p>
+                        <div class="scheme-details">
+                            <div class="detail-item">
+                                <strong>Eligibility:</strong>
+                                <p>All BPL families in Punjab with valid ration card</p>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Coverage:</strong>
+                                <p>Up to ₹2 lakh treatment, medicines, diagnostic tests</p>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Local Centers:</strong>
+                                <p>All PHCs, CHCs, District Hospital Patiala</p>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Contact:</strong>
+                                <p>District Health Officer, Patiala: 0175-2212345</p>
+                            </div>
+                        </div>
+                        <div class="scheme-actions">
+                            <button onclick="applyScheme('punjab')" class="btn btn-success">Apply Now</button>
+                            <button onclick="findCenter('punjab')" class="btn">Find Center</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <h3>💊 Jan Aushadhi Scheme</h3>
+                        <span class="scheme-status active">Active</span>
+                    </div>
+                    <div class="scheme-content">
+                        <p class="scheme-desc">Quality generic medicines at 50-90% lower prices</p>
+                        <div class="scheme-details">
+                            <div class="detail-item">
+                                <strong>Eligibility:</strong>
+                                <p>Available for everyone, no income restrictions</p>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Benefits:</strong>
+                                <p>1,500+ medicines, surgical items, nutraceuticals</p>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Nabha Stores:</strong>
+                                <p>Civil Hospital, Main Market, Railway Station Road</p>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Savings:</strong>
+                                <p>Save up to 80% on medicine costs</p>
+                            </div>
+                        </div>
+                        <div class="scheme-actions">
+                            <button onclick="findStore('jan_aushadhi')" class="btn btn-success">Find Store</button>
+                            <button onclick="comparePrices()" class="btn">Compare Prices</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="scheme-card">
+                    <div class="scheme-header">
+                        <h3>🚨 Emergency Healthcare Scheme</h3>
+                        <span class="scheme-status active">24/7 Active</span>
+                    </div>
+                    <div class="scheme-content">
+                        <p class="scheme-desc">Free ambulance and emergency medical services</p>
+                        <div class="scheme-details">
+                            <div class="detail-item">
+                                <strong>Services:</strong>
+                                <p>108 Ambulance, Emergency treatment, Trauma care</p>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Coverage:</strong>
+                                <p>Free ambulance transport, pre-hospital care</p>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Emergency Numbers:</strong>
+                                <p>Ambulance: 108, Police: 100, Fire: 101</p>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Response Time:</strong>
+                                <p>Average 15-20 minutes in urban areas</p>
+                            </div>
+                        </div>
+                        <div class="scheme-actions">
+                            <button onclick="callAmbulance()" class="btn btn-danger">🚨 Call Now</button>
+                            <button onclick="trackAmbulance()" class="btn">Track Ambulance</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>📞 Need Help with Schemes?</h3>
+                <div class="two-column">
+                    <div>
+                        <h4>Helpline Numbers:</h4>
+                        <ul>
+                            <li><strong>Ayushman Bharat:</strong> <a href="tel:14555">14555</a></li>
+                            <li><strong>Punjab Health:</strong> <a href="tel:01752212345">0175-2212345</a></li>
+                            <li><strong>Jan Aushadhi:</strong> <a href="tel:18001803939">1800-180-3939</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4>Local Offices:</h4>
+                        <ul>
+                            <li><strong>District Collector Office Patiala</strong></li>
+                            <li><strong>Civil Hospital Nabha</strong></li>
+                            <li><strong>Block Development Office</strong></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Emergency Portal Section -->
+        <div id="emergency" class="section">
+            <h2>🚨 Emergency Services</h2>
+            
+            <div class="card emergency-card">
+                <h3>⚠️ Emergency Contacts</h3>
+                <p><strong>For Life-Threatening Emergencies:</strong></p>
+                <ul>
+                    <li><strong>Ambulance:</strong> <a href="tel:108">108</a> (Free 24/7)</li>
+                    <li><strong>Police:</strong> <a href="tel:100">100</a></li>
+                    <li><strong>Fire Department:</strong> <a href="tel:101">101</a></li>
+                </ul>
+            </div>
+            
+            <div class="two-column">
+                <div class="card">
+                    <h3>🏥 Local Healthcare</h3>
+                    <ul>
+                        <li><strong>Civil Hospital Nabha:</strong> <a href="tel:01763250101">01763-250101</a></li>
+                        <li><strong>District Hospital Patiala:</strong> <a href="tel:01752212345">0175-2212345</a></li>
+                        <li><strong>Private Clinic:</strong> <a href="tel:01763250200">01763-250200</a></li>
+                    </ul>
+                    <button onclick="callAmbulance()" class="btn btn-danger">🚨 Call Ambulance</button>
+                </div>
+                
+                <div class="card">
+                    <h3>📍 Share Location</h3>
+                    <p>Share your location with emergency services:</p>
+                    <button onclick="shareLocation()" class="btn">📍 Get My Location</button>
+                    <div id="locationInfo" style="margin-top: 1rem;"></div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>⚠️ When to Call Emergency:</h3>
+                <ul>
+                    <li>Chest pain or difficulty breathing</li>
+                    <li>Severe injury or bleeding</li>
+                    <li>Loss of consciousness</li>
+                    <li>Severe allergic reactions</li>
+                    <li>High fever with confusion</li>
+                    <li>Signs of stroke (face drooping, arm weakness, speech difficulty)</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Application Data Storage
+        let appData = {
+            patients: JSON.parse(localStorage.getItem('nabha_patients') || '[]'),
+            medicines: JSON.parse(localStorage.getItem('nabha_medicines') || '[]'),
+            responses: JSON.parse(localStorage.getItem('nabha_responses') || '[]')
+        };
+
+        // Initialize default medicines
+        if (appData.medicines.length === 0) {
+            appData.medicines = [
+                { name: 'Paracetamol', stock: 50, price: 2.50 },
+                { name: 'Aspirin', stock: 30, price: 3.00 },
+                { name: 'Ibuprofen', stock: 25, price: 5.00 },
+                { name: 'Cough Syrup', stock: 15, price: 45.00 },
+                { name: 'Antibiotics', stock: 20, price: 120.00 }
+            ];
+            saveData();
+        }
+
+        // Navigation functionality
+        function showSection(sectionName) {
+            // Update navigation buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Hide all sections
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionName).classList.add('active');
+
+            // Load section-specific data
+            if (sectionName === 'doctor') {
+                loadPatientRequests();
+            } else if (sectionName === 'pharmacy') {
+                loadStockList();
+            }
+        }
+
+        // Patient Form Submission
+        document.getElementById('patientForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const patientData = {
+                id: Date.now(),
+                name: document.getElementById('patientName').value,
+                village: document.getElementById('patientVillage').value,
+                phone: document.getElementById('patientPhone').value,
+                age: document.getElementById('patientAge').value,
+                symptoms: document.getElementById('patientSymptoms').value,
+                urgency: document.getElementById('urgencyLevel').value,
+                timestamp: new Date().toLocaleString(),
+                status: 'pending'
+            };
+
+            appData.patients.push(patientData);
+            saveData();
+            
+            // Reset form
+            this.reset();
+            
+            // Show success message
+            showMessage('success', 'Your request has been submitted successfully! A doctor will respond soon.');
+        });
+
+        // Doctor Response Form
+        document.getElementById('responseForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const patientId = document.getElementById('responsePatientId').value;
+            const response = document.getElementById('doctorResponse').value;
+            
+            // Find and update patient
+            const patient = appData.patients.find(p => p.id == patientId);
+            if (patient) {
+                patient.status = 'responded';
+                patient.doctorResponse = response;
+                patient.responseTime = new Date().toLocaleString();
+            }
+            
+            saveData();
+            loadPatientRequests();
+            cancelResponse();
+            
+            showMessage('success', 'Response sent to patient successfully!');
+        });
+
+        // Pharmacy Stock Form
+        document.getElementById('stockForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('medicineName').value;
+            const stock = parseInt(document.getElementById('medicineStock').value);
+            const price = parseFloat(document.getElementById('medicinePrice').value);
+            
+            // Check if medicine exists
+            const existingMedicine = appData.medicines.find(m => 
+                m.name.toLowerCase() === name.toLowerCase()
+            );
+            
+            if (existingMedicine) {
+                existingMedicine.stock = stock;
+                existingMedicine.price = price;
+            } else {
+                appData.medicines.push({ name, stock, price });
+            }
+            
+            saveData();
+            loadStockList();
+            this.reset();
+            
+            showMessage('success', `Stock updated for ${name}!`);
+        });
+
+        // Load patient requests for doctor
+        function loadPatientRequests() {
+            const container = document.getElementById('patientRequests');
+            
+            if (appData.patients.length === 0) {
+                container.innerHTML = '<p>No patient requests yet.</p>';
+                return;
+            }
+
+            const html = appData.patients
+                .sort((a, b) => {
+                    const urgencyOrder = { emergency: 4, high: 3, medium: 2, low: 1 };
+                    return urgencyOrder[b.urgency] - urgencyOrder[a.urgency];
+                })
+                .map(patient => `
+                    <div class="card ${patient.urgency === 'emergency' || patient.urgency === 'high' ? 'urgency-' + patient.urgency : ''}">
+                        <h4>${patient.name} (Age: ${patient.age}) - ${patient.village}</h4>
+                        <p><strong>Phone:</strong> ${patient.phone}</p>
+                        <p><strong>Urgency:</strong> ${patient.urgency.toUpperCase()}</p>
+                        <p><strong>Symptoms:</strong> ${patient.symptoms}</p>
+                        <p><strong>Submitted:</strong> ${patient.timestamp}</p>
+                        <span class="status-indicator status-${patient.status}">${patient.status.toUpperCase()}</span>
+                        ${patient.status === 'pending' ? 
+                            `<button onclick="respondToPatient(${patient.id})" class="btn btn-success">Respond</button>` : 
+                            `<p><strong>Response:</strong> ${patient.doctorResponse}</p>`
+                        }
+                    </div>
+                `).join('');
+                
+            container.innerHTML = html;
+        }
+
+        // Respond to patient
+        function respondToPatient(patientId) {
+            const patient = appData.patients.find(p => p.id === patientId);
+            if (!patient) return;
+
+            document.getElementById('responsePatientId').value = patientId;
+            document.getElementById('responsePatientInfo').textContent = 
+                `${patient.name} (${patient.age} years) - ${patient.village}`;
+            document.getElementById('responseForm').style.display = 'block';
+        }
+
+        // Cancel response
+        function cancelResponse() {
+            document.getElementById('responseForm').style.display = 'none';
+            document.getElementById('doctorResponse').value = '';
+        }
+
+        // Search medicine
+        function searchMedicine() {
+            const query = document.getElementById('medicineSearch').value.toLowerCase();
+            const results = appData.medicines.filter(med => 
+                med.name.toLowerCase().includes(query)
+            );
+
+            const container = document.getElementById('medicineResults');
+            
+            if (results.length === 0) {
+                container.innerHTML = '<p>No medicines found.</p>';
+                return;
+            }
+
+            const html = results.map(med => `
+                <div class="card">
+                    <h4>${med.name}</h4>
+                    <p><strong>Stock:</strong> ${med.stock} units</p>
+                    <p><strong>Price:</strong> ₹${med.price}</p>
+                    <span class="status-indicator ${med.stock > 0 ? 'status-completed' : 'status-pending'}">
+                        ${med.stock > 0 ? 'Available' : 'Out of Stock'}
+                    </span>
+                </div>
+            `).join('');
+
+            container.innerHTML = html;
+        }
+
+        // Load stock list
+        function loadStockList() {
+            const container = document.getElementById('stockList');
+            
+            if (appData.medicines.length === 0) {
+                container.innerHTML = '<p>No medicines in stock.</p>';
+                return;
+            }
+
+            const html = appData.medicines.map(med => `
+                <div class="card">
+                    <h4>${med.name}</h4>
+                    <p><strong>Stock:</strong> ${med.stock} units</p>
+                    <p><strong>Price:</strong> ₹${med.price}</p>
+                    <span class="status-indicator ${med.stock > 0 ? 'status-completed' : 'status-pending'}">
+                        ${med.stock > 0 ? 'Available' : 'Out of Stock'}
+                    </span>
+                </div>
+            `).join('');
+
+            container.innerHTML = html;
+        }
+
+        // Emergency functions
+        function callAmbulance() {
+            if (confirm('This will call emergency services (108). Continue?')) {
+                window.location.href = 'tel:108';
+            }
+        }
+
+        function shareLocation() {
+            const container = document.getElementById('locationInfo');
+            container.innerHTML = '<p>Getting your location...</p>';
+
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    
+                    container.innerHTML = `
+                        <div class="card">
+                            <p><strong>Your Location:</strong></p>
+                            <p>Latitude: ${lat.toFixed(6)}</p>
+                            <p>Longitude: ${lng.toFixed(6)}</p>
+                            <a href="https://maps.google.com/?q=${lat},${lng}" target="_blank" class="btn">View on Map</a>
+                            <button onclick="sendLocationSMS(${lat}, ${lng})" class="btn">Send via SMS</button>
+                        </div>
+                    `;
+                }, function(error) {
+                    container.innerHTML = '<p>Unable to get location. Please enable location services.</p>';
+                });
+            } else {
+                container.innerHTML = '<p>Geolocation is not supported by this browser.</p>';
+            }
+        }
+
+        function sendLocationSMS(lat, lng) {
+            const message = `Emergency! My location: https://maps.google.com/?q=${lat},${lng}`;
+            window.location.href = `sms:108?body=${encodeURIComponent(message)}`;
+        }
+
+        // Utility functions
+        function saveData() {
+            localStorage.setItem('nabha_patients', JSON.stringify(appData.patients));
+            localStorage.setItem('nabha_medicines', JSON.stringify(appData.medicines));
+            localStorage.setItem('nabha_responses', JSON.stringify(appData.responses));
+        }
+
+        function showMessage(type, message) {
+            const messageDiv = type === 'success' ? 
+                document.getElementById('successMessage') : 
+                document.getElementById('errorMessage');
+            
+            messageDiv.textContent = message;
+            messageDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+            }, 5000);
+        }
+
+        // Symptom Checker Functions
+        function assessSymptoms() {
+            const checkedSymptoms = Array.from(document.querySelectorAll('#symptomForm input[type="checkbox"]:checked'));
+            const severity = parseInt(document.getElementById('symptomSeverity').value);
+            const duration = parseInt(document.getElementById('symptomDuration').value);
+            const ageGroup = document.getElementById('ageGroup').value;
+            
+            if (checkedSymptoms.length === 0) {
+                showMessage('error', 'Please select at least one symptom.');
+                return;
+            }
+            
+            // Calculate urgency score
+            let urgencyScore = 0;
+            let emergencySymptoms = [];
+            let recommendations = [];
+            
+            checkedSymptoms.forEach(symptom => {
+                const symptomUrgency = parseInt(symptom.dataset.urgency);
+                urgencyScore += symptomUrgency;
+                
+                if (symptomUrgency === 4) {
+                    emergencySymptoms.push(symptom.value.replace('_', ' '));
+                }
+            });
+            
+            // Adjust score based on severity and duration
+            urgencyScore += severity;
+            if (duration > 3) urgencyScore += 1;
+            if (ageGroup === 'child' || ageGroup === 'senior') urgencyScore += 1;
+            
+            // Determine urgency level and recommendations
+            let urgencyLevel, urgencyColor, actionRecommendation;
+            
+            if (emergencySymptoms.length > 0 || urgencyScore >= 12) {
+                urgencyLevel = 'EMERGENCY';
+                urgencyColor = '#e53e3e';
+                actionRecommendation = 'Call Emergency Services (108) IMMEDIATELY! Do not delay.';
+                recommendations = [
+                    'Call 108 for immediate ambulance',
+                    'Do not drive yourself to hospital',
+                    'If possible, have someone stay with you',
+                    'Take any current medications with you'
+                ];
+            } else if (urgencyScore >= 8) {
+                urgencyLevel = 'HIGH URGENCY';
+                urgencyColor = '#f59e0b';
+                actionRecommendation = 'Seek medical attention within 4 hours.';
+                recommendations = [
+                    'Visit nearest hospital or clinic soon',
+                    'Call ahead to inform them of your symptoms',
+                    'Prepare list of current medications',
+                    'Consider having someone accompany you'
+                ];
+            } else if (urgencyScore >= 5) {
+                urgencyLevel = 'MODERATE';
+                urgencyColor = '#3b82f6';
+                actionRecommendation = 'Schedule medical consultation within 24 hours.';
+                recommendations = [
+                    'Contact your family doctor or local clinic',
+                    'Monitor symptoms for any worsening',
+                    'Rest and stay hydrated',
+                    'Keep track of symptom changes'
+                ];
+            } else {
+                urgencyLevel = 'LOW';
+                urgencyColor = '#10b981';
+                actionRecommendation = 'Monitor symptoms. Consult doctor if symptoms persist or worsen.';
+                recommendations = [
+                    'Rest and take care of yourself',
+                    'Stay hydrated and eat light foods',
+                    'Monitor symptoms for 2-3 days',
+                    'Consult doctor if symptoms worsen'
+                ];
+            }
+            
+            // Generate specific advice based on symptoms
+            const symptomAdvice = generateSymptomAdvice(checkedSymptoms.map(s => s.value));
+            
+            // Display results
+            const resultHTML = `
+                <div class="assessment-result">
+                    <div class="urgency-result" style="border-left: 4px solid ${urgencyColor}; background: ${urgencyColor}20; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <h3 style="color: ${urgencyColor}; margin: 0 0 0.5rem 0;">${urgencyLevel}</h3>
+                        <p style="margin: 0; font-weight: 500;">${actionRecommendation}</p>
+                    </div>
+                    
+                    <div class="recommendations">
+                        <h4>Immediate Actions:</h4>
+                        <ul>
+                            ${recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                        </ul>
+                    </div>
+                    
+                    ${symptomAdvice ? `
+                        <div class="symptom-advice">
+                            <h4>Specific Care Advice:</h4>
+                            <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px;">
+                                ${symptomAdvice}
+                            </div>
+                        </div>
+                    ` : ''}
+                    
+                    <div class="emergency-contact" style="background: #fed7d7; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                        <h4 style="color: #c53030;">Emergency Contacts:</h4>
+                        <p><strong>Ambulance:</strong> <a href="tel:108">108</a> | <strong>Hospital:</strong> <a href="tel:01763250101">01763-250101</a></p>
+                    </div>
+                    
+                    ${urgencyLevel !== 'EMERGENCY' ? `
+                        <button onclick="createPatientRequest()" class="btn btn-success" style="margin-top: 1rem;">Submit Request to Doctor</button>
+                    ` : ''}
+                </div>
+            `;
+            
+            document.getElementById('symptomResult').innerHTML = resultHTML;
+        }
+        
+        function generateSymptomAdvice(symptoms) {
+            let advice = [];
+            
+            if (symptoms.includes('fever')) {
+                advice.push('Take paracetamol as directed, use cool compresses, stay hydrated');
+            }
+            if (symptoms.includes('cough')) {
+                advice.push('Try warm salt water gargles, honey (if over 1 year old), steam inhalation');
+            }
+            if (symptoms.includes('headache')) {
+                advice.push('Rest in a dark, quiet room, apply cold compress to forehead');
+            }
+            if (symptoms.includes('abdominal_pain')) {
+                advice.push('Avoid solid foods temporarily, try clear liquids, apply warm compress');
+            }
+            if (symptoms.includes('nausea')) {
+                advice.push('Try small sips of clear fluids, avoid solid foods, consider ginger tea');
+            }
+            if (symptoms.includes('diarrhea')) {
+                advice.push('Stay hydrated with ORS, follow BRAT diet, avoid dairy temporarily');
+            }
+            
+            return advice.length > 0 ? advice.join('. ') : null;
+        }
+        
+        function clearSymptoms() {
+            document.getElementById('symptomForm').reset();
+            document.getElementById('symptomResult').innerHTML = '<p>Please complete the symptom assessment form to get recommendations.</p>';
+        }
+        
+        function createPatientRequest() {
+            // Pre-fill patient form with symptom data
+            showSection('patient');
+            
+            const checkedSymptoms = Array.from(document.querySelectorAll('#symptomForm input[type="checkbox"]:checked'));
+            const symptomList = checkedSymptoms.map(s => s.value.replace('_', ' ')).join(', ');
+            const severity = document.getElementById('symptomSeverity').options[document.getElementById('symptomSeverity').selectedIndex].text;
+            const duration = document.getElementById('symptomDuration').options[document.getElementById('symptomDuration').selectedIndex].text;
+            
+            const symptomsText = `Symptoms: ${symptomList}\nSeverity: ${severity}\nDuration: ${duration}\n\nGenerated from Symptom Checker assessment.`;
+            
+            document.getElementById('patientSymptoms').value = symptomsText;
+            
+            showMessage('success', 'Symptom information has been transferred to the patient form. Please complete the remaining fields.');
+        }
+        
+        // Government Schemes Functions
+        function checkEligibility(scheme) {
+            let eligibilityInfo = '';
+            
+            switch(scheme) {
+                case 'ayushman':
+                    eligibilityInfo = `
+                        <div class="eligibility-info">
+                            <h3>Ayushman Bharat Eligibility Check</h3>
+                            <p><strong>You may be eligible if:</strong></p>
+                            <ul>
+                                <li>Your family is listed in SECC-2011 database</li>
+                                <li>You belong to scheduled caste/tribe</li>
+                                <li>You are from a landless household</li>
+                                <li>Your family has no adult member (16-59 years)</li>
+                            </ul>
+                            <p><strong>To verify:</strong></p>
+                            <ol>
+                                <li>Visit: <a href="https://pmjay.gov.in" target="_blank">pmjay.gov.in</a></li>
+                                <li>Enter your mobile number</li>
+                                <li>Check if your name appears in the list</li>
+                            </ol>
+                            <p><strong>Or visit nearest Common Service Center (CSC)</strong></p>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            showModal('Eligibility Information', eligibilityInfo);
+        }
+        
+        function findHospital(scheme) {
+            const hospitalInfo = `
+                <div class="hospital-info">
+                    <h3>Nearby Empaneled Hospitals</h3>
+                    <div class="hospital-list">
+                        <div class="hospital-item">
+                            <h4>Civil Hospital Nabha</h4>
+                            <p>Distance: 2 km | Phone: 01763-250101</p>
+                            <p>Services: General Medicine, Emergency, Surgery</p>
+                        </div>
+                        <div class="hospital-item">
+                            <h4>Rajindra Hospital, Patiala</h4>
+                            <p>Distance: 45 km | Phone: 0175-2212345</p>
+                            <p>Services: Specialized care, ICU, Advanced surgery</p>
+                        </div>
+                        <div class="hospital-item">
+                            <h4>DMC Hospital, Ludhiana</h4>
+                            <p>Distance: 65 km | Phone: 0161-2302555</p>
+                            <p>Services: Super specialty, Cardiology, Oncology</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            showModal('Hospital Locator', hospitalInfo);
+        }
+        
+        function applyScheme(scheme) {
+            let applicationInfo = '';
+            
+            switch(scheme) {
+                case 'punjab':
+                    applicationInfo = `
+                        <div class="application-info">
+                            <h3>Punjab Health Insurance - Application Process</h3>
+                            <h4>Required Documents:</h4>
+                            <ul>
+                                <li>Valid Ration Card</li>
+                                <li>Aadhar Card</li>
+                                <li>Income Certificate</li>
+                                <li>Family photograph</li>
+                            </ul>
+                            <h4>Application Steps:</h4>
+                            <ol>
+                                <li>Visit nearest PHC/CHC</li>
+                                <li>Fill application form</li>
+                                <li>Submit documents</li>
+                                <li>Wait for verification (7-10 days)</li>
+                                <li>Collect health card</li>
+                            </ol>
+                            <p><strong>Contact:</strong> District Health Officer: 0175-2212345</p>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            showModal('Application Guide', applicationInfo);
+        }
+        
+        function findCenter(type) {
+            const centerInfo = `
+                <div class="center-info">
+                    <h3>Nearby Health Centers</h3>
+                    <div class="center-list">
+                        <div class="center-item">
+                            <h4>Primary Health Center, Nabha</h4>
+                            <p>Address: Near Bus Stand, Nabha</p>
+                            <p>Timings: 9 AM - 5 PM | Phone: 01763-250102</p>
+                        </div>
+                        <div class="center-item">
+                            <h4>Community Health Center, Bhadson</h4>
+                            <p>Address: Bhadson Road, 15 km from Nabha</p>
+                            <p>Timings: 24/7 Emergency | Phone: 01763-250103</p>
+                        </div>
+                        <div class="center-item">
+                            <h4>District Hospital, Patiala</h4>
+                            <p>Address: Civil Lines, Patiala</p>
+                            <p>Timings: 24/7 | Phone: 0175-2212345</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            showModal('Health Centers', centerInfo);
+        }
+        
+        function findStore(type) {
+            const storeInfo = `
+                <div class="store-info">
+                    <h3>Jan Aushadhi Stores in Nabha</h3>
+                    <div class="store-list">
+                        <div class="store-item">
+                            <h4>Jan Aushadhi Store - Civil Hospital</h4>
+                            <p>Address: Civil Hospital Campus, Nabha</p>
+                            <p>Timings: 9 AM - 8 PM | Phone: 01763-250105</p>
+                        </div>
+                        <div class="store-item">
+                            <h4>Jan Aushadhi Store - Main Market</h4>
+                            <p>Address: Main Market, Near Post Office</p>
+                            <p>Timings: 8 AM - 10 PM | Phone: 01763-250106</p>
+                        </div>
+                        <div class="store-item">
+                            <h4>Jan Aushadhi Store - Railway Station</h4>
+                            <p>Address: Railway Station Road</p>
+                            <p>Timings: 9 AM - 9 PM | Phone: 01763-250107</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            showModal('Store Locator', storeInfo);
+        }
+        
+        function comparePrices() {
+            const priceInfo = `
+                <div class="price-info">
+                    <h3>Price Comparison - Jan Aushadhi vs Regular</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-top: 1rem;">
+                        <tr style="background: #f8f9fa;">
+                            <th style="padding: 8px; border: 1px solid #ddd;">Medicine</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">Regular Price</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">Jan Aushadhi</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">Savings</th>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Paracetamol 500mg (10 tabs)</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">₹15</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">₹3</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; color: green;">80%</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Amoxicillin 250mg (10 caps)</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">₹120</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">₹24</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; color: green;">80%</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 8px; border: 1px solid #ddd;">Omeprazole 20mg (10 caps)</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">₹150</td>
+                            <td style="padding: 8px; border: 1px solid #ddd;">₹15</td>
+                            <td style="padding: 8px; border: 1px solid #ddd; color: green;">90%</td>
+                        </tr>
+                    </table>
+                    <p style="margin-top: 1rem;"><strong>Note:</strong> Prices may vary. Visit store for current rates.</p>
+                </div>
+            `;
+            showModal('Price Comparison', priceInfo);
+        }
+        
+        function trackAmbulance() {
+            showModal('Ambulance Tracking', `
+                <div class="tracking-info">
+                    <h3>Track Your Ambulance</h3>
+                    <p>After calling 108, you will receive an SMS with:</p>
+                    <ul>
+                        <li>Ambulance registration number</li>
+                        <li>Expected arrival time</li>
+                        <li>Driver contact number</li>
+                    </ul>
+                    <p><strong>For tracking updates:</strong></p>
+                    <p>Call: <a href="tel:108">108</a> and provide your case number</p>
+                    <div style="background: #e3f2fd; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                        <p><strong>Average Response Time:</strong></p>
+                        <p>Urban areas: 15-20 minutes</p>
+                        <p>Rural areas: 25-35 minutes</p>
+                    </div>
+                </div>
+            `);
+        }
+        
+        // Utility function to show modal dialogs
+        function showModal(title, content) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5);
+                display: flex; align-items: center; justify-content: center; z-index: 1000;
+            `;
+            
+            modal.innerHTML = `
+                <div style="background: white; max-width: 600px; max-height: 80vh; overflow-y: auto; 
+                     border-radius: 12px; padding: 2rem; margin: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h2 style="margin: 0; color: #4c51bf;">${title}</h2>
+                        <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                                style="background: #e53e3e; color: white; border: none; border-radius: 50%; 
+                                width: 30px; height: 30px; cursor: pointer;">×</button>
+                    </div>
+                    ${content}
+                </div>
+            `;
+            
+            document.body.appendChild(modal);
+            
+            // Close modal when clicking outside
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+        
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadPatientRequests();
+            loadStockList();
+        });
+    </script>
+</body>
+</html>

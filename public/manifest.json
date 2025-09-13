@@ -1,0 +1,48 @@
+{
+  "short_name": "Nabha Telemedicine",
+  "name": "Nabha Telemedicine - Rural Healthcare Solution",
+  "description": "Bringing quality healthcare to rural communities in Nabha through telemedicine technology",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "logo192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "logo512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/nabha-telemedicine/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "theme_color": "#2E8B57",
+  "background_color": "#F5F5F5",
+  "categories": ["medical", "health", "productivity"],
+  "lang": "en-IN",
+  "scope": "/nabha-telemedicine/",
+  "related_applications": [],
+  "prefer_related_applications": false,
+  "screenshots": [
+    {
+      "src": "screenshot1.png",
+      "type": "image/png",
+      "sizes": "1280x720",
+      "label": "Home screen showing multilingual interface"
+    },
+    {
+      "src": "screenshot2.png", 
+      "type": "image/png",
+      "sizes": "1280x720",
+      "label": "Video consultation interface"
+    }
+  ]
+}

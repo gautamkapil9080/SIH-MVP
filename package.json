@@ -1,0 +1,49 @@
+{
+  "name": "Telemedicine",
+  "version": "1.0.0",
+  "description": "Telemedicine Access for Rural Healthcare ",
+  "main": "index.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.8.0",
+    "react-scripts": "5.0.1",
+    "simple-peer": "^9.11.1",
+    "socket.io-client": "^4.7.4",
+    "i18next": "^22.4.9",
+    "react-i18next": "^12.1.4",
+    "localforage": "^1.10.0",
+    "axios": "^1.3.3",
+    "styled-components": "^5.3.6",
+    "react-webcam": "^7.0.1",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "gh-pages": "^5.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "homepage": "https://github.com/yourusername/nabha-telemedicine",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/nabha-telemedicine.git"
+  }
+}
