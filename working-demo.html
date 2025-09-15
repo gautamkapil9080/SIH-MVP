@@ -274,6 +274,199 @@
             margin-bottom: 0.25rem;
         }
 
+        /* AI Chatbot Styles */
+        .chatbot-container {
+            max-height: 500px;
+            overflow-y: auto;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 1rem;
+            background: #f8f9fa;
+            margin: 1rem 0;
+        }
+
+        .chat-message {
+            margin: 1rem 0;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .chat-message.ai {
+            justify-content: flex-start;
+        }
+
+        .chat-message.user {
+            justify-content: flex-end;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 0.75rem 1rem;
+            border-radius: 15px;
+            word-wrap: break-word;
+        }
+
+        .message-bubble.ai {
+            background: #2E8B57;
+            color: white;
+            border-bottom-left-radius: 5px;
+        }
+
+        .message-bubble.user {
+            background: #007bff;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin: 0 0.5rem;
+        }
+
+        .ai-avatar {
+            background: #2E8B57;
+            color: white;
+        }
+
+        .user-avatar {
+            background: #007bff;
+            color: white;
+        }
+
+        .chat-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+            justify-content: center;
+        }
+
+        .chat-option {
+            background: #e9ecef;
+            border: 2px solid #dee2e6;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .chat-option:hover {
+            background: #2E8B57;
+            color: white;
+            border-color: #2E8B57;
+        }
+
+        .voice-controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1rem 0;
+            flex-wrap: wrap;
+        }
+
+        .voice-btn {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .voice-btn:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
+
+        .voice-btn.recording {
+            background: #dc3545;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .typing-indicator {
+            display: none;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            color: #6c757d;
+            font-style: italic;
+        }
+
+        .typing-dots {
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+
+        .typing-dots span {
+            animation: typing 1.4s infinite;
+            display: inline-block;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% { opacity: 0.3; }
+            30% { opacity: 1; }
+        }
+
+        .diagnosis-result {
+            background: linear-gradient(135deg, #e8f5e8 0%, #f0f8f0 100%);
+            border: 2px solid #2E8B57;
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+        }
+
+        .urgency-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin: 0.5rem 0;
+        }
+
+        .urgency-mild {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .urgency-urgent {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .urgency-emergency {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
         @media (max-width: 768px) {
             .nav-links {
                 flex-direction: column;
@@ -765,31 +958,62 @@
     <!-- Symptom Checker Section -->
     <section id="symptoms-section" class="section">
         <div class="container">
-            <h2 id="symptom_checker_title">AI Symptom Checker</h2>
+            <h2 id="symptom_checker_title">🤖 AI Symptom Checker</h2>
+            
+            <!-- Voice Controls -->
+            <div class="voice-controls">
+                <button id="startChatBtn" onclick="startSymptomChat()" class="btn">💬 Start Symptom Check</button>
+                <button id="voiceBtn" onclick="toggleVoiceRecording()" class="voice-btn">
+                    🎤 <span id="voiceText">Speak Your Symptoms</span>
+                </button>
+                <button id="speakBtn" onclick="toggleTextToSpeech()" class="voice-btn">
+                    🔊 <span id="speakText">AI Voice: ON</span>
+                </button>
+            </div>
+            
+            <!-- Chatbot Container -->
             <div class="card">
-                <h3>Select your symptoms:</h3>
-                <div class="symptoms-grid">
-                    <div class="symptom-btn" onclick="toggleSymptom(this)">
-                        🌡️ <br>Fever
+                <div id="chatbotContainer" class="chatbot-container">
+                    <div class="chat-message ai">
+                        <div class="message-avatar ai-avatar">🤖</div>
+                        <div class="message-bubble ai">
+                            Welcome to CSE-D AI Symptom Checker! I'll ask you a few questions to help assess your symptoms. Click "Start Symptom Check" to begin.
+                        </div>
                     </div>
-                    <div class="symptom-btn" onclick="toggleSymptom(this)">
-                        🤧 <br>Cough
-                    </div>
-                    <div class="symptom-btn" onclick="toggleSymptom(this)">
-                        🤕 <br>Headache
-                    </div>
-                    <div class="symptom-btn" onclick="toggleSymptom(this)">
-                        💪 <br>Body ache
-                    </div>
-                    <div class="symptom-btn" onclick="toggleSymptom(this)">
-                        🤢 <br>Nausea
-                    </div>
-                    <div class="symptom-btn" onclick="toggleSymptom(this)">
-                        😴 <br>Fatigue
+                    
+                    <!-- Typing Indicator -->
+                    <div id="typingIndicator" class="typing-indicator">
+                        <div class="message-avatar ai-avatar">🤖</div>
+                        AI Doctor is typing
+                        <span class="typing-dots">
+                            <span>.</span>
+                            <span>.</span>
+                            <span>.</span>
+                        </span>
                     </div>
                 </div>
-                <button onclick="checkSymptoms()" class="btn">Check Symptoms</button>
-                <div id="symptomResults" style="margin-top: 1rem;"></div>
+                
+                <!-- Chat Options (Dynamic) -->
+                <div id="chatOptions" class="chat-options" style="display: none;"></div>
+                
+                <!-- Diagnosis Results -->
+                <div id="diagnosisResult" class="diagnosis-result" style="display: none;"></div>
+                
+                <!-- Emergency Warning -->
+                <div id="emergencyWarning" class="card" style="display: none; background: #fff5f5; border-left: 4px solid #dc3545; margin-top: 1rem;">
+                    <h3 style="color: #dc3545;">⚠️ Emergency Alert</h3>
+                    <p style="color: #721c24;">Based on your symptoms, this may require immediate medical attention. Please:</p>
+                    <div style="margin: 1rem 0;">
+                        <button onclick="callEmergency('108')" class="btn emergency-btn">🚑 Call Emergency (108)</button>
+                        <button onclick="shareLocation()" class="btn" style="background: #6c757d; margin-left: 1rem;">📍 Share Location</button>
+                    </div>
+                </div>
+                
+                <!-- Quick Actions -->
+                <div class="voice-controls" style="margin-top: 1rem;">
+                    <button onclick="restartChat()" class="btn" style="background: #6c757d;">🔄 Start Over</button>
+                    <button onclick="bookConsultation()" class="btn">👨‍⚕️ Book Consultation</button>
+                </div>
             </div>
         </div>
     </section>
@@ -1452,54 +1676,465 @@
             console.log('Language changed to:', lang);
         }
 
-        // Toggle symptom selection
-        function toggleSymptom(element) {
-            element.classList.toggle('selected');
-            const symptom = element.textContent.trim();
-            
-            if (element.classList.contains('selected')) {
-                selectedSymptoms.push(symptom);
-            } else {
-                selectedSymptoms = selectedSymptoms.filter(s => s !== symptom);
-            }
+        // AI Symptom Checker Variables
+        let currentQuestion = 0;
+        let chatActive = false;
+        let userResponses = {};
+        let voiceRecognition = null;
+        let speechSynthesis = window.speechSynthesis;
+        let aiVoiceEnabled = true;
+        let isRecording = false;
 
-            console.log('Selected symptoms:', selectedSymptoms);
+        // Symptom Assessment Questions
+        const symptomQuestions = [
+            {
+                id: 'main_symptom',
+                question: "What is your main symptom or concern today?",
+                options: [
+                    { text: "Fever", value: "fever" },
+                    { text: "Headache", value: "headache" },
+                    { text: "Cough", value: "cough" },
+                    { text: "Stomach Pain", value: "stomach_pain" },
+                    { text: "Body Ache", value: "body_ache" },
+                    { text: "Breathing Issues", value: "breathing" }
+                ]
+            },
+            {
+                id: 'severity',
+                question: "How would you rate the severity of your symptoms?",
+                options: [
+                    { text: "Mild (1-3)", value: "mild" },
+                    { text: "Moderate (4-6)", value: "moderate" },
+                    { text: "Severe (7-10)", value: "severe" }
+                ]
+            },
+            {
+                id: 'duration',
+                question: "How long have you been experiencing these symptoms?",
+                options: [
+                    { text: "Less than 1 day", value: "less_1day" },
+                    { text: "1-3 days", value: "1_3days" },
+                    { text: "4-7 days", value: "4_7days" },
+                    { text: "More than 1 week", value: "more_1week" }
+                ]
+            },
+            {
+                id: 'additional_symptoms',
+                question: "Do you have any of these additional symptoms?",
+                options: [
+                    { text: "Nausea/Vomiting", value: "nausea" },
+                    { text: "Dizziness", value: "dizziness" },
+                    { text: "Fatigue/Weakness", value: "fatigue" },
+                    { text: "Loss of Appetite", value: "appetite_loss" },
+                    { text: "None of the above", value: "none" }
+                ]
+            },
+            {
+                id: 'recent_changes',
+                question: "Have you experienced any of these recently?",
+                options: [
+                    { text: "Travel to new places", value: "travel" },
+                    { text: "Change in diet", value: "diet_change" },
+                    { text: "High stress/anxiety", value: "stress" },
+                    { text: "Contact with sick person", value: "contact_sick" },
+                    { text: "None of the above", value: "none" }
+                ]
+            },
+            {
+                id: 'medical_history',
+                question: "Do you have any existing medical conditions?",
+                options: [
+                    { text: "Diabetes", value: "diabetes" },
+                    { text: "High Blood Pressure", value: "hypertension" },
+                    { text: "Heart Problems", value: "heart" },
+                    { text: "Asthma/Respiratory Issues", value: "respiratory" },
+                    { text: "No existing conditions", value: "none" }
+                ]
+            }
+        ];
+
+        // Start Symptom Chat
+        function startSymptomChat() {
+            currentQuestion = 0;
+            chatActive = true;
+            userResponses = {};
+            
+            // Clear previous chat
+            const container = document.getElementById('chatbotContainer');
+            container.innerHTML = `
+                <div class="chat-message ai">
+                    <div class="message-avatar ai-avatar">🤖</div>
+                    <div class="message-bubble ai">
+                        Hi! I'm your AI health assistant. I'll ask you 6 questions to better understand your symptoms and provide guidance.
+                    </div>
+                </div>
+            `;
+            
+            // Hide results and start first question
+            document.getElementById('diagnosisResult').style.display = 'none';
+            document.getElementById('emergencyWarning').style.display = 'none';
+            
+            setTimeout(() => {
+                askQuestion(0);
+            }, 1000);
         }
 
-        // Check symptoms
-        function checkSymptoms() {
-            const resultsDiv = document.getElementById('symptomResults');
-            
-            if (selectedSymptoms.length === 0) {
-                resultsDiv.innerHTML = '<div class="medicine-result"><p>Please select at least one symptom.</p></div>';
+        // Ask Question
+        function askQuestion(questionIndex) {
+            if (questionIndex >= symptomQuestions.length) {
+                analyzeSymptomsAndProvideResults();
                 return;
             }
 
-            // Simple AI-like recommendation
-            let urgency = 'Low';
-            let recommendation = 'Rest and monitor symptoms. Consult doctor if symptoms persist.';
+            const question = symptomQuestions[questionIndex];
             
-            if (selectedSymptoms.some(s => s.includes('Fever'))) {
-                urgency = 'Medium';
-                recommendation = 'Take paracetamol, rest, and stay hydrated. Consult doctor within 24 hours.';
-            }
+            // Show typing indicator
+            showTypingIndicator();
             
-            if (selectedSymptoms.length >= 3) {
-                urgency = 'High';
-                recommendation = 'Multiple symptoms detected. Please consult a doctor immediately.';
-            }
+            setTimeout(() => {
+                hideTypingIndicator();
+                
+                // Add AI question
+                addChatMessage('ai', `Question ${questionIndex + 1}/6: ${question.question}`);
+                
+                // Speak question if voice is enabled
+                if (aiVoiceEnabled) {
+                    speakText(question.question);
+                }
+                
+                // Show options
+                showQuestionOptions(question.options, questionIndex);
+            }, 1500);
+        }
 
-            resultsDiv.innerHTML = `
-                <div class="medicine-result">
-                    <h4>AI Assessment Results</h4>
-                    <p><strong>Selected Symptoms:</strong> ${selectedSymptoms.join(', ')}</p>
-                    <p><strong>Urgency Level:</strong> <span style="color: ${urgency === 'High' ? '#dc3545' : urgency === 'Medium' ? '#ffc107' : '#28a745'}">${urgency}</span></p>
-                    <p><strong>Recommendation:</strong> ${recommendation}</p>
-                    <button class="btn">Book Consultation</button>
+        // Show Question Options
+        function showQuestionOptions(options, questionIndex) {
+            const optionsDiv = document.getElementById('chatOptions');
+            optionsDiv.innerHTML = '';
+            
+            options.forEach(option => {
+                const btn = document.createElement('div');
+                btn.className = 'chat-option';
+                btn.textContent = option.text;
+                btn.onclick = () => selectOption(option, questionIndex);
+                optionsDiv.appendChild(btn);
+            });
+            
+            optionsDiv.style.display = 'flex';
+        }
+
+        // Select Option
+        function selectOption(option, questionIndex) {
+            const question = symptomQuestions[questionIndex];
+            userResponses[question.id] = option.value;
+            
+            // Add user response to chat
+            addChatMessage('user', option.text);
+            
+            // Hide options
+            document.getElementById('chatOptions').style.display = 'none';
+            
+            // Move to next question
+            currentQuestion = questionIndex + 1;
+            setTimeout(() => {
+                askQuestion(currentQuestion);
+            }, 500);
+        }
+
+        // Add Chat Message
+        function addChatMessage(sender, message) {
+            const container = document.getElementById('chatbotContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${sender}`;
+            
+            const avatar = sender === 'ai' ? '🤖' : '👤';
+            const avatarClass = sender === 'ai' ? 'ai-avatar' : 'user-avatar';
+            
+            messageDiv.innerHTML = `
+                <div class="message-avatar ${avatarClass}">${avatar}</div>
+                <div class="message-bubble ${sender}">${message}</div>
+            `;
+            
+            container.appendChild(messageDiv);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Show/Hide Typing Indicator
+        function showTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'flex';
+            const container = document.getElementById('chatbotContainer');
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'none';
+        }
+
+        // Analyze Symptoms and Provide Results
+        function analyzeSymptomsAndProvideResults() {
+            showTypingIndicator();
+            
+            setTimeout(() => {
+                hideTypingIndicator();
+                
+                const assessment = calculateSymptomAssessment(userResponses);
+                
+                addChatMessage('ai', 'Thank you for answering all my questions. Let me analyze your symptoms...');
+                
+                setTimeout(() => {
+                    displayDiagnosis(assessment);
+                }, 2000);
+            }, 1500);
+        }
+
+        // Calculate Symptom Assessment
+        function calculateSymptomAssessment(responses) {
+            let urgencyScore = 0;
+            let diagnosis = '';
+            let recommendations = [];
+            
+            // Assess main symptom
+            switch(responses.main_symptom) {
+                case 'fever':
+                    urgencyScore += responses.severity === 'severe' ? 3 : responses.severity === 'moderate' ? 2 : 1;
+                    diagnosis = 'Possible viral or bacterial infection';
+                    break;
+                case 'headache':
+                    urgencyScore += responses.severity === 'severe' ? 2 : 1;
+                    diagnosis = responses.severity === 'severe' ? 'Severe headache - possible migraine' : 'Tension headache';
+                    break;
+                case 'cough':
+                    urgencyScore += responses.additional_symptoms === 'fatigue' ? 2 : 1;
+                    diagnosis = 'Respiratory tract infection';
+                    break;
+                case 'stomach_pain':
+                    urgencyScore += responses.severity === 'severe' ? 3 : 2;
+                    diagnosis = 'Gastrointestinal distress';
+                    break;
+                case 'breathing':
+                    urgencyScore += 4; // Always high priority
+                    diagnosis = 'Respiratory difficulty';
+                    break;
+                default:
+                    urgencyScore += 1;
+                    diagnosis = 'General discomfort';
+            }
+            
+            // Adjust for severity and duration
+            if (responses.severity === 'severe') urgencyScore += 2;
+            if (responses.duration === 'more_1week') urgencyScore += 1;
+            if (responses.additional_symptoms !== 'none') urgencyScore += 1;
+            
+            // Medical history factors
+            if (responses.medical_history !== 'none') {
+                urgencyScore += 1;
+                recommendations.push('Consider your existing medical condition');
+            }
+            
+            // Determine urgency level
+            let urgency, urgencyClass, actions;
+            if (urgencyScore >= 6) {
+                urgency = 'Emergency';
+                urgencyClass = 'urgency-emergency';
+                actions = ['Call emergency services immediately (108)', 'Go to nearest emergency room', 'Do not delay seeking medical attention'];
+            } else if (urgencyScore >= 3) {
+                urgency = 'Urgent';
+                urgencyClass = 'urgency-urgent';
+                actions = ['Consult a doctor within 24 hours', 'Monitor symptoms closely', 'Consider visiting a clinic today'];
+            } else {
+                urgency = 'Mild';
+                urgencyClass = 'urgency-mild';
+                actions = ['Rest and monitor symptoms', 'Stay hydrated', 'Consult doctor if symptoms persist beyond 2-3 days'];
+            }
+            
+            // Add general recommendations
+            recommendations.push('Take adequate rest', 'Stay hydrated', 'Maintain good hygiene');
+            
+            return {
+                diagnosis,
+                urgency,
+                urgencyClass,
+                urgencyScore,
+                actions,
+                recommendations
+            };
+        }
+
+        // Display Diagnosis
+        function displayDiagnosis(assessment) {
+            const resultDiv = document.getElementById('diagnosisResult');
+            
+            resultDiv.innerHTML = `
+                <h3>🏥 AI Health Assessment</h3>
+                <div style="margin: 1rem 0;">
+                    <strong>Preliminary Assessment:</strong>
+                    <p style="margin: 0.5rem 0;">${assessment.diagnosis}</p>
+                </div>
+                
+                <div style="margin: 1rem 0;">
+                    <strong>Urgency Level:</strong>
+                    <span class="urgency-badge ${assessment.urgencyClass}">${assessment.urgency}</span>
+                </div>
+                
+                <div style="margin: 1rem 0;">
+                    <strong>Recommended Actions:</strong>
+                    <ul style="margin: 0.5rem 0; padding-left: 2rem;">
+                        ${assessment.actions.map(action => `<li style="margin: 0.25rem 0;">${action}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div style="margin: 1rem 0;">
+                    <strong>General Care Tips:</strong>
+                    <ul style="margin: 0.5rem 0; padding-left: 2rem;">
+                        ${assessment.recommendations.map(rec => `<li style="margin: 0.25rem 0;">${rec}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div style="margin: 1.5rem 0; padding: 1rem; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #17a2b8;">
+                    <strong>⚠️ Disclaimer:</strong> This assessment is for informational purposes only and does not replace professional medical diagnosis. Always consult with a qualified healthcare provider for proper medical advice.
                 </div>
             `;
+            
+            resultDiv.style.display = 'block';
+            
+            // Show emergency warning for high urgency
+            if (assessment.urgency === 'Emergency') {
+                document.getElementById('emergencyWarning').style.display = 'block';
+            }
+            
+            // Speak result if voice enabled
+            if (aiVoiceEnabled) {
+                speakText(`Assessment complete. Your condition appears to be ${assessment.urgency.toLowerCase()}. ${assessment.actions[0]}`);
+            }
+            
+            chatActive = false;
+        }
 
-            console.log('Symptom check completed for:', selectedSymptoms);
+        // Voice Recognition Functions
+        function toggleVoiceRecording() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                showStatusMessage('Speech recognition not supported in this browser', 'error');
+                return;
+            }
+
+            if (isRecording) {
+                stopVoiceRecording();
+            } else {
+                startVoiceRecording();
+            }
+        }
+
+        function startVoiceRecording() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            voiceRecognition = new SpeechRecognition();
+            
+            voiceRecognition.continuous = false;
+            voiceRecognition.interimResults = false;
+            voiceRecognition.lang = 'en-US';
+
+            voiceRecognition.onstart = function() {
+                isRecording = true;
+                document.getElementById('voiceBtn').classList.add('recording');
+                document.getElementById('voiceText').textContent = 'Listening...';
+                showStatusMessage('Listening... Speak now!', 'success');
+            };
+
+            voiceRecognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                addChatMessage('user', `🎤 ${transcript}`);
+                
+                // Process voice input (could be enhanced to match with options)
+                showStatusMessage(`You said: "${transcript}"`, 'success');
+            };
+
+            voiceRecognition.onerror = function(event) {
+                showStatusMessage('Voice recognition error: ' + event.error, 'error');
+                stopVoiceRecording();
+            };
+
+            voiceRecognition.onend = function() {
+                stopVoiceRecording();
+            };
+
+            voiceRecognition.start();
+        }
+
+        function stopVoiceRecording() {
+            if (voiceRecognition) {
+                voiceRecognition.stop();
+            }
+            isRecording = false;
+            document.getElementById('voiceBtn').classList.remove('recording');
+            document.getElementById('voiceText').textContent = 'Speak Your Symptoms';
+        }
+
+        // Text-to-Speech Functions
+        function toggleTextToSpeech() {
+            aiVoiceEnabled = !aiVoiceEnabled;
+            const speakBtn = document.getElementById('speakText');
+            speakBtn.textContent = aiVoiceEnabled ? 'AI Voice: ON' : 'AI Voice: OFF';
+            
+            if (!aiVoiceEnabled) {
+                speechSynthesis.cancel(); // Stop any current speech
+            }
+            
+            showStatusMessage(`AI Voice ${aiVoiceEnabled ? 'enabled' : 'disabled'}`, 'success');
+        }
+
+        function speakText(text) {
+            if (!aiVoiceEnabled || !speechSynthesis) return;
+            
+            speechSynthesis.cancel(); // Cancel any ongoing speech
+            
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 0.9;
+            utterance.pitch = 1;
+            utterance.volume = 0.8;
+            
+            // Try to use a female voice if available
+            const voices = speechSynthesis.getVoices();
+            const femaleVoice = voices.find(voice => 
+                voice.name.includes('Female') || 
+                voice.name.includes('Samantha') ||
+                voice.name.includes('Karen')
+            );
+            
+            if (femaleVoice) {
+                utterance.voice = femaleVoice;
+            }
+            
+            speechSynthesis.speak(utterance);
+        }
+
+        // Utility Functions
+        function restartChat() {
+            currentQuestion = 0;
+            chatActive = false;
+            userResponses = {};
+            
+            // Reset UI
+            document.getElementById('chatOptions').style.display = 'none';
+            document.getElementById('diagnosisResult').style.display = 'none';
+            document.getElementById('emergencyWarning').style.display = 'none';
+            
+            // Reset chat container
+            const container = document.getElementById('chatbotContainer');
+            container.innerHTML = `
+                <div class="chat-message ai">
+                    <div class="message-avatar ai-avatar">🤖</div>
+                    <div class="message-bubble ai">
+                        Welcome back to CSE-D AI Symptom Checker! Click "Start Symptom Check" to begin a new assessment.
+                    </div>
+                </div>
+            `;
+            
+            showStatusMessage('Chat reset. Ready for new assessment!', 'success');
+        }
+
+        function bookConsultation() {
+            showStatusMessage('Redirecting to consultation booking...', 'success');
+            alert('Consultation Booking:\n\nThis feature would connect you with available doctors.\n\nFor now, please use the Patient Portal to register and request a consultation.');
+            // Could redirect to patient portal or specific booking page
         }
 
         // Search medicine
