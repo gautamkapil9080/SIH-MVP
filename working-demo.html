@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CSE-D Telemedicine - Rural Healthcare Access</title>
+    <!-- Updated: 2025-01-15 13:28 - Patient Portal with Registration & Login -->
     <style>
         * {
             margin: 0;
@@ -328,10 +329,11 @@
             <h2 id="patient_portal_title">Patient Portal</h2>
             
             <!-- Patient Portal Tabs - Updated for Login/Registration -->
-            <div class="patient-tabs">
-                <button onclick="showPatientTab('registration')" class="patient-tab-btn active" id="tab_registration">Registration</button>
-                <button onclick="showPatientTab('login')" class="patient-tab-btn" id="tab_login">Login</button>
+            <div class="patient-tabs" style="border: 2px solid #2E8B57; padding: 10px; margin: 10px 0;">
+                <button onclick="showPatientTab('registration')" class="patient-tab-btn active" id="tab_registration">📝 Registration</button>
+                <button onclick="showPatientTab('login')" class="patient-tab-btn" id="tab_login">🔑 Login</button>
             </div>
+            <p style="color: #2E8B57; font-size: 0.9em; margin: 5px 0;">✅ Patient Portal now has both Registration and Login tabs above!</p>
 
             <!-- Registration Tab -->
             <div id="registration-tab" class="patient-tab-content active">
