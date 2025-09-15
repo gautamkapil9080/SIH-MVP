@@ -534,23 +534,200 @@
     <!-- Doctor Section -->
     <section id="doctor-section" class="section">
         <div class="container">
-            <h2 id="doctor_dashboard">Doctor Dashboard</h2>
-            <div class="card">
-                <h3 id="pending_requests">Pending Patient Requests</h3>
-                <div id="requestsList">
-                    <div class="medicine-result">
-                        <h4>Rajesh Kumar (45) - Khera Village</h4>
-                        <p><strong>Symptoms:</strong> Fever and cough for 3 days</p>
-                        <p><strong>Urgency:</strong> <span style="color: #dc3545;">High</span></p>
-                        <p><strong>Time:</strong> 2 hours ago</p>
-                        <button class="btn">Start Consultation</button>
+            <h2 id="doctor_portal_title">Doctor Portal</h2>
+            
+            <!-- Doctor Portal Tabs -->
+            <div class="patient-tabs" style="border: 2px solid #2E8B57; padding: 10px; margin: 10px 0;">
+                <button onclick="showDoctorTab('registration')" class="patient-tab-btn active" id="doctor_tab_registration">📝 Doctor Registration</button>
+                <button onclick="showDoctorTab('login')" class="patient-tab-btn" id="doctor_tab_login">🔑 Doctor Login</button>
+            </div>
+            <p style="color: #2E8B57; font-size: 0.9em; margin: 5px 0;">✅ Doctor Portal now has both Registration and Login tabs above!</p>
+
+            <!-- Doctor Registration Tab -->
+            <div id="doctor-registration-tab" class="patient-tab-content active">
+                <div class="card">
+                    <h3 id="doctor_registration">Doctor Registration</h3>
+                    <form id="doctorRegistrationForm">
+                        <!-- Basic Information -->
+                        <h4 id="doctor_basic_info">📋 Basic Information</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label id="doctor_full_name">Full Name:</label>
+                                <input type="text" id="regDoctorName" required>
+                            </div>
+                            <div class="form-group">
+                                <label id="doctor_phone">Phone Number:</label>
+                                <input type="tel" id="regDoctorPhone" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label id="doctor_address">Address:</label>
+                                <input type="text" id="regDoctorAddress" required>
+                            </div>
+                            <div class="form-group">
+                                <label id="doctor_password">Password:</label>
+                                <input type="password" id="regDoctorPassword" required>
+                            </div>
+                        </div>
+
+                        <!-- Professional Information -->
+                        <div class="medical-info-section">
+                            <h4 id="doctor_professional_info">🎓 Professional Information</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label id="doctor_qualification">Primary Qualification:</label>
+                                    <select id="regDoctorQualification" required>
+                                        <option value="" id="select_qualification">Select Qualification</option>
+                                        <option value="MBBS">MBBS</option>
+                                        <option value="MD">MD</option>
+                                        <option value="MS">MS</option>
+                                        <option value="DM">DM</option>
+                                        <option value="MCh">MCh</option>
+                                        <option value="BAMS">BAMS</option>
+                                        <option value="BHMS">BHMS</option>
+                                        <option value="BDS">BDS</option>
+                                        <option value="MDS">MDS</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label id="doctor_specialization">Specialization:</label>
+                                    <select id="regDoctorSpecialization" required>
+                                        <option value="" id="select_specialization">Select Specialization</option>
+                                        <option value="General Medicine">General Medicine</option>
+                                        <option value="Pediatrics">Pediatrics</option>
+                                        <option value="Cardiology">Cardiology</option>
+                                        <option value="Dermatology">Dermatology</option>
+                                        <option value="Gynecology">Gynecology</option>
+                                        <option value="Orthopedics">Orthopedics</option>
+                                        <option value="Psychiatry">Psychiatry</option>
+                                        <option value="ENT">ENT</option>
+                                        <option value="Ophthalmology">Ophthalmology</option>
+                                        <option value="Neurology">Neurology</option>
+                                        <option value="General Surgery">General Surgery</option>
+                                        <option value="Anesthesiology">Anesthesiology</option>
+                                        <option value="Radiology">Radiology</option>
+                                        <option value="Pathology">Pathology</option>
+                                        <option value="Family Medicine">Family Medicine</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label id="doctor_experience">Years of Experience:</label>
+                                    <input type="number" id="regDoctorExperience" placeholder="e.g., 5" min="0" max="50">
+                                </div>
+                                <div class="form-group">
+                                    <label id="doctor_license">Medical License Number:</label>
+                                    <input type="text" id="regDoctorLicense" placeholder="e.g., MH12345">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Education Background -->
+                        <div class="form-group">
+                            <label id="doctor_education">Education Background:</label>
+                            <textarea id="regDoctorEducation" rows="3" placeholder="Medical college, university, additional certifications, etc."></textarea>
+                        </div>
+                        
+                        <!-- Current Practice -->
+                        <div class="form-group">
+                            <label id="doctor_current_practice">Current Practice/Hospital:</label>
+                            <textarea id="regDoctorPractice" rows="2" placeholder="Current workplace, hospital affiliation, clinic details, etc."></textarea>
+                        </div>
+                        
+                        <button type="submit" class="btn" id="doctor_register_btn">Register as Doctor</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Doctor Login Tab -->
+            <div id="doctor-login-tab" class="patient-tab-content">
+                <div class="card">
+                    <h3 id="doctor_login">Doctor Login</h3>
+                    <form id="doctorLoginForm">
+                        <div class="form-group">
+                            <label id="doctor_login_phone">Phone Number:</label>
+                            <input type="tel" id="loginDoctorPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label id="doctor_login_password">Password:</label>
+                            <input type="password" id="loginDoctorPassword" required>
+                        </div>
+                        <button type="submit" class="btn" id="doctor_login_btn">Login</button>
+                    </form>
+                </div>
+                
+                <!-- Doctor Profile (shown after login) -->
+                <div id="doctorProfile" class="patient-profile" style="display: none;">
+                    <h3 id="doctor_profile_title">👨‍⚕️ Doctor Profile</h3>
+                    <div class="profile-info">
+                        <div class="profile-item">
+                            <strong id="doctor_profile_name_label">Name:</strong>
+                            <span id="doctorProfileName">-</span>
+                        </div>
+                        <div class="profile-item">
+                            <strong id="doctor_profile_phone_label">Phone:</strong>
+                            <span id="doctorProfilePhone">-</span>
+                        </div>
+                        <div class="profile-item">
+                            <strong id="doctor_profile_address_label">Address:</strong>
+                            <span id="doctorProfileAddress">-</span>
+                        </div>
+                        <div class="profile-item">
+                            <strong id="doctor_profile_qualification_label">Qualification:</strong>
+                            <span id="doctorProfileQualification">-</span>
+                        </div>
+                        <div class="profile-item">
+                            <strong id="doctor_profile_specialization_label">Specialization:</strong>
+                            <span id="doctorProfileSpecialization">-</span>
+                        </div>
+                        <div class="profile-item">
+                            <strong id="doctor_profile_experience_label">Experience:</strong>
+                            <span id="doctorProfileExperience">-</span>
+                        </div>
+                        <div class="profile-item">
+                            <strong id="doctor_profile_license_label">License:</strong>
+                            <span id="doctorProfileLicense">-</span>
+                        </div>
                     </div>
-                    <div class="medicine-result">
-                        <h4>Priya Singh (32) - Dandian Village</h4>
-                        <p><strong>Symptoms:</strong> Headache and nausea</p>
-                        <p><strong>Urgency:</strong> <span style="color: #ffc107;">Medium</span></p>
-                        <p><strong>Time:</strong> 1 hour ago</p>
-                        <button class="btn">Start Consultation</button>
+                    
+                    <h4 id="doctor_education_title" style="margin: 1.5rem 0 1rem 0; color: #2E8B57;">🎓 Education & Practice</h4>
+                    <div style="margin-top: 1rem;">
+                        <strong id="doctor_profile_education_label">Education Background:</strong>
+                        <p id="doctorProfileEducation" style="margin: 0.5rem 0; padding: 1rem; background: white; border-radius: 4px;">-</p>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <strong id="doctor_profile_practice_label">Current Practice:</strong>
+                        <p id="doctorProfilePractice" style="margin: 0.5rem 0; padding: 1rem; background: white; border-radius: 4px;">-</p>
+                    </div>
+                    
+                    <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                        <button onclick="viewPendingRequests()" class="btn" id="view_requests_btn">View Patient Requests</button>
+                        <button onclick="logoutDoctor()" class="btn" style="background: #6c757d;" id="doctor_logout_btn">Logout</button>
+                    </div>
+                </div>
+
+                <!-- Pending Requests (shown after login) -->
+                <div id="doctorDashboard" class="card" style="display: none; margin-top: 1rem;">
+                    <h3 id="pending_requests">Pending Patient Requests</h3>
+                    <div id="requestsList">
+                        <div class="medicine-result">
+                            <h4>Rajesh Kumar (45) - Khera Village</h4>
+                            <p><strong>Symptoms:</strong> Fever and cough for 3 days</p>
+                            <p><strong>Urgency:</strong> <span style="color: #dc3545;">High</span></p>
+                            <p><strong>Time:</strong> 2 hours ago</p>
+                            <button class="btn">Start Consultation</button>
+                        </div>
+                        <div class="medicine-result">
+                            <h4>Priya Singh (32) - Dandian Village</h4>
+                            <p><strong>Symptoms:</strong> Headache and nausea</p>
+                            <p><strong>Urgency:</strong> <span style="color: #ffc107;">Medium</span></p>
+                            <p><strong>Time:</strong> 1 hour ago</p>
+                            <button class="btn">Start Consultation</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -989,6 +1166,24 @@
                     loginPatient();
                 });
             }
+
+            // Doctor registration form
+            const doctorRegForm = document.getElementById('doctorRegistrationForm');
+            if (doctorRegForm) {
+                doctorRegForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    registerDoctor();
+                });
+            }
+
+            // Doctor login form
+            const doctorLoginForm = document.getElementById('doctorLoginForm');
+            if (doctorLoginForm) {
+                doctorLoginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    loginDoctor();
+                });
+            }
         }
 
         // Patient Portal Functions
@@ -1111,6 +1306,110 @@
             document.getElementById('patientProfile').style.display = 'none';
             document.getElementById('patientLoginForm').parentElement.style.display = 'block';
             showStatusMessage('Logged out successfully!', 'success');
+        }
+
+        // Doctor Portal Functions
+        function showDoctorTab(tabName) {
+            // Hide all doctor tab contents
+            document.querySelectorAll('.patient-tab-content').forEach(tab => {
+                if (tab.id.includes('doctor')) {
+                    tab.classList.remove('active');
+                }
+            });
+
+            // Remove active class from doctor tab buttons
+            document.querySelectorAll('#doctor_tab_registration, #doctor_tab_login').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected doctor tab
+            document.getElementById('doctor-' + tabName + '-tab').classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+
+            console.log('Switched to doctor tab:', tabName);
+        }
+
+        function registerDoctor() {
+            const formData = {
+                name: document.getElementById('regDoctorName').value,
+                phone: document.getElementById('regDoctorPhone').value,
+                address: document.getElementById('regDoctorAddress').value,
+                password: document.getElementById('regDoctorPassword').value,
+                qualification: document.getElementById('regDoctorQualification').value,
+                specialization: document.getElementById('regDoctorSpecialization').value,
+                experience: document.getElementById('regDoctorExperience').value,
+                license: document.getElementById('regDoctorLicense').value,
+                education: document.getElementById('regDoctorEducation').value,
+                practice: document.getElementById('regDoctorPractice').value,
+                registrationDate: new Date().toISOString()
+            };
+
+            // Save doctor data to localStorage
+            const doctors = JSON.parse(localStorage.getItem('doctors') || '[]');
+            
+            // Check if doctor already exists
+            const existingDoctor = doctors.find(d => d.phone === formData.phone);
+            if (existingDoctor) {
+                showStatusMessage('Doctor with this phone number already exists!', 'error');
+                return;
+            }
+
+            doctors.push(formData);
+            localStorage.setItem('doctors', JSON.stringify(doctors));
+
+            showStatusMessage('Doctor registration successful!', 'success');
+            document.getElementById('doctorRegistrationForm').reset();
+            
+            // Switch to login tab
+            setTimeout(() => {
+                showDoctorTab('login');
+            }, 2000);
+        }
+
+        function loginDoctor() {
+            const phone = document.getElementById('loginDoctorPhone').value;
+            const password = document.getElementById('loginDoctorPassword').value;
+
+            const doctors = JSON.parse(localStorage.getItem('doctors') || '[]');
+            const doctor = doctors.find(d => d.phone === phone && d.password === password);
+
+            if (doctor) {
+                displayDoctorProfile(doctor);
+                showStatusMessage('Doctor login successful!', 'success');
+                document.getElementById('doctorLoginForm').reset();
+            } else {
+                showStatusMessage('Invalid phone number or password!', 'error');
+            }
+        }
+
+        function displayDoctorProfile(doctor) {
+            document.getElementById('doctorProfileName').textContent = doctor.name;
+            document.getElementById('doctorProfilePhone').textContent = doctor.phone;
+            document.getElementById('doctorProfileAddress').textContent = doctor.address;
+            document.getElementById('doctorProfileQualification').textContent = doctor.qualification || '-';
+            document.getElementById('doctorProfileSpecialization').textContent = doctor.specialization || '-';
+            document.getElementById('doctorProfileExperience').textContent = doctor.experience ? doctor.experience + ' years' : '-';
+            document.getElementById('doctorProfileLicense').textContent = doctor.license || '-';
+            
+            document.getElementById('doctorProfileEducation').textContent = doctor.education || 'No education background recorded.';
+            document.getElementById('doctorProfilePractice').textContent = doctor.practice || 'No current practice information recorded.';
+
+            document.getElementById('doctorProfile').style.display = 'block';
+            document.getElementById('doctorLoginForm').parentElement.style.display = 'none';
+        }
+
+        function viewPendingRequests() {
+            document.getElementById('doctorDashboard').style.display = 'block';
+            showStatusMessage('Showing patient requests...', 'success');
+        }
+
+        function logoutDoctor() {
+            document.getElementById('doctorProfile').style.display = 'none';
+            document.getElementById('doctorDashboard').style.display = 'none';
+            document.getElementById('doctorLoginForm').parentElement.style.display = 'block';
+            showStatusMessage('Doctor logged out successfully!', 'success');
         }
 
         // Show section
