@@ -1686,70 +1686,187 @@
         let aiVoiceEnabled = true;
         let isRecording = false;
 
-        // Symptom Assessment Questions
+        // Comprehensive Symptom Assessment Questions
         const symptomQuestions = [
             {
-                id: 'main_symptom',
-                question: "What is your main symptom or concern today?",
+                id: 'main_symptom_category',
+                question: "Which body system or area is your main concern?",
                 options: [
-                    { text: "Fever", value: "fever" },
-                    { text: "Headache", value: "headache" },
-                    { text: "Cough", value: "cough" },
-                    { text: "Stomach Pain", value: "stomach_pain" },
-                    { text: "Body Ache", value: "body_ache" },
-                    { text: "Breathing Issues", value: "breathing" }
+                    { text: "🫁 Respiratory (Breathing, Cough, Chest)", value: "respiratory" },
+                    { text: "❤️ Cardiovascular (Heart, Chest Pain)", value: "cardiovascular" },
+                    { text: "🧠 Neurological (Head, Brain, Nerves)", value: "neurological" },
+                    { text: "🍽️ Digestive (Stomach, Intestines)", value: "digestive" },
+                    { text: "🦴 Musculoskeletal (Bones, Joints, Muscles)", value: "musculoskeletal" },
+                    { text: "🌡️ General (Fever, Fatigue, Weight)", value: "general" },
+                    { text: "👁️ Eyes/Vision Problems", value: "vision" },
+                    { text: "👂 Ear/Hearing Issues", value: "hearing" },
+                    { text: "🩸 Skin Conditions", value: "skin" },
+                    { text: "🧠 Mental Health", value: "mental" },
+                    { text: "👶 Women's Health/Reproductive", value: "reproductive" },
+                    { text: "💊 Kidney/Urinary Issues", value: "urinary" }
+                ]
+            },
+            {
+                id: 'specific_symptom',
+                question: "What is your specific main symptom?",
+                options: [
+                    // Respiratory
+                    { text: "🫁 Dry Cough", value: "dry_cough", category: "respiratory" },
+                    { text: "🫁 Cough with Phlegm", value: "wet_cough", category: "respiratory" },
+                    { text: "🫁 Shortness of Breath", value: "shortness_breath", category: "respiratory" },
+                    { text: "🫁 Wheezing", value: "wheezing", category: "respiratory" },
+                    { text: "🫁 Chest Tightness", value: "chest_tightness", category: "respiratory" },
+                    { text: "🫁 Sore Throat", value: "sore_throat", category: "respiratory" },
+                    { text: "🫁 Runny/Stuffy Nose", value: "nasal_congestion", category: "respiratory" },
+                    
+                    // Cardiovascular
+                    { text: "❤️ Chest Pain/Pressure", value: "chest_pain", category: "cardiovascular" },
+                    { text: "❤️ Heart Palpitations", value: "palpitations", category: "cardiovascular" },
+                    { text: "❤️ Irregular Heartbeat", value: "irregular_heartbeat", category: "cardiovascular" },
+                    { text: "❤️ Swelling in Legs/Ankles", value: "leg_swelling", category: "cardiovascular" },
+                    
+                    // Neurological
+                    { text: "🧠 Severe Headache", value: "severe_headache", category: "neurological" },
+                    { text: "🧠 Migraine", value: "migraine", category: "neurological" },
+                    { text: "🧠 Dizziness/Vertigo", value: "dizziness", category: "neurological" },
+                    { text: "🧠 Confusion/Memory Issues", value: "confusion", category: "neurological" },
+                    { text: "🧠 Seizures", value: "seizures", category: "neurological" },
+                    { text: "🧠 Numbness/Tingling", value: "numbness", category: "neurological" },
+                    { text: "🧠 Balance Problems", value: "balance_issues", category: "neurological" },
+                    
+                    // Digestive
+                    { text: "🍽️ Severe Stomach Pain", value: "stomach_pain", category: "digestive" },
+                    { text: "🍽️ Nausea/Vomiting", value: "nausea_vomiting", category: "digestive" },
+                    { text: "🍽️ Diarrhea", value: "diarrhea", category: "digestive" },
+                    { text: "🍽️ Constipation", value: "constipation", category: "digestive" },
+                    { text: "🍽️ Acid Reflux/Heartburn", value: "acid_reflux", category: "digestive" },
+                    { text: "🍽️ Loss of Appetite", value: "appetite_loss", category: "digestive" },
+                    { text: "🍽️ Blood in Stool", value: "blood_stool", category: "digestive" },
+                    
+                    // Musculoskeletal
+                    { text: "🦴 Back Pain", value: "back_pain", category: "musculoskeletal" },
+                    { text: "🦴 Joint Pain", value: "joint_pain", category: "musculoskeletal" },
+                    { text: "🦴 Muscle Cramps", value: "muscle_cramps", category: "musculoskeletal" },
+                    { text: "🦴 Neck Pain", value: "neck_pain", category: "musculoskeletal" },
+                    { text: "🦴 Shoulder Pain", value: "shoulder_pain", category: "musculoskeletal" },
+                    { text: "🦴 Hip/Knee Pain", value: "hip_knee_pain", category: "musculoskeletal" },
+                    
+                    // General
+                    { text: "🌡️ High Fever (>101°F)", value: "high_fever", category: "general" },
+                    { text: "🌡️ Low Grade Fever", value: "low_fever", category: "general" },
+                    { text: "🌡️ Extreme Fatigue", value: "extreme_fatigue", category: "general" },
+                    { text: "🌡️ Unexplained Weight Loss", value: "weight_loss", category: "general" },
+                    { text: "🌡️ Unexplained Weight Gain", value: "weight_gain", category: "general" },
+                    { text: "🌡️ Night Sweats", value: "night_sweats", category: "general" },
+                    
+                    // Vision
+                    { text: "👁️ Blurred Vision", value: "blurred_vision", category: "vision" },
+                    { text: "👁️ Eye Pain", value: "eye_pain", category: "vision" },
+                    { text: "👁️ Double Vision", value: "double_vision", category: "vision" },
+                    { text: "👁️ Light Sensitivity", value: "light_sensitivity", category: "vision" },
+                    
+                    // Hearing
+                    { text: "👂 Ear Pain", value: "ear_pain", category: "hearing" },
+                    { text: "👂 Hearing Loss", value: "hearing_loss", category: "hearing" },
+                    { text: "👂 Ringing in Ears", value: "tinnitus", category: "hearing" },
+                    { text: "👂 Ear Discharge", value: "ear_discharge", category: "hearing" },
+                    
+                    // Skin
+                    { text: "🩸 Rash/Skin Irritation", value: "rash", category: "skin" },
+                    { text: "🩸 Itching", value: "itching", category: "skin" },
+                    { text: "🩸 Unusual Moles/Growths", value: "skin_growths", category: "skin" },
+                    { text: "🩸 Wounds Not Healing", value: "non_healing_wounds", category: "skin" },
+                    
+                    // Mental Health
+                    { text: "🧠 Persistent Sadness", value: "depression", category: "mental" },
+                    { text: "🧠 Anxiety/Panic Attacks", value: "anxiety", category: "mental" },
+                    { text: "🧠 Sleep Problems", value: "sleep_issues", category: "mental" },
+                    { text: "🧠 Mood Swings", value: "mood_swings", category: "mental" },
+                    
+                    // Reproductive
+                    { text: "👶 Menstrual Irregularities", value: "menstrual_issues", category: "reproductive" },
+                    { text: "👶 Pelvic Pain", value: "pelvic_pain", category: "reproductive" },
+                    { text: "👶 Pregnancy Concerns", value: "pregnancy_concerns", category: "reproductive" },
+                    
+                    // Urinary
+                    { text: "💊 Painful Urination", value: "painful_urination", category: "urinary" },
+                    { text: "💊 Frequent Urination", value: "frequent_urination", category: "urinary" },
+                    { text: "💊 Blood in Urine", value: "blood_urine", category: "urinary" },
+                    { text: "💊 Kidney Pain", value: "kidney_pain", category: "urinary" }
                 ]
             },
             {
                 id: 'severity',
                 question: "How would you rate the severity of your symptoms?",
                 options: [
-                    { text: "Mild (1-3)", value: "mild" },
-                    { text: "Moderate (4-6)", value: "moderate" },
-                    { text: "Severe (7-10)", value: "severe" }
+                    { text: "😊 Mild (1-3) - Manageable discomfort", value: "mild" },
+                    { text: "😐 Moderate (4-6) - Noticeable impact on daily life", value: "moderate" },
+                    { text: "😰 Severe (7-8) - Significant pain/discomfort", value: "severe" },
+                    { text: "🚨 Critical (9-10) - Unbearable, need immediate help", value: "critical" }
                 ]
             },
             {
                 id: 'duration',
                 question: "How long have you been experiencing these symptoms?",
                 options: [
-                    { text: "Less than 1 day", value: "less_1day" },
-                    { text: "1-3 days", value: "1_3days" },
-                    { text: "4-7 days", value: "4_7days" },
-                    { text: "More than 1 week", value: "more_1week" }
+                    { text: "⏰ Less than 6 hours", value: "less_6hours" },
+                    { text: "📅 6-24 hours", value: "6_24hours" },
+                    { text: "📅 1-3 days", value: "1_3days" },
+                    { text: "📅 4-7 days", value: "4_7days" },
+                    { text: "📅 1-2 weeks", value: "1_2weeks" },
+                    { text: "📅 2-4 weeks", value: "2_4weeks" },
+                    { text: "📅 More than 1 month", value: "more_1month" }
                 ]
             },
             {
                 id: 'additional_symptoms',
-                question: "Do you have any of these additional symptoms?",
+                question: "Do you have any of these additional symptoms? (Select all that apply)",
                 options: [
-                    { text: "Nausea/Vomiting", value: "nausea" },
-                    { text: "Dizziness", value: "dizziness" },
-                    { text: "Fatigue/Weakness", value: "fatigue" },
-                    { text: "Loss of Appetite", value: "appetite_loss" },
-                    { text: "None of the above", value: "none" }
-                ]
-            },
-            {
-                id: 'recent_changes',
-                question: "Have you experienced any of these recently?",
-                options: [
-                    { text: "Travel to new places", value: "travel" },
-                    { text: "Change in diet", value: "diet_change" },
-                    { text: "High stress/anxiety", value: "stress" },
-                    { text: "Contact with sick person", value: "contact_sick" },
-                    { text: "None of the above", value: "none" }
+                    { text: "🤢 Nausea/Vomiting", value: "nausea" },
+                    { text: "💫 Dizziness/Lightheadedness", value: "dizziness" },
+                    { text: "😴 Extreme Fatigue/Weakness", value: "fatigue" },
+                    { text: "🌡️ Fever/Chills", value: "fever_chills" },
+                    { text: "😰 Shortness of Breath", value: "breathlessness" },
+                    { text: "💧 Excessive Sweating", value: "sweating" },
+                    { text: "🍽️ Loss of Appetite", value: "appetite_loss" },
+                    { text: "😵 Confusion/Disorientation", value: "confusion" },
+                    { text: "🦵 Swelling in Extremities", value: "swelling" },
+                    { text: "✋ None of the above", value: "none" }
                 ]
             },
             {
                 id: 'medical_history',
                 question: "Do you have any existing medical conditions?",
                 options: [
-                    { text: "Diabetes", value: "diabetes" },
-                    { text: "High Blood Pressure", value: "hypertension" },
-                    { text: "Heart Problems", value: "heart" },
-                    { text: "Asthma/Respiratory Issues", value: "respiratory" },
-                    { text: "No existing conditions", value: "none" }
+                    { text: "🩸 Diabetes (Type 1 or 2)", value: "diabetes" },
+                    { text: "💗 High Blood Pressure/Hypertension", value: "hypertension" },
+                    { text: "❤️ Heart Disease/Heart Problems", value: "heart_disease" },
+                    { text: "🫁 Asthma/COPD/Respiratory Issues", value: "respiratory_disease" },
+                    { text: "🧠 Neurological Conditions", value: "neurological_disease" },
+                    { text: "🦴 Arthritis/Joint Problems", value: "arthritis" },
+                    { text: "🩸 Blood Disorders", value: "blood_disorders" },
+                    { text: "🍽️ Digestive/GI Problems", value: "digestive_disease" },
+                    { text: "🧬 Cancer (Current or Past)", value: "cancer" },
+                    { text: "💊 Kidney/Liver Disease", value: "kidney_liver" },
+                    { text: "🧠 Mental Health Conditions", value: "mental_health" },
+                    { text: "💉 Autoimmune Conditions", value: "autoimmune" },
+                    { text: "✋ No existing conditions", value: "none" }
+                ]
+            },
+            {
+                id: 'recent_factors',
+                question: "Have you experienced any of these recently?",
+                options: [
+                    { text: "✈️ Recent Travel (Domestic/International)", value: "travel" },
+                    { text: "🍽️ Change in Diet/New Foods", value: "diet_change" },
+                    { text: "😰 High Stress/Emotional Trauma", value: "high_stress" },
+                    { text: "🤧 Contact with Sick Person", value: "contact_sick" },
+                    { text: "💊 Started New Medications", value: "new_medications" },
+                    { text: "🏥 Recent Surgery/Medical Procedure", value: "recent_surgery" },
+                    { text: "🏃 Increased Physical Activity", value: "increased_activity" },
+                    { text: "📱 Changes in Sleep Pattern", value: "sleep_changes" },
+                    { text: "🌿 Exposure to Allergens/Chemicals", value: "allergen_exposure" },
+                    { text: "✋ None of the above", value: "none" }
                 ]
             }
         ];
@@ -1909,135 +2026,431 @@
             }, 1500);
         }
 
-        // Calculate Symptom Assessment
+        // Comprehensive Medical Knowledge Database
+        const medicalKnowledge = {
+            // Respiratory conditions
+            dry_cough: {
+                condition: "Dry Cough",
+                possibleCauses: ["Viral infection", "Allergies", "Asthma", "GERD", "Medication side effects"],
+                doctorType: "General Practitioner or Pulmonologist",
+                urgencyFactors: ["fever", "shortness_breath", "blood_cough"],
+                dietRecommendations: ["Warm water with honey", "Ginger tea", "Avoid cold drinks", "Stay hydrated"],
+                careInstructions: ["Use humidifier", "Avoid irritants like smoke", "Rest your voice", "Sleep with elevated head"]
+            },
+            wet_cough: {
+                condition: "Productive Cough",
+                possibleCauses: ["Bacterial infection", "Pneumonia", "Bronchitis", "COPD exacerbation"],
+                doctorType: "General Practitioner or Pulmonologist",
+                urgencyFactors: ["green_yellow_sputum", "fever", "chest_pain"],
+                dietRecommendations: ["Warm fluids", "Spicy foods to thin mucus", "Avoid dairy temporarily"],
+                careInstructions: ["Expectorate mucus", "Steam inhalation", "Chest physiotherapy", "Monitor sputum color"]
+            },
+            shortness_breath: {
+                condition: "Shortness of Breath",
+                possibleCauses: ["Asthma", "Heart problems", "Anemia", "Anxiety", "Lung infection"],
+                doctorType: "Cardiologist or Pulmonologist (Emergency if severe)",
+                urgencyFactors: ["chest_pain", "blue_lips", "severe"],
+                dietRecommendations: ["Light meals", "Iron-rich foods if anemic", "Avoid gas-producing foods"],
+                careInstructions: ["Sit upright", "Practice breathing exercises", "Avoid strenuous activity", "Use prescribed inhalers"]
+            },
+            chest_pain: {
+                condition: "Chest Pain",
+                possibleCauses: ["Heart attack", "Angina", "Muscle strain", "Anxiety", "GERD"],
+                doctorType: "Cardiologist (Emergency if severe)",
+                urgencyFactors: ["radiating_pain", "sweating", "nausea", "severe"],
+                dietRecommendations: ["Low sodium", "Heart-healthy foods", "Avoid caffeine", "Light meals"],
+                careInstructions: ["Rest immediately", "Take prescribed nitroglycerin if available", "Avoid physical activity", "Call emergency if severe"]
+            },
+            severe_headache: {
+                condition: "Severe Headache",
+                possibleCauses: ["Migraine", "Tension headache", "High blood pressure", "Meningitis", "Brain tumor"],
+                doctorType: "Neurologist or General Practitioner",
+                urgencyFactors: ["neck_stiffness", "fever", "vision_changes", "confusion"],
+                dietRecommendations: ["Stay hydrated", "Avoid trigger foods", "Regular meals", "Limit caffeine"],
+                careInstructions: ["Rest in dark room", "Apply cold/warm compress", "Relaxation techniques", "Track triggers"]
+            },
+            stomach_pain: {
+                condition: "Severe Stomach Pain",
+                possibleCauses: ["Gastritis", "Peptic ulcer", "Appendicitis", "Gallstones", "Pancreatitis"],
+                doctorType: "Gastroenterologist or General Practitioner",
+                urgencyFactors: ["vomiting_blood", "severe_pain", "fever", "rigid_abdomen"],
+                dietRecommendations: ["Clear liquids initially", "BRAT diet", "Avoid spicy/fatty foods", "Small frequent meals"],
+                careInstructions: ["Rest", "Apply heat pad", "Avoid solid foods initially", "Monitor for worsening"]
+            },
+            high_fever: {
+                condition: "High Fever",
+                possibleCauses: ["Bacterial infection", "Viral infection", "Heat stroke", "Medication reaction"],
+                doctorType: "General Practitioner (Emergency if >103°F)",
+                urgencyFactors: ["temperature_over_103", "difficulty_breathing", "confusion"],
+                dietRecommendations: ["Increased fluids", "Electrolyte solutions", "Light foods", "Avoid alcohol"],
+                careInstructions: ["Cool compresses", "Tepid baths", "Light clothing", "Monitor temperature regularly"]
+            },
+            back_pain: {
+                condition: "Back Pain",
+                possibleCauses: ["Muscle strain", "Herniated disc", "Arthritis", "Kidney stones", "Osteoporosis"],
+                doctorType: "Orthopedist or Physical Medicine Specialist",
+                urgencyFactors: ["leg_numbness", "bladder_problems", "severe_pain"],
+                dietRecommendations: ["Anti-inflammatory foods", "Calcium and Vitamin D", "Maintain healthy weight"],
+                careInstructions: ["Gentle stretching", "Heat/ice therapy", "Proper posture", "Avoid bed rest beyond 2 days"]
+            },
+            joint_pain: {
+                condition: "Joint Pain",
+                possibleCauses: ["Arthritis", "Injury", "Gout", "Lupus", "Infection"],
+                doctorType: "Rheumatologist or Orthopedist",
+                urgencyFactors: ["red_swollen_joints", "fever", "inability_to_move"],
+                dietRecommendations: ["Anti-inflammatory diet", "Omega-3 fatty acids", "Avoid purines if gout"],
+                careInstructions: ["Rest affected joint", "Ice for acute injury", "Gentle range of motion", "Elevate if swollen"]
+            },
+            depression: {
+                condition: "Persistent Sadness/Depression",
+                possibleCauses: ["Major depression", "Seasonal depression", "Grief", "Medical conditions", "Medication side effects"],
+                doctorType: "Psychiatrist or Psychologist",
+                urgencyFactors: ["suicidal_thoughts", "self_harm", "inability_to_function"],
+                dietRecommendations: ["Balanced diet", "Omega-3 rich foods", "Limit alcohol", "Regular meals"],
+                careInstructions: ["Maintain routine", "Exercise regularly", "Social support", "Adequate sleep"]
+            },
+            anxiety: {
+                condition: "Anxiety/Panic Attacks",
+                possibleCauses: ["Generalized anxiety", "Panic disorder", "Stress", "Medical conditions"],
+                doctorType: "Psychiatrist or Psychologist",
+                urgencyFactors: ["chest_pain", "difficulty_breathing", "severe_panic"],
+                dietRecommendations: ["Limit caffeine", "Avoid alcohol", "Regular meals", "Magnesium-rich foods"],
+                careInstructions: ["Breathing exercises", "Mindfulness", "Regular exercise", "Stress management"]
+            }
+        };
+
+        // Calculate Comprehensive Symptom Assessment
         function calculateSymptomAssessment(responses) {
             let urgencyScore = 0;
-            let diagnosis = '';
+            let diagnosis = 'General assessment needed';
             let recommendations = [];
-            
-            // Assess main symptom
-            switch(responses.main_symptom) {
-                case 'fever':
-                    urgencyScore += responses.severity === 'severe' ? 3 : responses.severity === 'moderate' ? 2 : 1;
-                    diagnosis = 'Possible viral or bacterial infection';
+            let doctorType = 'General Practitioner';
+            let dietAdvice = [];
+            let careInstructions = [];
+            let possibleConditions = [];
+
+            // Get medical knowledge for specific symptom
+            const specificSymptom = responses.specific_symptom;
+            const medicalInfo = medicalKnowledge[specificSymptom] || {};
+
+            if (medicalInfo.condition) {
+                diagnosis = medicalInfo.condition;
+                possibleConditions = medicalInfo.possibleCauses || [];
+                doctorType = medicalInfo.doctorType || 'General Practitioner';
+                dietAdvice = medicalInfo.dietRecommendations || [];
+                careInstructions = medicalInfo.careInstructions || [];
+            }
+
+            // Calculate urgency score based on severity
+            switch(responses.severity) {
+                case 'critical':
+                    urgencyScore += 8;
                     break;
-                case 'headache':
-                    urgencyScore += responses.severity === 'severe' ? 2 : 1;
-                    diagnosis = responses.severity === 'severe' ? 'Severe headache - possible migraine' : 'Tension headache';
+                case 'severe':
+                    urgencyScore += 5;
                     break;
-                case 'cough':
-                    urgencyScore += responses.additional_symptoms === 'fatigue' ? 2 : 1;
-                    diagnosis = 'Respiratory tract infection';
+                case 'moderate':
+                    urgencyScore += 3;
                     break;
-                case 'stomach_pain':
-                    urgencyScore += responses.severity === 'severe' ? 3 : 2;
-                    diagnosis = 'Gastrointestinal distress';
-                    break;
-                case 'breathing':
-                    urgencyScore += 4; // Always high priority
-                    diagnosis = 'Respiratory difficulty';
-                    break;
-                default:
+                case 'mild':
                     urgencyScore += 1;
-                    diagnosis = 'General discomfort';
+                    break;
             }
-            
-            // Adjust for severity and duration
-            if (responses.severity === 'severe') urgencyScore += 2;
-            if (responses.duration === 'more_1week') urgencyScore += 1;
-            if (responses.additional_symptoms !== 'none') urgencyScore += 1;
-            
-            // Medical history factors
-            if (responses.medical_history !== 'none') {
+
+            // Duration factors
+            switch(responses.duration) {
+                case 'less_6hours':
+                    if (responses.severity === 'severe' || responses.severity === 'critical') urgencyScore += 2;
+                    break;
+                case '6_24hours':
+                    urgencyScore += 1;
+                    break;
+                case 'more_1month':
+                    urgencyScore += 2; // Chronic conditions need attention
+                    break;
+            }
+
+            // Additional symptoms impact
+            if (responses.additional_symptoms && responses.additional_symptoms !== 'none') {
+                const additionalSymptoms = Array.isArray(responses.additional_symptoms) ? 
+                    responses.additional_symptoms : [responses.additional_symptoms];
+                
+                additionalSymptoms.forEach(symptom => {
+                    switch(symptom) {
+                        case 'fever_chills':
+                        case 'breathlessness':
+                        case 'confusion':
+                            urgencyScore += 2;
+                            break;
+                        case 'nausea':
+                        case 'dizziness':
+                        case 'fatigue':
+                            urgencyScore += 1;
+                            break;
+                    }
+                });
+            }
+
+            // Medical history considerations
+            if (responses.medical_history && responses.medical_history !== 'none') {
                 urgencyScore += 1;
-                recommendations.push('Consider your existing medical condition');
+                const conditions = Array.isArray(responses.medical_history) ? 
+                    responses.medical_history : [responses.medical_history];
+                
+                conditions.forEach(condition => {
+                    switch(condition) {
+                        case 'heart_disease':
+                        case 'diabetes':
+                        case 'respiratory_disease':
+                            urgencyScore += 1;
+                            recommendations.push(`Monitor symptoms closely due to your ${condition.replace('_', ' ')} history`);
+                            break;
+                    }
+                });
             }
-            
-            // Determine urgency level
+
+            // Determine urgency level and actions
             let urgency, urgencyClass, actions;
-            if (urgencyScore >= 6) {
+            
+            if (urgencyScore >= 10) {
+                urgency = 'Critical Emergency';
+                urgencyClass = 'urgency-emergency';
+                actions = [
+                    '🚨 Call emergency services immediately (108/102)',
+                    '🏥 Go to nearest emergency room NOW',
+                    '⚠️ Do NOT drive yourself - call ambulance',
+                    '📞 Inform family members of your condition'
+                ];
+            } else if (urgencyScore >= 7) {
                 urgency = 'Emergency';
                 urgencyClass = 'urgency-emergency';
-                actions = ['Call emergency services immediately (108)', 'Go to nearest emergency room', 'Do not delay seeking medical attention'];
-            } else if (urgencyScore >= 3) {
+                actions = [
+                    '🚨 Seek immediate medical attention',
+                    '🏥 Visit emergency room within 1-2 hours',
+                    '📞 Call emergency services if symptoms worsen',
+                    '👥 Have someone accompany you'
+                ];
+            } else if (urgencyScore >= 4) {
                 urgency = 'Urgent';
                 urgencyClass = 'urgency-urgent';
-                actions = ['Consult a doctor within 24 hours', 'Monitor symptoms closely', 'Consider visiting a clinic today'];
+                actions = [
+                    '🏥 Consult a doctor within 24 hours',
+                    '📞 Call your healthcare provider today',
+                    '🔍 Monitor symptoms closely',
+                    '📋 Keep a symptom diary'
+                ];
             } else {
                 urgency = 'Mild';
                 urgencyClass = 'urgency-mild';
-                actions = ['Rest and monitor symptoms', 'Stay hydrated', 'Consult doctor if symptoms persist beyond 2-3 days'];
+                actions = [
+                    '🏠 Rest and self-care at home',
+                    '💧 Stay well hydrated',
+                    '📞 Consult doctor if symptoms persist >2-3 days',
+                    '🔍 Monitor for any worsening'
+                ];
             }
-            
-            // Add general recommendations
-            recommendations.push('Take adequate rest', 'Stay hydrated', 'Maintain good hygiene');
-            
+
             return {
                 diagnosis,
                 urgency,
                 urgencyClass,
                 urgencyScore,
                 actions,
-                recommendations
+                recommendations,
+                doctorType,
+                dietAdvice,
+                careInstructions,
+                possibleConditions
             };
         }
 
-        // Display Diagnosis
+        // Display Comprehensive Diagnosis
         function displayDiagnosis(assessment) {
             const resultDiv = document.getElementById('diagnosisResult');
             
-            resultDiv.innerHTML = `
-                <h3>🏥 AI Health Assessment</h3>
-                <div style="margin: 1rem 0;">
-                    <strong>Preliminary Assessment:</strong>
-                    <p style="margin: 0.5rem 0;">${assessment.diagnosis}</p>
-                </div>
-                
-                <div style="margin: 1rem 0;">
-                    <strong>Urgency Level:</strong>
-                    <span class="urgency-badge ${assessment.urgencyClass}">${assessment.urgency}</span>
-                </div>
-                
-                <div style="margin: 1rem 0;">
-                    <strong>Recommended Actions:</strong>
-                    <ul style="margin: 0.5rem 0; padding-left: 2rem;">
-                        ${assessment.actions.map(action => `<li style="margin: 0.25rem 0;">${action}</li>`).join('')}
+            // Build possible conditions list
+            const possibleConditionsHtml = assessment.possibleConditions && assessment.possibleConditions.length > 0 ? `
+                <div style="margin: 1rem 0; padding: 1rem; background: #f8f9fa; border-radius: 6px;">
+                    <strong>🩺 Possible Causes:</strong>
+                    <ul style="margin: 0.5rem 0; padding-left: 1.5rem; columns: 2; column-gap: 2rem;">
+                        ${assessment.possibleConditions.map(cause => `<li style="margin: 0.25rem 0; break-inside: avoid;">${cause}</li>`).join('')}
                     </ul>
                 </div>
-                
-                <div style="margin: 1rem 0;">
-                    <strong>General Care Tips:</strong>
-                    <ul style="margin: 0.5rem 0; padding-left: 2rem;">
+            ` : '';
+            
+            // Build diet recommendations
+            const dietAdviceHtml = assessment.dietAdvice && assessment.dietAdvice.length > 0 ? `
+                <div style="margin: 1rem 0; padding: 1rem; background: #e8f5e8; border-radius: 6px; border-left: 4px solid #28a745;">
+                    <strong>🍽️ Dietary Recommendations:</strong>
+                    <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                        ${assessment.dietAdvice.map(advice => `<li style="margin: 0.25rem 0;">${advice}</li>`).join('')}
+                    </ul>
+                </div>
+            ` : '';
+            
+            // Build care instructions
+            const careInstructionsHtml = assessment.careInstructions && assessment.careInstructions.length > 0 ? `
+                <div style="margin: 1rem 0; padding: 1rem; background: #fff3cd; border-radius: 6px; border-left: 4px solid #ffc107;">
+                    <strong>👩‍⚕️ Home Care Instructions:</strong>
+                    <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                        ${assessment.careInstructions.map(instruction => `<li style="margin: 0.25rem 0;">${instruction}</li>`).join('')}
+                    </ul>
+                </div>
+            ` : '';
+            
+            // Build recommendations if any
+            const recommendationsHtml = assessment.recommendations && assessment.recommendations.length > 0 ? `
+                <div style="margin: 1rem 0; padding: 1rem; background: #d4edda; border-radius: 6px; border-left: 4px solid #155724;">
+                    <strong>💡 Additional Recommendations:</strong>
+                    <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
                         ${assessment.recommendations.map(rec => `<li style="margin: 0.25rem 0;">${rec}</li>`).join('')}
                     </ul>
                 </div>
+            ` : '';
+            
+            resultDiv.innerHTML = `
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem; text-align: center;">
+                    <h3 style="margin: 0; font-size: 1.5rem;">🏥 AI Health Assessment Results</h3>
+                    <p style="margin: 0.5rem 0 0 0; opacity: 0.9;">Comprehensive symptom analysis and medical guidance</p>
+                </div>
                 
-                <div style="margin: 1.5rem 0; padding: 1rem; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #17a2b8;">
-                    <strong>⚠️ Disclaimer:</strong> This assessment is for informational purposes only and does not replace professional medical diagnosis. Always consult with a qualified healthcare provider for proper medical advice.
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 1rem 0;">
+                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border-left: 4px solid #007bff;">
+                        <strong>🩺 Condition Assessment:</strong>
+                        <p style="margin: 0.5rem 0; font-size: 1.1rem; color: #0056b3;">${assessment.diagnosis}</p>
+                    </div>
+                    
+                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; border-left: 4px solid ${assessment.urgencyClass === 'urgency-emergency' ? '#dc3545' : assessment.urgencyClass === 'urgency-urgent' ? '#ffc107' : '#28a745'};">
+                        <strong>⏱️ Urgency Level:</strong><br>
+                        <span class="urgency-badge ${assessment.urgencyClass}" style="font-size: 1.1rem; margin-top: 0.5rem; display: inline-block;">${assessment.urgency}</span>
+                    </div>
+                </div>
+                
+                <div style="margin: 1.5rem 0; padding: 1rem; background: #e3f2fd; border-radius: 8px; border-left: 4px solid #2196f3;">
+                    <strong>👨‍⚕️ Recommended Specialist:</strong>
+                    <p style="margin: 0.5rem 0; font-size: 1.1rem; color: #1565c0;">${assessment.doctorType}</p>
+                </div>
+                
+                ${possibleConditionsHtml}
+                
+                <div style="margin: 1.5rem 0; padding: 1rem; background: ${assessment.urgencyClass === 'urgency-emergency' ? '#f8d7da' : assessment.urgencyClass === 'urgency-urgent' ? '#fff3cd' : '#d4edda'}; border-radius: 8px; border-left: 4px solid ${assessment.urgencyClass === 'urgency-emergency' ? '#dc3545' : assessment.urgencyClass === 'urgency-urgent' ? '#ffc107' : '#28a745'};">
+                    <strong>🚨 Immediate Actions Needed:</strong>
+                    <ol style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                        ${assessment.actions.map(action => `<li style="margin: 0.5rem 0; font-weight: 500;">${action}</li>`).join('')}
+                    </ol>
+                </div>
+                
+                ${dietAdviceHtml}
+                ${careInstructionsHtml}
+                ${recommendationsHtml}
+                
+                <div style="margin: 2rem 0; padding: 1.5rem; background: #f1f3f4; border-radius: 10px; border: 2px dashed #9e9e9e;">
+                    <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                        <span style="font-size: 2rem; margin-right: 1rem;">⚠️</span>
+                        <strong style="color: #d32f2f; font-size: 1.2rem;">Important Medical Disclaimer</strong>
+                    </div>
+                    <p style="margin: 0; color: #424242; line-height: 1.6;">
+                        This AI assessment is for <strong>educational and informational purposes only</strong> and should not be considered as professional medical advice, diagnosis, or treatment. 
+                        Always consult with qualified healthcare professionals for proper medical evaluation and care. In case of emergency, call your local emergency services immediately.
+                    </p>
+                </div>
+                
+                <div style="text-align: center; margin: 1.5rem 0;">
+                    <button onclick="startNewAssessment()" class="btn" style="background: #2E8B57; margin-right: 1rem;">
+                        🔄 New Assessment
+                    </button>
+                    <button onclick="printResults()" class="btn" style="background: #6c757d;">
+                        🖨️ Print Results
+                    </button>
                 </div>
             `;
             
             resultDiv.style.display = 'block';
             
             // Show emergency warning for high urgency
-            if (assessment.urgency === 'Emergency') {
-                document.getElementById('emergencyWarning').style.display = 'block';
+            if (assessment.urgency === 'Emergency' || assessment.urgency === 'Critical Emergency') {
+                const emergencyDiv = document.getElementById('emergencyWarning');
+                if (emergencyDiv) {
+                    emergencyDiv.style.display = 'block';
+                }
             }
             
-            // Speak result if voice enabled
+            // Enhanced voice feedback
             if (aiVoiceEnabled) {
-                speakText(`Assessment complete. Your condition appears to be ${assessment.urgency.toLowerCase()}. ${assessment.actions[0]}`);
+                let voiceMessage = `Assessment complete. Your condition is assessed as ${assessment.urgency.toLowerCase()}. `;
+                if (assessment.urgencyClass === 'urgency-emergency') {
+                    voiceMessage += 'This requires immediate medical attention. ';
+                }
+                voiceMessage += `I recommend consulting a ${assessment.doctorType.toLowerCase()}. `;
+                voiceMessage += assessment.actions[0].replace(/�[�-��-�]|�[�-�]|�[�-�]|⚠️|⏱️/g, '');
+                
+                speakText(voiceMessage);
             }
             
             chatActive = false;
+            
+            // Scroll to results
+            resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        // Additional helper functions
+        function startNewAssessment() {
+            // Reset and restart
+            currentQuestion = 0;
+            userResponses = {};
+            document.getElementById('diagnosisResult').style.display = 'none';
+            document.getElementById('emergencyWarning').style.display = 'none';
+            document.getElementById('chatbotContainer').innerHTML = '';
+            
+            // Start new assessment
+            setTimeout(() => {
+                startSymptomChat();
+            }, 500);
+        }
+        
+        function printResults() {
+            const printWindow = window.open('', '_blank');
+            const resultContent = document.getElementById('diagnosisResult').innerHTML;
+            
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>AI Health Assessment Results</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.6; }
+                        .urgency-badge { padding: 0.25rem 0.75rem; border-radius: 15px; font-weight: bold; }
+                        .urgency-mild { background: #d4edda; color: #155724; }
+                        .urgency-urgent { background: #fff3cd; color: #856404; }
+                        .urgency-emergency { background: #f8d7da; color: #721c24; }
+                        @media print { body { margin: 0; } }
+                    </style>
+                </head>
+                <body>
+                    <h1>AI Health Assessment Results</h1>
+                    <p><strong>Generated on:</strong> ${new Date().toLocaleString()}</p>
+                    ${resultContent}
+                </body>
+                </html>
+            `);
+            
+            printWindow.document.close();
+            printWindow.print();
         }
 
-        // Voice Recognition Functions
+        // Enhanced Voice Recognition Functions with Conversational AI
+        let conversationContext = {
+            awaitingResponse: false,
+            currentQuestionType: null,
+            partialResponses: {},
+            conversationFlow: 'initial'
+        };
+
         function toggleVoiceRecording() {
             console.log('toggleVoiceRecording called');
             
             if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                showStatusMessage('Speech recognition not supported in this browser', 'error');
+                showStatusMessage('Speech recognition not supported in this browser. Please try Chrome or Edge.', 'error');
+                speakText('Sorry, speech recognition is not supported in this browser. Please try using Chrome or Edge.');
                 return;
             }
 
@@ -2052,32 +2465,77 @@
             const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
             voiceRecognition = new SpeechRecognition();
             
-            voiceRecognition.continuous = false;
-            voiceRecognition.interimResults = false;
-            voiceRecognition.lang = 'en-US';
+            // Enhanced settings for better recognition
+            voiceRecognition.continuous = true;
+            voiceRecognition.interimResults = true;
+            voiceRecognition.lang = currentLanguage === 'hi' ? 'hi-IN' : currentLanguage === 'te' ? 'te-IN' : 'en-US';
+            voiceRecognition.maxAlternatives = 3;
+
+            let finalTranscript = '';
+            let interimTranscript = '';
 
             voiceRecognition.onstart = function() {
                 isRecording = true;
-                document.getElementById('voiceBtn').classList.add('recording');
-                document.getElementById('voiceText').textContent = 'Listening...';
-                showStatusMessage('Listening... Speak now!', 'success');
+                const voiceBtn = document.getElementById('voiceBtn');
+                const voiceText = document.getElementById('voiceText');
+                if (voiceBtn) voiceBtn.classList.add('recording');
+                if (voiceText) voiceText.textContent = 'Listening...';
+                
+                showStatusMessage('🎤 Listening... Speak clearly!', 'success');
+                
+                // Visual feedback
+                createVoiceVisualizer();
             };
 
             voiceRecognition.onresult = function(event) {
-                const transcript = event.results[0][0].transcript;
-                addChatMessage('user', `🎤 ${transcript}`);
+                finalTranscript = '';
+                interimTranscript = '';
                 
-                // Process voice input (could be enhanced to match with options)
-                showStatusMessage(`You said: "${transcript}"`, 'success');
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript;
+                    } else {
+                        interimTranscript += transcript;
+                    }
+                }
+                
+                // Show interim results
+                updateVoicePreview(finalTranscript + interimTranscript);
+                
+                // Process final transcript
+                if (finalTranscript) {
+                    processVoiceInput(finalTranscript.trim());
+                    finalTranscript = '';
+                }
             };
 
             voiceRecognition.onerror = function(event) {
-                showStatusMessage('Voice recognition error: ' + event.error, 'error');
+                let errorMessage = 'Voice recognition error: ';
+                switch(event.error) {
+                    case 'network':
+                        errorMessage += 'Network connection issue';
+                        break;
+                    case 'not-allowed':
+                        errorMessage += 'Microphone access denied. Please allow microphone permissions.';
+                        break;
+                    case 'no-speech':
+                        errorMessage += 'No speech detected. Please speak clearly.';
+                        break;
+                    default:
+                        errorMessage += event.error;
+                }
+                showStatusMessage(errorMessage, 'error');
                 stopVoiceRecording();
             };
 
             voiceRecognition.onend = function() {
-                stopVoiceRecording();
+                if (isRecording) {
+                    // Auto-restart if user is still speaking
+                    setTimeout(() => {
+                        if (isRecording) voiceRecognition.start();
+                    }, 100);
+                }
             };
 
             voiceRecognition.start();
@@ -2088,46 +2546,346 @@
                 voiceRecognition.stop();
             }
             isRecording = false;
-            document.getElementById('voiceBtn').classList.remove('recording');
-            document.getElementById('voiceText').textContent = 'Speak Your Symptoms';
+            
+            const voiceBtn = document.getElementById('voiceBtn');
+            const voiceText = document.getElementById('voiceText');
+            if (voiceBtn) voiceBtn.classList.remove('recording');
+            if (voiceText) voiceText.textContent = 'Speak Your Symptoms';
+            
+            removeVoiceVisualizer();
+            clearVoicePreview();
         }
 
-        // Text-to-Speech Functions
+        // Process voice input with conversational AI
+        function processVoiceInput(transcript) {
+            console.log('Processing voice input:', transcript);
+            
+            addChatMessage('user', `🎤 "${transcript}"`);
+            
+            // Stop current recording to process
+            stopVoiceRecording();
+            
+            // Show processing indicator
+            showTypingIndicator();
+            
+            setTimeout(() => {
+                hideTypingIndicator();
+                
+                if (!chatActive) {
+                    // Handle general conversation
+                    handleGeneralConversation(transcript);
+                } else {
+                    // Handle symptom assessment responses
+                    handleSymptomResponse(transcript);
+                }
+            }, 1000);
+        }
+
+        // Handle general conversation outside symptom assessment
+        function handleGeneralConversation(transcript) {
+            const lowerTranscript = transcript.toLowerCase();
+            
+            if (lowerTranscript.includes('start') || lowerTranscript.includes('begin') || 
+                lowerTranscript.includes('symptom') || lowerTranscript.includes('check') ||
+                lowerTranscript.includes('health')) {
+                
+                addChatMessage('ai', 'Perfect! I\'ll help you with your symptom assessment. Let me start by asking you a few questions.');
+                speakText('Perfect! I will help you with your symptom assessment. Let me start by asking you a few questions.');
+                
+                setTimeout(() => {
+                    startSymptomChat();
+                }, 2000);
+                
+            } else if (lowerTranscript.includes('hello') || lowerTranscript.includes('hi')) {
+                const greeting = 'Hello! I\'m your AI health assistant. I can help you assess your symptoms and provide medical guidance. Would you like to start a symptom check?';
+                addChatMessage('ai', greeting);
+                speakText(greeting);
+                
+            } else if (lowerTranscript.includes('help')) {
+                const helpMessage = 'I can help you with symptom assessment, provide health advice, and guide you to appropriate medical care. You can speak to me naturally or click buttons. What would you like to know?';
+                addChatMessage('ai', helpMessage);
+                speakText(helpMessage);
+                
+            } else {
+                const fallbackMessage = 'I understand you said "' + transcript + '". I\'m here to help with your health concerns. Would you like to start a symptom assessment, or do you have a specific question about your health?';
+                addChatMessage('ai', fallbackMessage);
+                speakText('I understand. I am here to help with your health concerns. Would you like to start a symptom assessment?');
+            }
+        }
+
+        // Handle voice responses during symptom assessment
+        function handleSymptomResponse(transcript) {
+            const currentQ = symptomQuestions[currentQuestion];
+            if (!currentQ) return;
+            
+            const lowerTranscript = transcript.toLowerCase();
+            let matchedOption = null;
+            let confidence = 0;
+            
+            // Try to match transcript with available options
+            currentQ.options.forEach(option => {
+                const optionText = option.text.toLowerCase().replace(/[🎤🔥🩺👁️👂🩸🧠❤️🫁🍽️🦴🌡️👶💊⏰📅🤢💫😴😊😐😰🚨✋]/g, '');
+                const keywords = optionText.split(/[\s,\-()]/g).filter(word => word.length > 2);
+                
+                let matches = 0;
+                keywords.forEach(keyword => {
+                    if (lowerTranscript.includes(keyword.toLowerCase())) {
+                        matches++;
+                    }
+                });
+                
+                const currentConfidence = matches / keywords.length;
+                if (currentConfidence > confidence && currentConfidence > 0.3) {
+                    confidence = currentConfidence;
+                    matchedOption = option;
+                }
+            });
+            
+            if (matchedOption) {
+                // Found a match
+                selectOption(matchedOption.value, matchedOption.text);
+                
+                const confirmMessage = `I understood: ${matchedOption.text}. Let me ask you the next question.`;
+                addChatMessage('ai', confirmMessage);
+                speakText(confirmMessage);
+                
+            } else {
+                // No clear match found, ask for clarification
+                const clarificationMessage = `I heard "${transcript}" but I\'m not sure which option you meant. Let me repeat the options for you.`;
+                addChatMessage('ai', clarificationMessage);
+                speakText(clarificationMessage);
+                
+                // Re-ask the question
+                setTimeout(() => {
+                    askQuestion(currentQuestion);
+                }, 2000);
+            }
+        }
+
+        // Create voice visualizer for better UX
+        function createVoiceVisualizer() {
+            const container = document.getElementById('chatbotContainer');
+            if (!container || document.getElementById('voiceVisualizer')) return;
+            
+            const visualizer = document.createElement('div');
+            visualizer.id = 'voiceVisualizer';
+            visualizer.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: center; padding: 1rem; background: linear-gradient(45deg, #ff6b6b, #4ecdc4); border-radius: 10px; margin: 1rem 0; animation: pulse 1.5s infinite;">
+                    <div style="width: 20px; height: 20px; background: white; border-radius: 50%; margin: 0 5px; animation: bounce 1s infinite;" data-delay="0"></div>
+                    <div style="width: 20px; height: 20px; background: white; border-radius: 50%; margin: 0 5px; animation: bounce 1s infinite;" data-delay="0.2s"></div>
+                    <div style="width: 20px; height: 20px; background: white; border-radius: 50%; margin: 0 5px; animation: bounce 1s infinite;" data-delay="0.4s"></div>
+                    <span style="color: white; font-weight: bold; margin-left: 15px;">🎤 Listening...</span>
+                </div>
+            `;
+            container.appendChild(visualizer);
+        }
+
+        function removeVoiceVisualizer() {
+            const visualizer = document.getElementById('voiceVisualizer');
+            if (visualizer) {
+                visualizer.remove();
+            }
+        }
+
+        // Show voice preview of what user is saying
+        function updateVoicePreview(text) {
+            let preview = document.getElementById('voicePreview');
+            if (!preview) {
+                const container = document.getElementById('chatbotContainer');
+                preview = document.createElement('div');
+                preview.id = 'voicePreview';
+                preview.style.cssText = 'background: #f0f8ff; border: 2px dashed #4a90e2; padding: 10px; margin: 10px 0; border-radius: 8px; font-style: italic; color: #666;';
+                container.appendChild(preview);
+            }
+            preview.innerHTML = `🎤 "${text}"<span style="animation: blink 1s infinite;">|</span>`;
+        }
+
+        function clearVoicePreview() {
+            const preview = document.getElementById('voicePreview');
+            if (preview) {
+                preview.remove();
+            }
+        }
+
+        // Enhanced Text-to-Speech Functions with Multi-language Support
+        let currentVoice = null;
+        let voicesLoaded = false;
+        
+        // Load and cache voices
+        function loadVoices() {
+            return new Promise((resolve) => {
+                const voices = speechSynthesis.getVoices();
+                if (voices.length > 0) {
+                    voicesLoaded = true;
+                    resolve(voices);
+                } else {
+                    speechSynthesis.onvoiceschanged = () => {
+                        voicesLoaded = true;
+                        resolve(speechSynthesis.getVoices());
+                    };
+                }
+            });
+        }
+
         function toggleTextToSpeech() {
             aiVoiceEnabled = !aiVoiceEnabled;
             const speakBtn = document.getElementById('speakText');
-            speakBtn.textContent = aiVoiceEnabled ? 'AI Voice: ON' : 'AI Voice: OFF';
+            if (speakBtn) {
+                speakBtn.textContent = aiVoiceEnabled ? '🔊 AI Voice: ON' : '🔇 AI Voice: OFF';
+                speakBtn.style.background = aiVoiceEnabled ? '#28a745' : '#6c757d';
+            }
             
             if (!aiVoiceEnabled) {
                 speechSynthesis.cancel(); // Stop any current speech
+            } else {
+                // Test voice when enabled
+                speakText('AI voice is now enabled. I will speak my responses to help you.');
             }
             
             showStatusMessage(`AI Voice ${aiVoiceEnabled ? 'enabled' : 'disabled'}`, 'success');
         }
 
-        function speakText(text) {
-            if (!aiVoiceEnabled || !speechSynthesis) return;
+        async function speakText(text) {
+            if (!aiVoiceEnabled || !speechSynthesis || !text) return;
             
             speechSynthesis.cancel(); // Cancel any ongoing speech
             
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.rate = 0.9;
-            utterance.pitch = 1;
-            utterance.volume = 0.8;
+            // Clean text for better speech
+            const cleanText = text
+                .replace(/[🎤🔥🩺👁️👂🩸🧠❤️🫁🍽️🦴🌡️👶💊⏰📅🤢💫😴😊😐😰🚨✋🏥📞👥🔍📋🏠💧⚠️⏱️👨‍⚕️👩‍⚕️💡🔄🖨️]/g, '') // Remove emojis
+                .replace(/\*\*([^*]+)\*\*/g, '$1') // Remove bold markdown
+                .replace(/\*([^*]+)\*/g, '$1') // Remove italic markdown
+                .replace(/([.!?])\s*([A-Z])/g, '$1 $2') // Add pauses between sentences
+                .trim();
             
-            // Try to use a female voice if available
-            const voices = speechSynthesis.getVoices();
-            const femaleVoice = voices.find(voice => 
-                voice.name.includes('Female') || 
-                voice.name.includes('Samantha') ||
-                voice.name.includes('Karen')
-            );
+            if (!cleanText) return;
             
-            if (femaleVoice) {
-                utterance.voice = femaleVoice;
+            const utterance = new SpeechSynthesisUtterance(cleanText);
+            
+            // Enhanced voice settings
+            utterance.rate = 0.85; // Slightly slower for better comprehension
+            utterance.pitch = 1.1; // Slightly higher pitch for friendliness
+            utterance.volume = 0.9;
+            
+            // Load voices if not already loaded
+            const voices = await loadVoices();
+            
+            // Select voice based on current language
+            let selectedVoice = null;
+            
+            if (currentLanguage === 'hi') {
+                // Look for Hindi voice
+                selectedVoice = voices.find(voice => 
+                    voice.lang.includes('hi') || 
+                    voice.lang.includes('Hindi') ||
+                    (voice.name.toLowerCase().includes('hindi'))
+                );
+            } else if (currentLanguage === 'te') {
+                // Look for Telugu voice
+                selectedVoice = voices.find(voice => 
+                    voice.lang.includes('te') || 
+                    voice.lang.includes('Telugu') ||
+                    (voice.name.toLowerCase().includes('telugu'))
+                );
             }
             
-            speechSynthesis.speak(utterance);
+            // Fallback to English voices
+            if (!selectedVoice) {
+                // Prefer female voices for healthcare context
+                selectedVoice = voices.find(voice => 
+                    voice.lang.includes('en') && (
+                        voice.name.toLowerCase().includes('female') ||
+                        voice.name.toLowerCase().includes('samantha') ||
+                        voice.name.toLowerCase().includes('karen') ||
+                        voice.name.toLowerCase().includes('susan') ||
+                        voice.name.toLowerCase().includes('allison') ||
+                        voice.name.toLowerCase().includes('zira')
+                    )
+                );
+                
+                // If no female voice, use any English voice
+                if (!selectedVoice) {
+                    selectedVoice = voices.find(voice => 
+                        voice.lang.includes('en-US') || 
+                        voice.lang.includes('en-GB') ||
+                        voice.lang.includes('en')
+                    );
+                }
+            }
+            
+            if (selectedVoice) {
+                utterance.voice = selectedVoice;
+                currentVoice = selectedVoice;
+                console.log('Using voice:', selectedVoice.name, selectedVoice.lang);
+            }
+            
+            // Add event listeners for better control
+            utterance.onstart = function() {
+                console.log('Speech started');
+                // Visual indicator that AI is speaking
+                showSpeakingIndicator();
+            };
+            
+            utterance.onend = function() {
+                console.log('Speech ended');
+                hideSpeakingIndicator();
+            };
+            
+            utterance.onerror = function(event) {
+                console.error('Speech error:', event.error);
+                hideSpeakingIndicator();
+                if (event.error === 'not-allowed') {
+                    showStatusMessage('Speech synthesis not allowed. Please check browser settings.', 'error');
+                }
+            };
+            
+            // Speak with a slight delay to ensure voice is loaded
+            setTimeout(() => {
+                speechSynthesis.speak(utterance);
+            }, 100);
+        }
+        
+        // Voice selection utility
+        function selectVoice(voiceName) {
+            loadVoices().then(voices => {
+                const voice = voices.find(v => v.name === voiceName);
+                if (voice) {
+                    currentVoice = voice;
+                    showStatusMessage(`Voice changed to: ${voice.name}`, 'success');
+                    speakText('Voice changed successfully. This is how I sound now.');
+                }
+            });
+        }
+        
+        // Visual indicators for speech
+        function showSpeakingIndicator() {
+            const indicator = document.createElement('div');
+            indicator.id = 'speakingIndicator';
+            indicator.innerHTML = `
+                <div style="
+                    position: fixed; 
+                    top: 80px; 
+                    right: 20px; 
+                    background: linear-gradient(45deg, #ff6b6b, #4ecdc4); 
+                    color: white; 
+                    padding: 10px 20px; 
+                    border-radius: 25px; 
+                    font-weight: bold;
+                    animation: pulse 1.5s infinite;
+                    z-index: 1002;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+                ">
+                    🔊 AI Speaking...
+                </div>
+            `;
+            document.body.appendChild(indicator);
+        }
+        
+        function hideSpeakingIndicator() {
+            const indicator = document.getElementById('speakingIndicator');
+            if (indicator) {
+                indicator.remove();
+            }
         }
 
         // Utility Functions
