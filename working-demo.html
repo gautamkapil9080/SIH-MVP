@@ -963,6 +963,7 @@
             <!-- Voice Controls -->
             <div class="voice-controls">
                 <button id="startChatBtn" onclick="startSymptomChat()" class="btn">💬 Start Symptom Check</button>
+                <button onclick="alert('Voice feature test - this works!')" class="btn" style="background: #17a2b8;">🗺️ Test Button</button>
                 <button id="voiceBtn" onclick="toggleVoiceRecording()" class="voice-btn">
                     🎤 <span id="voiceText">Speak Your Symptoms</span>
                 </button>
@@ -1755,29 +1756,50 @@
 
         // Start Symptom Chat
         function startSymptomChat() {
-            currentQuestion = 0;
-            chatActive = true;
-            userResponses = {};
+            console.log('startSymptomChat called'); // Debug log
             
-            // Clear previous chat
-            const container = document.getElementById('chatbotContainer');
-            container.innerHTML = `
-                <div class="chat-message ai">
-                    <div class="message-avatar ai-avatar">🤖</div>
-                    <div class="message-bubble ai">
-                        Hi! I'm your AI health assistant. I'll ask you 6 questions to better understand your symptoms and provide guidance.
+            try {
+                currentQuestion = 0;
+                chatActive = true;
+                userResponses = {};
+                
+                // Clear previous chat
+                const container = document.getElementById('chatbotContainer');
+                if (!container) {
+                    console.error('chatbotContainer not found');
+                    return;
+                }
+                
+                container.innerHTML = `
+                    <div class="chat-message ai">
+                        <div class="message-avatar ai-avatar">🤖</div>
+                        <div class="message-bubble ai">
+                            Hi! I'm your AI health assistant. I'll ask you 6 questions to better understand your symptoms and provide guidance.
+                        </div>
                     </div>
-                </div>
-            `;
-            
-            // Hide results and start first question
-            document.getElementById('diagnosisResult').style.display = 'none';
-            document.getElementById('emergencyWarning').style.display = 'none';
-            
-            setTimeout(() => {
-                askQuestion(0);
-            }, 1000);
+                `;
+                
+                // Hide results and start first question
+                const diagnosisDiv = document.getElementById('diagnosisResult');
+                const emergencyDiv = document.getElementById('emergencyWarning');
+                
+                if (diagnosisDiv) diagnosisDiv.style.display = 'none';
+                if (emergencyDiv) emergencyDiv.style.display = 'none';
+                
+                showStatusMessage('Starting symptom assessment...', 'success');
+                
+                setTimeout(() => {
+                    askQuestion(0);
+                }, 1000);
+                
+            } catch (error) {
+                console.error('Error in startSymptomChat:', error);
+                showStatusMessage('Error starting symptom checker: ' + error.message, 'error');
+            }
         }
+        
+        // Make function globally accessible
+        window.startSymptomChat = startSymptomChat;
 
         // Ask Question
         function askQuestion(questionIndex) {
@@ -2012,6 +2034,8 @@
 
         // Voice Recognition Functions
         function toggleVoiceRecording() {
+            console.log('toggleVoiceRecording called');
+            
             if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
                 showStatusMessage('Speech recognition not supported in this browser', 'error');
                 return;
@@ -2136,6 +2160,12 @@
             alert('Consultation Booking:\n\nThis feature would connect you with available doctors.\n\nFor now, please use the Patient Portal to register and request a consultation.');
             // Could redirect to patient portal or specific booking page
         }
+        
+        // Make all symptom checker functions globally accessible
+        window.toggleVoiceRecording = toggleVoiceRecording;
+        window.toggleTextToSpeech = toggleTextToSpeech;
+        window.restartChat = restartChat;
+        window.bookConsultation = bookConsultation;
 
         // Search medicine
         function searchMedicine() {
