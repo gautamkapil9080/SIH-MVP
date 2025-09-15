@@ -496,8 +496,8 @@
     <div class="language-selector">
         <select id="languageSelect">
             <option value="en">English</option>
-            <option value="hi">हिंदी</option>
-            <option value="pa">ਪੰਜਾਬੀ</option>
+            <option value="hi">हिंदी (Hindi)</option>
+            <option value="te">తెలుగు (Telugu)</option>
         </select>
     </div>
 
@@ -1330,31 +1330,31 @@
                 search: "खोजें",
                 symptom_checker_title: "AI लक्षण जांचकर्ता"
             },
-            pa: {
-                app_title: "CSE-D ਟੈਲੀਮੈਡਿਸਿਨ",
-                patient_portal: "ਮਰੀਜ਼ ਪੋਰਟਲ",
-                doctor_portal: "ਡਾਕਟਰ ਪੋਰਟਲ",
-                pharmacy_portal: "ਦਵਾਈ ਪੋਰਟਲ",
-                symptom_checker: "ਲੱਛਣ ਜਾਂਚਕਰਤਾ",
-                emergency: "🚨 ਐਮਰਜੈਂਸੀ",
-                patient_registration: "ਮਰੀਜ਼ ਰਜਿਸਟ੍ਰੇਸ਼ਨ",
-                full_name: "ਪੂਰਾ ਨਾਮ:",
-                village: "ਪਿੰਡ:",
-                phone: "ਫ਼ੋਨ ਨੰਬਰ:",
-                age: "ਉਮਰ:",
-                symptoms: "ਆਪਣੇ ਲੱਛਣਾਂ ਦਾ ਵਰਣਨ ਕਰੋ:",
-                urgency: "ਤਤਕਾਲਤਾ ਪੱਧਰ:",
-                low: "ਘੱਟ",
-                medium: "ਮੱਧਮ",
-                high: "ਉੱਚ",
-                emergency_level: "ਐਮਰਜੈਂਸੀ",
-                submit_request: "ਬੇਨਤੀ ਭੇਜੋ",
-                doctor_dashboard: "ਡਾਕਟਰ ਡੈਸ਼ਬੋਰਡ",
-                pending_requests: "ਬਕਾਇਆ ਮਰੀਜ਼ ਬੇਨਤੀਆਂ",
-                medicine_availability: "ਦਵਾਈ ਉਪਲਬਧਤਾ",
-                search_medicines: "ਦਵਾਈਆਂ ਖੋਜੋ",
-                search: "ਖੋਜ",
-                symptom_checker_title: "AI ਲੱਛਣ ਜਾਂਚਕਰਤਾ"
+            te: {
+                app_title: "CSE-D టెలిమెడిసిన్",
+                patient_portal: "రోగి పోర్టల్",
+                doctor_portal: "డాక్టర్ పోర్టల్",
+                pharmacy_portal: "మరున్ను పోర్టల్",
+                symptom_checker: "లక్షణాల పరీక్షకుడు",
+                emergency: "🚨 ఎమర్జెన్సీ",
+                patient_registration: "రోగి నమోదు",
+                full_name: "పూర్ణ పేరు:",
+                village: "గ్రామం/కిరానా:",
+                phone: "ఫోన్ నంబర్:",
+                age: "వయస్సు:",
+                symptoms: "మీ లక్షణాలన్ని వివరించండి:",
+                urgency: "క్షిప్రతా స్థాయి:",
+                low: "తక్కువ",
+                medium: "మధ్యమం",
+                high: "ఎక్కువ",
+                emergency_level: "ఎమర్జెన్సీ",
+                submit_request: "అర్జి పంపండి",
+                doctor_dashboard: "డాక్టర్ డాష్‌బోర్డ్",
+                pending_requests: "పెండింగ్ రోగి అర్జిలు",
+                medicine_availability: "మరున్ను లభ్యత",
+                search_medicines: "మరున్నులను తెలుసుకోండి",
+                search: "తెలుసుకో",
+                symptom_checker_title: "AI లక్షణాల పరీక్షకుడు"
             }
         };
 
@@ -2316,6 +2316,20 @@
                 });
             }
         }
+
+        // Initialize language selector event listener
+        document.addEventListener('DOMContentLoaded', function() {
+            const languageSelect = document.getElementById('languageSelect');
+            if (languageSelect) {
+                languageSelect.addEventListener('change', function() {
+                    changeLanguage(this.value);
+                });
+                
+                // Set default language
+                changeLanguage('en');
+                console.log('Language selector initialized');
+            }
+        });
 
         console.log('Nabha Telemedicine MVP loaded successfully!');
     </script>
