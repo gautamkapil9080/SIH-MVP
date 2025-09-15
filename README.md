@@ -1,11 +1,11 @@
-# 🏥 Nabha Telemedicine - SIH MVP
+# 🏥 CSE-D Telemedicine - SIH MVP
 
 ![Telemedicine](https://img.shields.io/badge/Healthcare-Telemedicine-green)
 ![Government](https://img.shields.io/badge/Government-Punjab-orange)
 ![React](https://img.shields.io/badge/React-18.2.0-blue)
 ![PWA](https://img.shields.io/badge/PWA-Enabled-purple)
 
-> **Smart India Hackathon 2024 MVP** - Comprehensive telemedicine solution for rural healthcare in Nabha region, Punjab.
+> **Smart India Hackathon 2024 MVP** - Comprehensive telemedicine solution for rural healthcare, powered by CSE-D Team.
 
 ## 🎯 Problem Statement
 
@@ -229,7 +229,7 @@ This project is developed for Smart India Hackathon 2024 and is intended for gov
 [![GitHub stars](https://img.shields.io/github/stars/gautamkapil9080/SIH-MVP?style=social)](https://github.com/gautamkapil9080/SIH-MVP)
 [![GitHub forks](https://img.shields.io/github/forks/gautamkapil9080/SIH-MVP?style=social)](https://github.com/gautamkapil9080/SIH-MVP)
 
-# Nabha Telemedicine - Rural Healthcare Access MVP
+# CSE-D Telemedicine - Rural Healthcare Access MVP
 
 ## Problem Statement
 Nabha and its surrounding rural areas face significant healthcare challenges with the local Civil Hospital operating at less than 50% staff capacity (only 11 doctors for 23 sanctioned posts). Patients from 173 villages travel long distances only to find specialists unavailable or medicines out of stock.

@@ -1,7 +1,7 @@
 // Translation data for multiple languages
 const translations = {
     en: {
-        app_title: "Nabha Telemedicine",
+        app_title: "CSE-D Telemedicine",
         patient_portal: "Patient Portal",
         doctor_portal: "Doctor Portal", 
         pharmacy_portal: "Pharmacy Portal",
@@ -153,7 +153,7 @@ const translations = {
         district_hospital: "District Hospital Patiala"
     },
     hi: {
-        app_title: "नाभा टेलीमेडिसिन",
+        app_title: "CSE-D टेलीमेडिसिन",
         patient_portal: "मरीज़ पोर्टल",
         doctor_portal: "डॉक्टर पोर्टल",
         pharmacy_portal: "दवाखाना पोर्टल", 
@@ -305,7 +305,7 @@ const translations = {
         district_hospital: "जिला अस्पताल पटियाला"
     },
     te: {
-        app_title: "నాభా టెలిమెడిసిన్",
+        app_title: "CSE-D టెలిమెడిసిన్",
         patient_portal: "రోగి పోర్టల్",
         doctor_portal: "వైద్యుడు పోర్టల్",
         pharmacy_portal: "ఫార్మసీ పోర్టల్",
