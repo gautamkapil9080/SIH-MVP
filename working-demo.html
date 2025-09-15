@@ -175,6 +175,104 @@
             border: 1px solid #f5c6cb;
         }
 
+        /* Patient Portal Tabs */
+        .patient-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .patient-tab-btn {
+            background: none;
+            border: none;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            font-size: 1rem;
+            color: #6c757d;
+            transition: all 0.3s;
+        }
+
+        .patient-tab-btn.active {
+            color: #2E8B57;
+            border-bottom-color: #2E8B57;
+            font-weight: bold;
+        }
+
+        .patient-tab-btn:hover {
+            color: #2E8B57;
+            background: rgba(46, 139, 87, 0.1);
+        }
+
+        .patient-tab-content {
+            display: none;
+        }
+
+        .patient-tab-content.active {
+            display: block;
+        }
+
+        /* Enhanced Form Styling */
+        .form-row {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .medical-info-section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            border: 1px solid #dee2e6;
+        }
+
+        .medical-info-section h4 {
+            color: #2E8B57;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .patient-profile {
+            background: #e8f5e8;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #2E8B57;
+        }
+
+        .patient-profile h3 {
+            color: #2E8B57;
+            margin-bottom: 1rem;
+        }
+
+        .profile-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .profile-item {
+            background: white;
+            padding: 0.75rem;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+        }
+
+        .profile-item strong {
+            color: #2E8B57;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
         @media (max-width: 768px) {
             .nav-links {
                 flex-direction: column;
@@ -182,6 +280,19 @@
             
             .section {
                 padding: 1rem;
+            }
+
+            .patient-tabs {
+                flex-direction: column;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .form-row .form-group {
+                margin-bottom: 1rem;
             }
         }
     </style>
@@ -214,40 +325,206 @@
     <!-- Patient Section -->
     <section id="patient-section" class="section active">
         <div class="container">
-            <h2 id="patient_registration">Patient Registration</h2>
-            <div class="card">
-                <form id="patientForm">
-                    <div class="form-group">
-                        <label id="full_name">Full Name:</label>
-                        <input type="text" id="patientName" required>
+            <h2 id="patient_portal_title">Patient Portal</h2>
+            
+            <!-- Patient Portal Tabs -->
+            <div class="patient-tabs">
+                <button onclick="showPatientTab('registration')" class="patient-tab-btn active" id="tab_registration">Registration</button>
+                <button onclick="showPatientTab('login')" class="patient-tab-btn" id="tab_login">Login</button>
+            </div>
+
+            <!-- Registration Tab -->
+            <div id="registration-tab" class="patient-tab-content active">
+                <div class="card">
+                    <h3 id="patient_registration">Patient Registration</h3>
+                    <form id="patientRegistrationForm">
+                        <!-- Basic Information -->
+                        <h4 id="basic_info">📋 Basic Information</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label id="full_name">Full Name:</label>
+                                <input type="text" id="regPatientName" required>
+                            </div>
+                            <div class="form-group">
+                                <label id="age">Age:</label>
+                                <input type="number" id="regPatientAge" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label id="phone">Phone Number:</label>
+                                <input type="tel" id="regPatientPhone" required>
+                            </div>
+                            <div class="form-group">
+                                <label id="gender">Gender:</label>
+                                <select id="regPatientGender" required>
+                                    <option value="" id="select_gender">Select Gender</option>
+                                    <option value="male" id="male">Male</option>
+                                    <option value="female" id="female">Female</option>
+                                    <option value="other" id="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label id="village">Village/Address:</label>
+                                <input type="text" id="regPatientVillage" required>
+                            </div>
+                            <div class="form-group">
+                                <label id="password">Password:</label>
+                                <input type="password" id="regPatientPassword" required>
+                            </div>
+                        </div>
+
+                        <!-- Medical Information -->
+                        <div class="medical-info-section">
+                            <h4 id="medical_info">🩺 Medical Information</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label id="blood_group">Blood Group:</label>
+                                    <select id="regBloodGroup" required>
+                                        <option value="" id="select_blood_group">Select Blood Group</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label id="height">Height (cm):</label>
+                                    <input type="number" id="regHeight" placeholder="e.g., 170">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label id="weight">Weight (kg):</label>
+                                    <input type="number" id="regWeight" placeholder="e.g., 65">
+                                </div>
+                                <div class="form-group">
+                                    <label id="sugar_level">Sugar Level (mg/dL):</label>
+                                    <input type="number" id="regSugarLevel" placeholder="e.g., 110">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label id="blood_pressure_systolic">Blood Pressure (Systolic):</label>
+                                    <input type="number" id="regBPSystolic" placeholder="e.g., 120">
+                                </div>
+                                <div class="form-group">
+                                    <label id="blood_pressure_diastolic">Blood Pressure (Diastolic):</label>
+                                    <input type="number" id="regBPDiastolic" placeholder="e.g., 80">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Medical History -->
+                        <div class="form-group">
+                            <label id="medical_history">Medical History:</label>
+                            <textarea id="regMedicalHistory" rows="3" placeholder="Previous surgeries, chronic conditions, allergies, etc."></textarea>
+                        </div>
+                        
+                        <!-- Current Symptoms -->
+                        <div class="form-group">
+                            <label id="current_symptoms">Current Symptoms:</label>
+                            <textarea id="regCurrentSymptoms" rows="3" placeholder="Describe your current health concerns..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label id="urgency">Urgency Level:</label>
+                            <select id="regUrgencyLevel">
+                                <option value="low" id="low">Low</option>
+                                <option value="medium" id="medium">Medium</option>
+                                <option value="high" id="high">High</option>
+                                <option value="emergency" id="emergency_level">Emergency</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn" id="register_btn">Register & Submit Request</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Login Tab -->
+            <div id="login-tab" class="patient-tab-content">
+                <div class="card">
+                    <h3 id="patient_login">Patient Login</h3>
+                    <form id="patientLoginForm">
+                        <div class="form-group">
+                            <label id="login_phone">Phone Number:</label>
+                            <input type="tel" id="loginPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label id="login_password">Password:</label>
+                            <input type="password" id="loginPassword" required>
+                        </div>
+                        <button type="submit" class="btn" id="login_btn">Login</button>
+                    </form>
+                </div>
+                
+                <!-- Patient Profile (shown after login) -->
+                <div id="patientProfile" class="patient-profile" style="display: none;">
+                    <h3 id="patient_profile_title">👤 Patient Profile</h3>
+                    <div class="profile-info">
+                        <div class="profile-item">
+                            <strong id="profile_name_label">Name:</strong>
+                            <span id="profileName">-</span>
+                        </div>
+                        <div class="profile-item">
+                            <strong id="profile_age_label">Age:</strong>
+                            <span id="profileAge">-</span>
+                        </div>
+                        <div class="profile-item">
+                            <strong id="profile_gender_label">Gender:</strong>
+                            <span id="profileGender">-</span>
+                        </div>
+                        <div class="profile-item">
+                            <strong id="profile_phone_label">Phone:</strong>
+                            <span id="profilePhone">-</span>
+                        </div>
+                        <div class="profile-item">
+                            <strong id="profile_blood_group_label">Blood Group:</strong>
+                            <span id="profileBloodGroup">-</span>
+                        </div>
+                        <div class="profile-item">
+                            <strong id="profile_village_label">Address:</strong>
+                            <span id="profileVillage">-</span>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label id="village">Village:</label>
-                        <input type="text" id="patientVillage" required>
+                    
+                    <h4 id="medical_info_title" style="margin: 1.5rem 0 1rem 0; color: #2E8B57;">🩺 Medical Information</h4>
+                    <div class="profile-info">
+                        <div class="profile-item">
+                            <strong id="profile_height_label">Height:</strong>
+                            <span id="profileHeight">-</span>
+                        </div>
+                        <div class="profile-item">
+                            <strong id="profile_weight_label">Weight:</strong>
+                            <span id="profileWeight">-</span>
+                        </div>
+                        <div class="profile-item">
+                            <strong id="profile_sugar_label">Sugar Level:</strong>
+                            <span id="profileSugar">-</span>
+                        </div>
+                        <div class="profile-item">
+                            <strong id="profile_bp_label">Blood Pressure:</strong>
+                            <span id="profileBP">-</span>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label id="phone">Phone Number:</label>
-                        <input type="tel" id="patientPhone" required>
+                    
+                    <div style="margin-top: 1.5rem;">
+                        <strong id="profile_history_label">Medical History:</strong>
+                        <p id="profileMedicalHistory" style="margin: 0.5rem 0; padding: 1rem; background: white; border-radius: 4px;">-</p>
                     </div>
-                    <div class="form-group">
-                        <label id="age">Age:</label>
-                        <input type="number" id="patientAge" required>
+                    
+                    <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                        <button onclick="requestConsultation()" class="btn" id="request_consultation_btn">Request New Consultation</button>
+                        <button onclick="logoutPatient()" class="btn" style="background: #6c757d;" id="logout_btn">Logout</button>
                     </div>
-                    <div class="form-group">
-                        <label id="symptoms">Describe your symptoms:</label>
-                        <textarea id="patientSymptoms" rows="4" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label id="urgency">Urgency Level:</label>
-                        <select id="urgencyLevel">
-                            <option value="low" id="low">Low</option>
-                            <option value="medium" id="medium">Medium</option>
-                            <option value="high" id="high">High</option>
-                            <option value="emergency" id="emergency_level">Emergency</option>
-                        </select>
-                    </div>
-                    <button type="submit" class="btn" id="submit_request">Submit Request</button>
-                </form>
+                </div>
             </div>
         </div>
     </section>
@@ -560,21 +837,61 @@
             en: {
                 app_title: "CSE-D Telemedicine",
                 patient_portal: "Patient Portal",
+                patient_portal_title: "Patient Portal",
                 doctor_portal: "Doctor Portal",
                 pharmacy_portal: "Pharmacy Portal",
                 symptom_checker: "Symptom Checker",
                 emergency: "🚨 Emergency",
+                tab_registration: "Registration",
+                tab_login: "Login",
                 patient_registration: "Patient Registration",
+                patient_login: "Patient Login",
+                basic_info: "📋 Basic Information",
+                medical_info: "🩺 Medical Information",
                 full_name: "Full Name:",
-                village: "Village:",
+                village: "Village/Address:",
                 phone: "Phone Number:",
                 age: "Age:",
+                gender: "Gender:",
+                select_gender: "Select Gender",
+                male: "Male",
+                female: "Female",
+                other: "Other",
+                password: "Password:",
+                blood_group: "Blood Group:",
+                select_blood_group: "Select Blood Group",
+                height: "Height (cm):",
+                weight: "Weight (kg):",
+                sugar_level: "Sugar Level (mg/dL):",
+                blood_pressure_systolic: "Blood Pressure (Systolic):",
+                blood_pressure_diastolic: "Blood Pressure (Diastolic):",
+                medical_history: "Medical History:",
+                current_symptoms: "Current Symptoms:",
                 symptoms: "Describe your symptoms:",
                 urgency: "Urgency Level:",
                 low: "Low",
                 medium: "Medium",
                 high: "High",
                 emergency_level: "Emergency",
+                register_btn: "Register & Submit Request",
+                login_phone: "Phone Number:",
+                login_password: "Password:",
+                login_btn: "Login",
+                patient_profile_title: "👤 Patient Profile",
+                profile_name_label: "Name:",
+                profile_age_label: "Age:",
+                profile_gender_label: "Gender:",
+                profile_phone_label: "Phone:",
+                profile_blood_group_label: "Blood Group:",
+                profile_village_label: "Address:",
+                medical_info_title: "🩺 Medical Information",
+                profile_height_label: "Height:",
+                profile_weight_label: "Weight:",
+                profile_sugar_label: "Sugar Level:",
+                profile_bp_label: "Blood Pressure:",
+                profile_history_label: "Medical History:",
+                request_consultation_btn: "Request New Consultation",
+                logout_btn: "Logout",
                 submit_request: "Submit Request",
                 doctor_dashboard: "Doctor Dashboard",
                 pending_requests: "Pending Patient Requests",
@@ -653,12 +970,145 @@
                 changeLanguage(e.target.value);
             });
 
-            // Patient form
-            document.getElementById('patientForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                showStatusMessage('Request submitted successfully!', 'success');
-                this.reset();
+            // Patient registration form
+            const regForm = document.getElementById('patientRegistrationForm');
+            if (regForm) {
+                regForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    registerPatient();
+                });
+            }
+
+            // Patient login form
+            const loginForm = document.getElementById('patientLoginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    loginPatient();
+                });
+            }
+        }
+
+        // Patient Portal Functions
+        function showPatientTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll('.patient-tab-content').forEach(tab => {
+                tab.classList.remove('active');
             });
+
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.patient-tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            
+            // Add active class to clicked button
+            event.target.classList.add('active');
+
+            console.log('Switched to patient tab:', tabName);
+        }
+
+        function registerPatient() {
+            const formData = {
+                name: document.getElementById('regPatientName').value,
+                age: document.getElementById('regPatientAge').value,
+                phone: document.getElementById('regPatientPhone').value,
+                gender: document.getElementById('regPatientGender').value,
+                village: document.getElementById('regPatientVillage').value,
+                password: document.getElementById('regPatientPassword').value,
+                bloodGroup: document.getElementById('regBloodGroup').value,
+                height: document.getElementById('regHeight').value,
+                weight: document.getElementById('regWeight').value,
+                sugarLevel: document.getElementById('regSugarLevel').value,
+                bpSystolic: document.getElementById('regBPSystolic').value,
+                bpDiastolic: document.getElementById('regBPDiastolic').value,
+                medicalHistory: document.getElementById('regMedicalHistory').value,
+                currentSymptoms: document.getElementById('regCurrentSymptoms').value,
+                urgency: document.getElementById('regUrgencyLevel').value,
+                registrationDate: new Date().toISOString()
+            };
+
+            // Save patient data to localStorage
+            const patients = JSON.parse(localStorage.getItem('patients') || '[]');
+            
+            // Check if patient already exists
+            const existingPatient = patients.find(p => p.phone === formData.phone);
+            if (existingPatient) {
+                showStatusMessage('Patient with this phone number already exists!', 'error');
+                return;
+            }
+
+            patients.push(formData);
+            localStorage.setItem('patients', JSON.stringify(patients));
+            
+            // Also save the consultation request
+            const requests = JSON.parse(localStorage.getItem('consultationRequests') || '[]');
+            requests.push({
+                ...formData,
+                id: 'REQ-' + Date.now(),
+                timestamp: new Date().toISOString(),
+                status: 'pending'
+            });
+            localStorage.setItem('consultationRequests', JSON.stringify(requests));
+
+            showStatusMessage('Registration successful! Consultation request submitted.', 'success');
+            document.getElementById('patientRegistrationForm').reset();
+            
+            // Switch to login tab
+            setTimeout(() => {
+                showPatientTab('login');
+            }, 2000);
+        }
+
+        function loginPatient() {
+            const phone = document.getElementById('loginPhone').value;
+            const password = document.getElementById('loginPassword').value;
+
+            const patients = JSON.parse(localStorage.getItem('patients') || '[]');
+            const patient = patients.find(p => p.phone === phone && p.password === password);
+
+            if (patient) {
+                displayPatientProfile(patient);
+                showStatusMessage('Login successful!', 'success');
+                document.getElementById('patientLoginForm').reset();
+            } else {
+                showStatusMessage('Invalid phone number or password!', 'error');
+            }
+        }
+
+        function displayPatientProfile(patient) {
+            document.getElementById('profileName').textContent = patient.name;
+            document.getElementById('profileAge').textContent = patient.age + ' years';
+            document.getElementById('profileGender').textContent = patient.gender;
+            document.getElementById('profilePhone').textContent = patient.phone;
+            document.getElementById('profileBloodGroup').textContent = patient.bloodGroup || '-';
+            document.getElementById('profileVillage').textContent = patient.village;
+            
+            document.getElementById('profileHeight').textContent = patient.height ? patient.height + ' cm' : '-';
+            document.getElementById('profileWeight').textContent = patient.weight ? patient.weight + ' kg' : '-';
+            document.getElementById('profileSugar').textContent = patient.sugarLevel ? patient.sugarLevel + ' mg/dL' : '-';
+            
+            const bp = patient.bpSystolic && patient.bpDiastolic ? 
+                `${patient.bpSystolic}/${patient.bpDiastolic} mmHg` : '-';
+            document.getElementById('profileBP').textContent = bp;
+            
+            document.getElementById('profileMedicalHistory').textContent = patient.medicalHistory || 'No medical history recorded.';
+
+            document.getElementById('patientProfile').style.display = 'block';
+            document.getElementById('patientLoginForm').parentElement.style.display = 'none';
+        }
+
+        function requestConsultation() {
+            // This would typically open a form for new consultation request
+            alert('New consultation request feature coming soon!');
+        }
+
+        function logoutPatient() {
+            document.getElementById('patientProfile').style.display = 'none';
+            document.getElementById('patientLoginForm').parentElement.style.display = 'block';
+            showStatusMessage('Logged out successfully!', 'success');
         }
 
         // Show section
